@@ -45,7 +45,7 @@
               <div class="beranda-wrapper">
                 <h2 class="beranda">Beranda</h2>
               </div>
-              <button class="button-masuk">
+              <button class="button-masuk" onclick="window.location.href='auth/login.php'" style="cursor: pointer;">
                 <img
                   class="button-masuk-child"
                   alt=""
@@ -54,7 +54,7 @@
 
                 <div class="masuk">Masuk</div>
               </button>
-              <button class="button-daftar">
+              <button class="button-daftar" onclick="window.location.href='auth/register.php'" style="cursor: pointer;">
                 <div class="button-daftar-child"></div>
                 <div class="daftar">Daftar</div>
               </button>
