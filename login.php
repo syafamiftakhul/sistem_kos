@@ -1,6 +1,6 @@
 import line5 from "./line-5.svg";
 import line6 from "./line-6.svg";
-import "./style_masuk.css";
+import "./login_style.css";
 
 export const Box = (): JSX.Element => {
   return (
