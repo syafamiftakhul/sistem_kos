@@ -1,140 +1,62 @@
-body {
-  margin: 0;
-  line-height: normal;
-}
-
 :root {
-  /* Figma Variables */
+  /* --- 1. SPACING & RADIUS (Sistem 4px/8px) --- */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
 
-  /* Spacing */
-  --Depth-0: 0px;
-  --Depth-025: 1px;
-  --Depth-100: 4px;
-  --Radius-200: 8px;
-  --Space-200: 8px;
-  --Space-300: 12px;
-  --Space-400: 16px;
-  --Static-Display-Small-Line-Height: 44px;
-  --Static-Display-Small-Size: 36px;
-  --Static-Display-Small-Tracking: 0px;
-  --Stroke-Border: 1px;
+  --radius-sm: 2px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+  --radius-xl: 15px;
+  --radius-full: 60px;
 
-  /* Color */
-  --Black-100: rgba(12, 12, 13, 0.05);
-  --Black-200: rgba(12, 12, 13, 0.1);
+  /* --- 2. COLORS (Dikelompokkan Berdasarkan Fungsi) --- */
+  /* Brand & Neutrals */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-brand-primary: #4f7394;   /* steelblue */
+  --color-brand-secondary: #81a6c6; /* lightsteelblue */
+  --color-success: #8baf48;         /* olivedrab */
+  
+  /* Grays & Backgrounds */
+  --color-bg-light: #f6f6f6;        /* whitesmoke */
+  --color-bg-alice: #ecf9ff;        /* aliceblue */
+  --color-gray-100: #e6e6e6;
+  --color-gray-200: #c7c7c7;
+  --color-gray-300: #757575;
+  --color-gray-dark: #2d3d4a;
+  
+  /* Transparencies */
+  --black-alpha-5: rgba(12, 12, 13, 0.05);
+  --black-alpha-10: rgba(12, 12, 13, 0.10);
+  --white-alpha-20: rgba(255, 255, 255, 0.23);
 
-  /* Common Style Variables */
+  /* --- 3. TYPOGRAPHY --- */
+  --font-main: 'Inter', sans-serif;
+  --font-secondary: 'Roboto', sans-serif;
 
-  /* Color */
-  --color-aliceblue: #ecf9ff;
-  --color-black: #000;
-  --color-darkslategray: #2d3d4a;
-  --color-gainsboro-100: #e6e6e6;
-  --color-gainsboro-200: #d9d9d9;
-  --color-gray-100: #fffefe;
-  --color-gray-200: #757575;
-  --color-gray-300: #1e1e1e;
-  --color-gray-400: rgba(255, 255, 255, 0.23);
-  --color-gray-500: rgba(0, 0, 0, 0.2);
-  --color-gray-600: rgba(255, 255, 255, 0.1);
-  --color-lightsteelblue: #81a6c6;
-  --color-olivedrab: #8baf48;
-  --color-silver-100: #c7c7c7;
-  --color-silver-200: #c5c5c5;
-  --color-steelblue: #4f7394;
-  --color-white: #fff;
-  --color-whitesmoke: #f6f6f6;
+  /* Font Sizes */
+  --fs-xs: 14px;
+  --fs-base: 16px;
+  --fs-lg: 18px;
+  --fs-xl: 20px;
+  --fs-2xl: 24px;
+  --fs-3xl: 30px;
+  --fs-display: 36px;
 
-  /* Gap */
-  --gap-8: 8px;
-  --gap-15: 15px;
-  --gap-18: 18px;
-  --gap-20: 20px;
-  --gap-22: 22px;
-  --gap-28: 28px;
+  /* Line Heights */
+  --lh-tight: 1.2;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.6;
 
-  /* Padding */
-  --padding-0: 0px;
-  --padding-1: 1px;
-  --padding-2: 2px;
-  --padding-3: 3px;
-  --padding-4: 4px;
-  --padding-5: 5px;
-  --padding-6: 6px;
-  --padding-7: 7px;
-  --padding-8: 8px;
-  --padding-12: 12px;
-  --padding-14: 14px;
-  --padding-15: 15px;
-  --padding-16: 16px;
-  --padding-17: 17px;
-  --padding-18: 18px;
-  --padding-19: 19px;
-  --padding-20: 20px;
-  --padding-21: 21px;
-  --padding-22: 22px;
-  --padding-24: 24px;
-  --padding-26: 26px;
-  --padding-29: 29px;
-  --padding-32: 32px;
-  --padding-35: 35px;
-  --padding-36: 36px;
-  --padding-40: 40px;
-  --padding-4_5: 4.5px;
-  --padding-4_6: 4.6px;
-
-  /* BorderRadius */
-  --br-0: 0px;
-  --br-2: 2px;
-  --br-5: 5px;
-  --br-15: 15px;
-  --br-60: 60px;
-
-  /* Font */
-  --font-inter: Inter;
-  --font-roboto: Roboto;
-
-  /* FontSize */
-  --fs-16: 16px;
-  --fs-18: 18px;
-  --fs-20: 20px;
-  --fs-21: 21px;
-  --fs-23: 23px;
-  --fs-24: 24px;
-  --fs-25: 25px;
-  --fs-28: 28px;
-  --fs-30: 30px;
-  --fs-35: 35px;
-
-  /* Shadows */
-  --Drop-Shadow-200: 0px 1px 4px var(--Black-200), 0px 1px 4px var(--Black-100);
-  --shadow-drop: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  --shadow-drop-1: 4px 0px 4px rgba(0, 0, 0, 0.25);
-  --shadow-drop-2: 4px 4px 4px rgba(0, 0, 0, 0.25);
-
-  /* WidthHeights */
-  --height-1: 1px;
-  --height-16: 16px;
-  --height-37: 37px;
-  --height-48: 48px;
-  --height-168: 168px;
-  --height-48_8: 48.8px;
-  --min-w-129: 129px;
-  --width-16: 16px;
-  --width-48: 48px;
-  --width-84: 84px;
-  --width-101: 101px;
-  --width-118: 118px;
-  --width-199: 199px;
-  --width-548: 548px;
-
-  /* LineHeights */
-  --lh-22: 22px;
-  --lh-26: 26px;
-  --lh-28: 28px;
-  --lh-29: 29px;
-  --lh-39: 39px;
-
-  --left-8: 8px;
-  --top-8: 8px;
+  /* --- 4. SHADOWS --- */
+  --shadow-sm: 0px 1px 4px var(--black-alpha-10);
+  --shadow-md: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
