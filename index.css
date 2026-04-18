@@ -1,3 +1,4 @@
+/* HEADER */
 .dashboard-user1-inner {
   position: absolute;
   top: 0;
@@ -365,7 +366,13 @@
 }
 
 /* Card content styling */
-.deluxe-content, .room-info {
+.deluxe-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.room-info, .deluxe-info {
   padding: 20px;
   flex-grow: 1;
 }
