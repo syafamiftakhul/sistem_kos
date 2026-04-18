@@ -278,60 +278,6 @@
                   <div class="wrapper">
                     <h2 class="h22">️4.8</h2>
                   </div>
-<<<<<<< HEAD
-                </section>
-              </div>
-              <div class="frame-parent4">
-                <section class="deluxe-content-wrapper">
-                  <div class="deluxe-content">
-                    <div class="deluxe-content-child"></div>
-                    <div class="deluxe-info">
-                      <div class="deluxe-description">
-                        <div class="room-details">
-                          <h2 class="deluxe-room-a1">Deluxe Room A1</h2>
-                          <div class="single-1">
-                            Single - 1 Orang - 20m²<br /> 
-                          </div>
-                        </div>
-                        <div class="amenity-items-parent">
-                          <div class="amenity-items">
-                            <div class="amenity-items-child"></div>
-                            <h2 class="wifi">WiFi</h2>
-                          </div>
-                          <div class="feature-a-c">
-                            <div class="amenity-items-child"></div>
-                            <h2 class="wifi">AC</h2>
-                          </div>
-                          <div class="rectangle-parent4">
-                            <div class="rectangle-div"></div>
-                            <h3 class="bed">Bed</h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="line-parent">
-                      <div class="line-div"></div>
-                      <div class="price-details">
-                        <div class="price-container">
-                          <div class="mulai-dari">Mulai Dari</div>
-                          <div class="price-range">
-                            <div class="price-values">
-                              <div class="rp-1000000-parent">
-                                <h2 class="rp-1000000">Rp. 1.000.000</h2>
-                                <div class="bulan-wrapper">
-                                  <div class="bulan">/bulan</div>
-                                </div>
-                              </div>
-                            </div>
-                            <button class="button-daftar2" onclick="window.location.href='detail.php'">
-                              <div class="button-daftar-item"></div>
-                              <div class="daftar">Lihat Detail</div>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-=======
                 </div>
               </section>
               <section class="status-containers2">
@@ -348,7 +294,6 @@
                       src="./public/Rectangle-23.svg" />
 
                     <h3 class="tersedia">Tersedia</h3>
->>>>>>> 354ce17 (daftar)
                   </div>
                 </div>
                 <div class="rectangle-parent3">
@@ -412,13 +357,6 @@
                             <div class="daftar">Lihat Detail</div>
                           </button>
                         </div>
-<<<<<<< HEAD
-                        <button class="button-daftar2" onclick="window.location.href='detail.php'">
-                          <div class="button-daftar-item"></div>
-                          <div class="daftar">Lihat Detail</div>
-                        </button>
-=======
->>>>>>> 354ce17 (daftar)
                       </div>
                     </div>
                   </div>
@@ -439,31 +377,9 @@
                         <div class="amenity-items-child"></div>
                         <h2 class="wifi">WiFi</h2>
                       </div>
-<<<<<<< HEAD
-                    </div>
-                  </div>
-                  <div class="room-types-item"></div>
-                  <div class="price-info">
-                    <div class="price-container">
-                      <div class="mulai-dari">Mulai Dari</div>
-                      <div class="price-range">
-                        <div class="price-values">
-                          <div class="rp-1000000-parent">
-                            <h2 class="rp-700000">Rp. 400.000</h2>
-                            <div class="bulan-wrapper">
-                              <div class="bulan">/bulan</div>
-                            </div>
-                          </div>
-                        </div>
-                        <button class="button-daftar2" onclick="window.location.href='detail.php'">
-                          <div class="button-daftar-item"></div>
-                          <div class="daftar">Lihat Detail</div>
-                        </button>
-=======
                       <div class="feature-a-c">
                         <div class="amenity-items-child"></div>
                         <h2 class="wifi">AC</h2>
->>>>>>> 354ce17 (daftar)
                       </div>
                     </div>
                   </div>
