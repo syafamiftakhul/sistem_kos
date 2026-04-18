@@ -352,10 +352,9 @@
                               </div>
                             </div>
                           </div>
-                          <button class="button-daftar2">
-                            <div class="button-daftar-item"></div>
+                          <<a href="detail.php" class="button-daftar2">
                             <div class="daftar">Lihat Detail</div>
-                          </button>
+                            </a>
                         </div>
                       </div>
                     </div>
