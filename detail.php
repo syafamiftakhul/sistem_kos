@@ -189,7 +189,7 @@
               </div>
             </div>
 
-            <button class="btn-pesan">Pesan Sekarang</button>
+            <button class="btn-pesan" onclick="window.location.href='booking.php'" style="cursor: pointer;">Pesan Sekarang</button>
           </div>
         </div>
 

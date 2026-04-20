@@ -48,7 +48,7 @@
             
             <?php if (isset($_SESSION['user_name'])): ?>
               <div class="beranda-wrapper" style="margin-left: 24px; margin-right: 24px;">
-                <h2 class="beranda" style="color: #333; font-weight: 600; cursor: pointer;">Dashboard Saya</h2>
+                <h2 class="beranda" style="color: #333; font-weight: 600; cursor: pointer;" onclick="window.location.href='dashboard.php'">Dashboard Saya</h2>
               </div>
               <div class="user-profile" style="display: flex; align-items: center; justify-content: center; padding: 6px 16px; border: 1.5px solid #83A6C4; border-radius: 20px; cursor: pointer;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
