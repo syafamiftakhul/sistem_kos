@@ -1,27 +1,35 @@
-import line5 from "./line-5.svg";
-import line6 from "./line-6.svg";
-import "./login_style.css";
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body class="auth-bg">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Masuk</h2>
+            <p>Masukan kredensial untuk Anda untuk melanjutkan</p>
+        </div>
 
-export const Box = (): JSX.Element => {
-  return (
-    <div className="box">
-      <div className="masuk">
-        <div className="rectangle" />
-        <div className="text-wrapper">Masuk</div>
-        <p className="div">Masukan kredensial untuk Anda untuk melanjutkan</p>
-        <img className="line" alt="Line" src={line5} />
-        <img className="img" alt="Line" src={line6} />
-        <div className="text-wrapper-2">Email *</div>
-        <div className="text-wrapper-3">Password *</div>
-        <div className="rectangle-2" />
-        <div className="rectangle-3" />
-        <div className="text-wrapper-4">Masukkan Password. . .</div>
-        <div className="rectangle-4" />
-        <div className="text-wrapper-5">Masuk</div>
-        <div className="text-wrapper-6">Belum Punya Akun?</div>
-        <div className="text-wrapper-7">Daftar sini</div>
-        <div className="text-wrapper-8">Masukkan Email. . .</div>
-      </div>
+        <form action="" method="POST">
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" placeholder="Masukkan Email. . ." required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" placeholder="Masukkan Password. . ." required>
+            </div>
+
+            <button type="submit" class="btn-submit">Masuk</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Belum Punya Akun? <a href="daftar.php">Daftar sini</a></p>
+        </div>
     </div>
-  );
-};
+</body>
+</html>
