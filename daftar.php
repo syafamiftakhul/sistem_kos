@@ -30,7 +30,7 @@
                 <input type="password" id="password" name="password" placeholder="Masukkan Password. . ." required>
             </div>
 
-            <button type="submit" class="btn-submit">Masuk</button>
+            <button type="submit" class="btn-submit">Daftar</button>
         </form>
 
         <div class="auth-footer">
