@@ -71,3 +71,9 @@ body {
     padding-top: 20px;
     border-top: 1px solid #eee;
 }
+
+.footer-text a {
+    color: #83A6C4;
+    text-decoration: none;
+    font-weight: 600;
+}

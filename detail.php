@@ -38,7 +38,7 @@
         <div class="left-col">
           <section class="gallery-section">
             <div class="main-image">
-              <img src="https://images.unsplash.com/photo-1522771731478-44710c50d820?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Main Room" />
+              <img src="assets/img/bedroom1.jpg" alt="Main Room" />
             </div>
             <div class="thumbnail-list">
               <div class="thumb active"><img src="https://images.unsplash.com/photo-1522771731478-44710c50d820?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Thumb 1" /></div>

@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="assets/css/global.css" />
   <link rel="stylesheet" href="assets/css/index.css" />
+  
   <link
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
@@ -22,7 +23,7 @@
       <img
         class="tempimagettnyuq-1-icon"
         alt=""
-        src="./public/tempImagettnYUq-1@2x.png" />
+        src="assets/img/bedroom1.jpg" />
 
       <img class="frame-child" alt="" src="./public/Rectangle-23.svg" />
     </section>
@@ -33,7 +34,9 @@
           <div class="rectangle-group">
             <div class="frame-inner"></div>
             <div class="key">
-              <img class="icon" alt="" src="./public/Icon.svg" />
+              <a href="index.php">
+                <img class="icon" src="<a href="www.flaticon.com/free-icons/real-estate" title="real estate icons">
+              </a>
             </div>
           </div>
           <div class="kos-aqsya-residence-wrapper">
@@ -45,14 +48,14 @@
             <div class="beranda-wrapper">
               <h2 class="beranda" style="cursor: pointer;" onclick="window.location.href='index.php'">Beranda</h2>
             </div>
-            
+
             <?php if (isset($_SESSION['user_name'])): ?>
               <div class="beranda-wrapper" style="margin-left: 24px; margin-right: 24px;">
                 <h2 class="beranda" style="color: #333; font-weight: 600; cursor: pointer;" onclick="window.location.href='dashboard.php'">Dashboard Saya</h2>
               </div>
               <div class="user-profile" style="display: flex; align-items: center; justify-content: center; padding: 6px 16px; border: 1.5px solid #83A6C4; border-radius: 20px; cursor: pointer;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
-                  <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="#83A6C4"/>
+                  <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="#83A6C4" />
                 </svg>
                 <span style="color: #83A6C4; font-weight: 600; font-size: 13px; font-family: 'Inter', sans-serif;"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
                 <a href="logout.php" style="margin-left: 12px; font-size: 12px; color: #ff6b6b; text-decoration: none; font-family: 'Inter', sans-serif;">(Keluar)</a>
@@ -369,7 +372,7 @@
                           </div>
                           <a href="detail.php" class="button-daftar2">
                             <div class="daftar">Lihat Detail</div>
-                            </a>
+                          </a>
                         </div>
                       </div>
                     </div>

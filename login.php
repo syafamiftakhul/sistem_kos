@@ -27,7 +27,7 @@
 
         <div class="divider"></div>
 
-        <div class="footer-text">
+        <div class="footer-text a">
             Belum Punya Akun? <a href="daftar.php">Daftar sini</a>
         </div>
     </div>
