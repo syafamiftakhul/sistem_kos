@@ -1,3 +1,13 @@
+<?php
+session_start();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $nama = $_POST['nama'] ?? 'Ricky Naila';
+    if (empty($nama)) $nama = 'Ricky Naila';
+    $_SESSION['user_name'] = $nama;
+    header("Location: index.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>

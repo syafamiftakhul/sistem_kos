@@ -1,3 +1,18 @@
+<?php
+session_start();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = $_POST['email'] ?? 'Ricky Naila';
+    $name = explode('@', $email)[0];
+    if (empty($name) || $name === 'Ricky Naila') {
+        $name = 'Ricky Naila';
+    } else {
+        $name = ucfirst($name);
+    }
+    $_SESSION['user_name'] = $name;
+    header("Location: index.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
