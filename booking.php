@@ -1,6 +1,16 @@
 <?php
 session_start();
-$user_name = $_SESSION['user_name'] ?? '';
+
+// Cek apakah ada ID User di session. 
+// Kalau kosong, berarti dia belum login atau belum daftar.
+if (!isset($_SESSION['id_user'])) {
+    // Arahkan paksa ke login.php
+    echo "<script>
+            alert('Akses Ditolak! Kamu harus login dulu untuk bisa booking kamar.');
+            window.location.href='login.php?pesan=wajib_login';
+          </script>";
+    exit(); // Hentikan semua proses di bawahnya
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">

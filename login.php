@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -15,6 +16,18 @@
         <h2>Masuk</h2>
         <p>Masukan kredensial untuk Anda untuk melanjutkan</p>
 
+        <!-- NOTIFIKASI -->
+        <?php if (isset($_GET['pesan'])): ?>
+            <div style="color: #e74c3c; background: #fdeaea; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 14px; text-align: center;">
+                <?php 
+                    if ($_GET['pesan'] == "gagal") echo "Login gagal! Email atau password salah.";
+                    if ($_GET['pesan'] == "wajib_login") echo "Anda harus login dulu untuk memesan.";
+                    if ($_GET['pesan'] == "logout") echo "Anda telah berhasil keluar.";
+                ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- FORM (CUMA 1 SEKARANG) -->
         <form action="proses_login.php" method="POST">
             <label class="form-label">Email *</label>
             <input type="email" name="email" class="form-control" placeholder="Masukkan Email. . ." required><br><br>

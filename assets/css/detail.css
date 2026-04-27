@@ -310,3 +310,24 @@
 .btn-pesan:hover {
   background-color: #7b98b3;
 }
+
+.thumb {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent; /* Border awal transparan */
+  transition: all 0.3s ease;
+}
+
+/* Ini class yang bakal bikin warna biru pas dipilih */
+.thumb.active {
+  border-color: #5b8fb9; /* Warna biru primary kamu */
+  box-shadow: 0 0 8px rgba(91, 143, 185, 0.5); /* Opsional: efek glow lembut */
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

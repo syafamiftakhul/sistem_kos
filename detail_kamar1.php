@@ -16,9 +16,7 @@
     <header class="detail-header">
       <div class="logo-area">
         <div class="key">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
-            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
-          </svg>
+          <img src="assets/img/key.png" alt="Logo" class="icon" style="width: 24px; height: 24px; filter: brightness(0) invert(1);">
         </div>
         <h1 class="logo-text">Kos Aqsya Residence</h1>
       </div>
@@ -40,9 +38,14 @@
             <div class="main-image">
               <img src="assets/img/bedroom1.jpg" alt="Main Room" />
             </div>
+
             <div class="thumbnail-list">
-              <div class="thumb active"><img src="https://images.unsplash.com/photo-1522771731478-44710c50d820?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Thumb 1" /></div>
-              <div class="thumb"><img src="https://images.unsplash.com/photo-1502672260266-1c1de2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Thumb 2" /></div>
+              <div class="thumb active">
+                <img src="assets/img/bedroom1.jpg" alt="Thumb 1" />
+              </div>
+              <div class="thumb">
+                <img src="assets/img/bedroom2.png" alt="Thumb 2" />
+              </div>
             </div>
           </section>
 
@@ -197,6 +200,26 @@
     </main>
 
   </div>
+  <script>
+    // Ambil semua kotak thumbnail
+    const allThumbnails = document.querySelectorAll('.thumb');
+    // Ambil elemen gambar besar utama
+    const displayImage = document.querySelector('.main-image img');
+
+    allThumbnails.forEach(item => {
+      item.addEventListener('click', function() {
+        // 1. Matikan warna biru di semua thumbnail lain
+        allThumbnails.forEach(t => t.classList.remove('active'));
+
+        // 2. Kasih warna biru di thumbnail yang diklik
+        this.classList.add('active');
+
+        // 3. Ambil alamat (src) gambar dari thumbnail, lalu pasang di gambar besar
+        const clickedImgSrc = this.querySelector('img').getAttribute('src');
+        displayImage.src = clickedImgSrc;
+      });
+    });
+  </script>
 </body>
 
 </html>

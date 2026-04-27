@@ -1,13 +1,3 @@
-<?php
-session_start();
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nama = $_POST['nama'] ?? 'Ricky Naila';
-    if (empty($nama)) $nama = 'Ricky Naila';
-    $_SESSION['user_name'] = $nama;
-    header("Location: index.php");
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -23,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p>Lengkapi Data Diri untuk mengisi</p>
         </div>
 
-        <form action="" method="POST">
+        <form action="proses_daftar.php" method="POST">
             <div class="form-group">
                 <label for="nama">Nama Lengkap *</label>
                 <input type="text" id="nama" name="nama" placeholder="Masukkan Nama Lengkap. . ." required>
