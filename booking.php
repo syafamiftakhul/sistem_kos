@@ -1,15 +1,22 @@
 <?php
 session_start();
+include "koneksi.php";
 
-// Cek apakah ada ID User di session. 
-// Kalau kosong, berarti dia belum login atau belum daftar.
-if (!isset($_SESSION['id_user'])) {
-    // Arahkan paksa ke login.php
-    echo "<script>
-            alert('Akses Ditolak! Kamu harus login dulu untuk bisa booking kamar.');
-            window.location.href='login.php?pesan=wajib_login';
-          </script>";
-    exit(); // Hentikan semua proses di bawahnya
+// Ambil id_tipe, kalau gak ada dari URL, coba ambil id (siapa tau lu typo)
+$id_tipe = $_GET['id_tipe'] ?? $_GET['id'] ?? '';
+
+$query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar WHERE id_tipe = '$id_tipe'");
+$data_tipe = mysqli_fetch_array($query);
+
+if ($data_tipe) {
+    $tampil_tipe = $data_tipe['nama_tipe'];
+    $tampil_harga = $data_tipe['harga'];
+} else {
+    // Kalau masih 0, kita coba tarik data pertama yang ada di tabel biar gak kosong banget
+    $res = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1");
+    $d = mysqli_fetch_array($res);
+    $tampil_tipe = $d['nama_tipe'] ?? "Database Kosong";
+    $tampil_harga = $d['harga'] ?? 0;
 }
 ?>
 <!DOCTYPE html>
@@ -51,16 +58,19 @@ if (!isset($_SESSION['id_user'])) {
 
         <div class="room-info-box">
           <div class="room-info-left">
-            <h3>Deluxe Room A1</h3>
+            <h3><?php echo htmlspecialchars($tampil_tipe); ?></h3>
             <p>Kaliwungu</p>
           </div>
           <div class="room-info-right">
-            <h3>Rp 1.000.000</h3>
+            <h3>Rp <?php echo number_format((float)$tampil_harga, 0, ',', '.'); ?></h3>
             <p>Per Bulan</p>
           </div>
         </div>
 
         <form action="pembayaran.php" method="POST">
+          <input type="hidden" name="id_tipe" value="<?php echo $id_tipe; ?>">
+          <input type="hidden" name="harga_satuan" value="<?php echo $tampil_harga; ?>">
+
           <div class="section-heading">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -68,30 +78,31 @@ if (!isset($_SESSION['id_user'])) {
             </svg>
             Informasi Personal
           </div>
+          
           <div class="form-grid">
             <div class="input-group">
               <label>Nama Lengkap *</label>
-              <input type="text" name="nama" value="<?php echo htmlspecialchars($user_name); ?>" required>
+              <input type="text" name="nama" required>
             </div>
             <div class="input-group">
-              <label>NIK (Nomor id) *</label>
-              <input type="text" name="nik" required>
+              <label>NIK (no_ktp) *</label>
+              <input type="text" name="no_ktp" required>
             </div>
             <div class="input-group">
-              <label>Nomor Telepon</label>
-              <input type="text" name="telepon">
+              <label>Nomor Telepon (no_hp) *</label>
+              <input type="text" name="no_hp" required>
             </div>
             <div class="input-group">
-              <label>Alamat Rumah Sekarang</label>
-              <input type="text" name="alamat">
+              <label>Alamat *</label>
+              <input type="text" name="alamat" required>
             </div>
             <div class="input-group">
-              <label>Nomor Telepon Keluarga</label>
-              <input type="text" name="telepon_keluarga">
+              <label>Nomor Telepon Keluarga *</label>
+              <input type="text" name="kontak_keluarga" required>
             </div>
             <div class="input-group">
               <label>Jenis Kelamin *</label>
-              <select name="gender" required>
+              <select name="jenis_kelamin" required>
                 <option value="">Pilih...</option>
                 <option value="Laki-laki">Laki-laki</option>
                 <option value="Perempuan">Perempuan</option>
@@ -108,14 +119,19 @@ if (!isset($_SESSION['id_user'])) {
             </svg>
             Periode Pemesanan
           </div>
+          
           <div class="form-grid">
             <div class="input-group">
-              <label>Check-in Date *</label>
-              <input type="date" name="checkin" value="2025-08-14" required>
+              <label>Tanggal Masuk *</label>
+              <input type="date" name="tgl_masuk" required>
             </div>
             <div class="input-group">
-              <label>Check-out Date *</label>
-              <input type="date" name="checkout" value="2025-11-14" required>
+              <label>Durasi (Bulan) *</label>
+              <select name="periode" required>
+                <option value="1">1 Bulan</option>
+                <option value="3">3 Bulan</option>
+                <option value="6">6 Bulan</option>
+              </select>
             </div>
           </div>
 

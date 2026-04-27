@@ -1,4 +1,9 @@
 /* HEADER */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 .dashboard-user1-inner {
   position: relative;
   z-index: 1000;

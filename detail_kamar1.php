@@ -1,3 +1,19 @@
+<?php
+include "koneksi.php";
+
+// Kita gak usah pakai WHERE dulu, ambil aja data yang ada di tabel tipe_kamar
+$query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1");
+
+if ($query && mysqli_num_rows($query) > 0) {
+    $data = mysqli_fetch_array($query);
+    $id_tipe = $data['id_tipe']; // Ambil ID-nya buat dipake di tombol nanti
+} else {
+    // Kalau ini muncul, berarti tabel tipe_kamar lu beneran kosong atau koneksi salah
+    $data = ['nama_tipe' => 'DB Kosong', 'harga' => 0];
+    $id_tipe = 0;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -52,7 +68,7 @@
           <section class="info-card">
             <div class="room-title-area">
               <div class="title-left">
-                <h2 class="room-name">Deluxe Room A1</h2>
+                <h2 class="room-name"><?php echo $data['nama_tipe']; ?></h2>
                 <div class="location-detail">
                   <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -177,7 +193,7 @@
         <div class="right-col">
           <div class="booking-card">
             <div class="price-header">
-              <h2>Rp 1.000.000</h2>
+              <h2>Rp <?php echo number_format($data['harga'], 0, ',', '.'); ?></h2>
               <span>per bulan</span>
             </div>
 
@@ -192,7 +208,9 @@
               </div>
             </div>
 
-            <button class="btn-pesan" onclick="window.location.href='booking.php'" style="cursor: pointer;">Pesan Sekarang</button>
+            <button class="btn-pesan" onclick="window.location.href='booking.php?id_tipe=<?php echo $id_tipe; ?>'" style="cursor: pointer;">
+    Pesan Sekarang
+</button>
           </div>
         </div>
 

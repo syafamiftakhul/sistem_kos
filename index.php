@@ -54,7 +54,7 @@
 
               <!-- USER SUDAH LOGIN -->
               <div class="beranda-wrapper" style="margin-left: 24px;">
-                <h2 class="beranda" onclick="window.location.href='dashboard.php'">
+                <h2 class="beranda" onclick="window.location.href='user/dashboard_user.php'">
                   Dashboard Saya
                 </h2>
               </div>
@@ -241,7 +241,6 @@
         </div>
       </section>
       <main class="select-fields-parent">
-        <div class="kamar-tersedia-parent">
           <h2 class="kamar-tersedia">Kamar Tersedia</h2>
 
           <div class="frame-parent4" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
