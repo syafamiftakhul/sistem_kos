@@ -505,7 +505,9 @@
 
 .footer-info {
   display: flex;
-  justify-content: space-between;
+  /* Kita tetapkan judul di kiri, sisanya (kontak) ke tengah & kanan */
+  justify-content: space-between; 
+  align-items: center;
   border-bottom: 1px solid rgba(255,255,255,0.1);
   padding-bottom: 20px;
 }
@@ -518,13 +520,18 @@
 
 .kontak-parent {
   display: flex;
-  gap: 100px;
+  /* Ini kuncinya: lebarnya dibuat fleksibel untuk mengisi ruang */
+  flex: 1; 
+  /* Memberi jarak antar tulisan Kontak */
+  justify-content: space-evenly; 
+  align-items: center;
 }
 
 .kontak {
   font-size: 16px;
   font-weight: 600;
   margin: 0;
+  /* Pastikan tidak ada margin-left/right yang aneh */
 }
 
 .contact-details {
