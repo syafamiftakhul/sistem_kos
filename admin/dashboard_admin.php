@@ -1,9 +1,7 @@
 <?php
 session_start();
-if ($row['akses'] == 1) {
-    // header("Location: admin/dashboard_admin.php"); // Matikan sementara
-    die("Login Sukses! Data Akses Lu adalah: " . $row['akses']);
-}
+echo "Isi Session Akses Lu adalah: " . ($_SESSION['akses'] ?? 'KOSONG'); 
+// header("Location: ../index.php"); // Matikan dulu baris ini!
 ?>
 <!DOCTYPE html>
 <html lang="id">
