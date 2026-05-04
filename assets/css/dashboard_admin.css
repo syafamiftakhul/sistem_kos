@@ -72,3 +72,45 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg-main); }
 .success { background: #E6F4EA; color: #1E8E3E; }
 .warning { background: #FEEFC3; color: #B05E00; }
 .info { background: #E8F0FE; color: #1967D2; }
+
+/* Sidebar Awal (Kecil) */
+.sidebar-admin {
+    width: 90px;
+    transition: width 0.3s ease; /* Biar smooth pas melebar */
+    overflow: hidden;
+}
+
+/* Sembunyikan Teks Secara Default */
+.menu-text, .logo-text {
+    display: none;
+    white-space: nowrap;
+    margin-left: 15px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Sidebar Saat Melebar (Class .expand ditambahin via JS) */
+.sidebar-admin.expand {
+    width: 240px; /* Lebar pas muncul tulisan */
+}
+
+/* Munculkan Teks Saat Sidebar Expand */
+.sidebar-admin.expand .menu-text, 
+.sidebar-admin.expand .logo-text {
+    display: inline-block;
+}
+
+/* Atur Nav Link biar sejajar pas lebar */
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 25px;
+    text-decoration: none;
+    color: #333;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    padding: 20px 25px;
+}
