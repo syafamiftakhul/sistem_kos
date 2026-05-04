@@ -1,12 +1,7 @@
 <?php
 session_start();
-
-if (!isset($_SESSION['akses']) || $_SESSION['akses'] != 1) {
-    
-    header("Location: ../login.php"); 
-    exit(); // Penting agar sisa kode di bawah tidak dijalankan
-}
-
+echo "Isi Session Akses Lu adalah: " . ($_SESSION['akses'] ?? 'KOSONG'); 
+// header("Location: ../index.php"); // Matikan dulu baris ini!
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -18,7 +13,6 @@ if (!isset($_SESSION['akses']) || $_SESSION['akses'] != 1) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    
 
     <div class="dashboard-wrapper">
         <aside class="sidebar-admin">
