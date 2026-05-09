@@ -93,7 +93,6 @@ $query_pengaduan = "SELECT pengaduan.*, customer.nama, tipe_kamar.nama_tipe
 
 $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
 
-echo "Isi Session Akses Lu adalah: " . ($_SESSION['akses'] ?? 'KOSONG'); 
 ?>
 <!DOCTYPE html>
 <html lang="id">
