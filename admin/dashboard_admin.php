@@ -1,5 +1,6 @@
 <?php
 session_start();
+<<<<<<< HEAD
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
@@ -92,6 +93,10 @@ $query_pengaduan = "SELECT pengaduan.*, customer.nama, tipe_kamar.nama_tipe
                     ORDER BY pengaduan.tgl_lapor DESC LIMIT 5";
 
 $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
+=======
+echo "Isi Session Akses Lu adalah: " . ($_SESSION['akses'] ?? 'KOSONG'); 
+// header("Location: ../index.php"); // Matikan dulu baris ini!
+>>>>>>> eeed14c12c9a9ae64573d7137c31e3e957f6e37c
 ?>
 <!DOCTYPE html>
 <html lang="id">
