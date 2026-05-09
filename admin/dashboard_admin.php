@@ -115,31 +115,31 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
             </div>
 
             <nav class="nav-icons">
-                <a href="#" class="nav-link active">
+                <a href="dashboard_admin.php" class="nav-link active">
                     <img src="../assets/img/home-icon.png" alt="Home">
                     <span class="menu-text">Dashboard</span>
                 </a>
-                <a href="#" class="nav-link">
+                <a href="kamar.php" class="nav-link">
                     <img src="../assets/img/key-icon.png" alt="Rooms">
                     <span class="menu-text">Kamar</span>
                 </a>
-                <a href="#" class="nav-link">
+                <a href="penghuni.php" class="nav-link">
                     <img src="../assets/img/user-icon.png" alt="Tenants">
                     <span class="menu-text">Penghuni</span>
                 </a>
-                <a href="#" class="nav-link">
+                <a href="pembayaran.php" class="nav-link">
                     <img src="../assets/img/payment-icon.png" alt="Payments">
                     <span class="menu-text">Pembayaran</span>
                 </a>
-                <a href="#" class="nav-link">
+                <a href="pengaduan.php" class="nav-link">
                     <img src="../assets/img/complaint-icon.png" alt="Complaints">
                     <span class="menu-text">Pengaduan</span>
                 </a>
-                <a href="#" class="nav-link">
+                <a href="laporan.php" class="nav-link">
                     <img src="../assets/img/report-icon.png" alt="Reports">
                     <span class="menu-text">Laporan</span>
                 </a>
-                <a href="#" class='nav-link'>
+                <a href="tipe_kamar.php" class='nav-link'>
                     <img src='../assets/img/type-icon.png' alt='Type'>
                     <span class='menu-text'>Tipe Kamar</span>
                 </a>
