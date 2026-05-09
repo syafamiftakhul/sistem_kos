@@ -1,6 +1,5 @@
 <?php
 session_start();
-<<<<<<< HEAD
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
