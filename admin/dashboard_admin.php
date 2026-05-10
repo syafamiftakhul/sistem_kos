@@ -131,6 +131,10 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
                     <img src="../assets/img/payment-icon.png" alt="Payments">
                     <span class="menu-text">Pembayaran</span>
                 </a>
+                <a href="pesanan.php" class="nav-link">
+                    <img src="../assets/img/order-icon.png" alt="Orders">
+                    <span class="menu-text">Pesanan</span>
+                </a>
                 <a href="pengaduan.php" class="nav-link">
                     <img src="../assets/img/complaint-icon.png" alt="Complaints">
                     <span class="menu-text">Pengaduan</span>
@@ -156,6 +160,8 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
                 <h1>DASHBOARD</h1>
                 <p>Ringkasan Manajemen Kos Anda</p>
             </header>
+
+            
 
             <section class="stats-row">
                 <!-- Total Kamar -->
@@ -312,7 +318,6 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
     </main>
     </div>
 
-    <!-- SCRIPT JS TARUH SEBELUM TUTUP BODY -->
     <script>
         const btnMenu = document.getElementById('btn-menu');
         const sidebar = document.getElementById('sidebar');
