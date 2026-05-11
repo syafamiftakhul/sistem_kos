@@ -152,40 +152,22 @@
       <div class="select-field">
         <div class="label">Tipe Kamar</div>
         <div class="description">Description</div>
-        <div class="select">
-          <div class="value">WiFi, AC, ..</div>
-          <img
-            class="chevron-down-icon"
-            alt=""
-            src="./public/Chevron-down.svg" />
-
-          <div class="options">
-            <div class="hello-world">Hello World</div>
-            <div class="option-2">Option 2</div>
-            <div class="option-2">Option 3</div>
-            <div class="option-2">Option 4</div>
-            <div class="option-2">Option 5</div>
-          </div>
-        </div>
+        <select class="select-dropdown">
+          <option value="">Semua Tipe Kamar</option>
+          <option value="deluxe_a1">Deluxe Room A1</option>
+          <option value="deluxe_a2">Deluxe Room A2</option>
+          <option value="standard">Standard Room</option>
+        </select>
       </div>
       <div class="select-field">
         <div class="label">Range Harga</div>
         <div class="description">Description</div>
-        <div class="select">
-          <div class="value">Rp 1.000.000</div>
-          <img
-            class="chevron-down-icon"
-            alt=""
-            src="./public/Chevron-down.svg" />
-
-          <div class="options">
-            <div class="hello-world">Hello World</div>
-            <div class="option-2">Option 2</div>
-            <div class="option-2">Option 3</div>
-            <div class="option-2">Option 4</div>
-            <div class="option-2">Option 5</div>
-          </div>
-        </div>
+        <select class="select-dropdown">
+          <option value="">Semua Harga</option>
+          <option value="under_500">&lt; Rp 500.000</option>
+          <option value="500_800">Rp 500.000 - Rp 800.000</option>
+          <option value="over_800">&gt; Rp 800.000</option>
+        </select>
       </div>
     </section>
     <main class="select-fields-parent">

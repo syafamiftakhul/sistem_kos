@@ -344,6 +344,28 @@
   display: none;
 }
 
+.select-dropdown {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px; /* fallback since var(--border-radius) may not be defined */
+  font-size: 14px;
+  background-color: var(--white);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+  outline: none;
+  color: var(--text-main, #333);
+}
+
+.select-dropdown:focus {
+  border-color: #83A6C4;
+}
+
 /* KAMAR TERSEDIA - Cards Container */
 .kamar-tersedia-parent {
   max-width: 1140px;
