@@ -1,0 +1,215 @@
+/* Ambil variabel dari Dashboard */
+:root {
+    --bg-main: #F3E3D0;
+    --accent-blue: #81A6C6;
+    --light-blue: #AACDDC;
+    --white: #FFFFFF;
+    --radius-panel: 25px;
+    --text-dark: #333333;
+    --text-muted: #888888;
+}
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--bg-main); 
+    margin: 0;
+}
+
+.dashboard-wrapper { display: flex; min-height: 100vh; }
+
+/* SIDEBAR GLOBAL */
+.sidebar-admin {
+    width: 90px;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+    padding: 25px 0;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+}
+
+.sidebar-admin.expand { width: 240px; }
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    text-decoration: none;
+    color: #333;
+}
+
+.nav-link.active {
+    background: #AACDDC;
+    border-radius: 15px;
+    margin: 0 15px;
+}
+
+.menu-text, .logo-text { display: none; margin-left: 15px; }
+.sidebar-admin.expand .menu-text, .sidebar-admin.expand .logo-text { display: inline-block; }
+
+.main-content { padding: 40px; flex-grow: 1; position: relative;}
+
+/* Header Styling */
+.header-title h1 { font-size: 32px; font-weight: 700; color: var(--text-dark); margin: 0; }
+.header-title p { color: var(--text-muted); font-size: 15px; margin-top: 5px; }
+
+/* Action Bar */
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 35px;
+    margin-bottom: 25px;
+}
+
+.search-box {
+    background: var(--white);
+    padding: 12px 20px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    width: 350px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    margin-left: 10px;
+    width: 100%;
+    font-size: 14px;
+}
+
+.btn-tambah {
+    background: var(--accent-blue);
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+/* Table Container */
+.table-container {
+    background: var(--white);
+    padding: 30px;
+    border-radius: var(--radius-panel);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.02);
+}
+
+.tipe-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tipe-table th {
+    text-align: left;
+    padding: 15px;
+    font-size: 14px;
+    color: var(--text-dark);
+    border-bottom: 2px solid #f9f9f9;
+    font-weight: 600;
+}
+
+.tipe-table td {
+    padding: 20px 15px;
+    font-size: 14px;
+    color: #555;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.modal-overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Modal Box */
+.modal-box {
+    background: var(--bg-main);
+    width: 450px;
+    padding: 30px;
+    border-radius: var(--radius-panel);
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-box h2 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    color: var(--text-dark);
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    background: white;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.btn-submit {
+    width: 100%;
+    background: var(--accent-blue);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 15px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+.btn-submit:hover {
+    background: #6e94b4;
+}
