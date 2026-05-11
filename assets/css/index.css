@@ -360,6 +360,8 @@
   cursor: pointer;
   outline: none;
   color: var(--text-main, #333);
+  font-family: inherit;
+  box-sizing: border-box;
 }
 
 .select-dropdown:focus {
