@@ -1,0 +1,106 @@
+:root {
+    --bg-main: #F3E3D0;
+    --accent-blue: #81A6C6;
+    --light-blue: #AACDDC;
+    --white: #FFFFFF;
+    --radius-panel: 35px;
+}
+
+/* Hilangkan margin default & pinggiran putih */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    min-height: 100vh; /* Full layar */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Tengah vertikal */
+    padding: 20px;
+}
+
+.main-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Kotak Gedein di sini */
+.form-container {
+    background: var(--white);
+    width: 100%;
+    max-width: 800px; /* Lebih lebar dari sebelumnya */
+    padding: 50px;
+    border-radius: 35px; /* Radius gede sesuai dashboard */
+    box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+}
+
+.form-header { margin-bottom: 40px; text-align: center; }
+.form-header h2 { font-size: 28px; color: #333; margin-bottom: 8px; }
+.form-header p { color: #888; font-size: 14px; }
+
+.input-group { margin-bottom: 25px; }
+.input-group label { 
+    display: block; 
+    font-size: 14px; 
+    font-weight: 600; 
+    margin-bottom: 10px; 
+    color: #444; 
+}
+
+.input-group input, 
+.input-group select, 
+.input-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #f0f0f0;
+    border-radius: 15px;
+    background: #fafafa;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus, .input-group select:focus {
+    border-color: var(--accent-blue);
+}
+
+.input-group textarea {
+    height: 120px;
+    resize: none;
+    background: #f1f1f1; /* Beda warna dikit buat tanda readonly */
+    color: #666;
+}
+
+.form-actions {
+    display: flex;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.btn-simpan {
+    flex: 2;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 18px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-simpan:hover { opacity: 0.9; transform: translateY(-2px); }
+
+.btn-batal {
+    flex: 1;
+    text-decoration: none;
+    text-align: center;
+    padding: 18px;
+    background: #eee;
+    color: #666;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 14px;
+}
