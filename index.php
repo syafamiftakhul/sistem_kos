@@ -39,7 +39,7 @@
           <h2 class="beranda" onclick="window.location.href='dashboard.php'" style="margin: 0; font-size: 1rem; cursor: pointer;">Dashboard Saya</h2>
           <a href="logout.php" class="logout-link" style="text-decoration: none; color: red;">Keluar</a>
         <?php else: ?>
-          <a href="login.php" class="button-masuk" style="text-decoration: none; border: 1px solid #007bff; padding: 8px 20px; border-radius: 5px;">Masuk</a>
+          <a href="login.php" class="button-masuk" style="text-decoration: none; border: 1px solid #81A6C6; padding: 8px 20px; border-radius: 5px;">Masuk</a>
           <a href="daftar.php" class="button-daftar" style="text-decoration: none; background: #81A6C6; color: white; padding: 8px 20px; border-radius: 5px;">Daftar</a>
         <?php endif; ?>
       </nav>
