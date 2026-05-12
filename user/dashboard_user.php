@@ -3,7 +3,6 @@ session_start();
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-
 if (!isset($_SESSION['id_user'])) {
     header("Location: ../login.php");
     exit;
@@ -11,12 +10,14 @@ if (!isset($_SESSION['id_user'])) {
 
 $id_user = $_SESSION['id_user'];
 
-$query = mysqli_query($koneksi,
-"SELECT * FROM customer WHERE id_user='$id_user'");
+$query = mysqli_query($koneksi, "SELECT * FROM customer WHERE id_user='$id_user'");
 
-$data = mysqli_fetch_assoc($query);
-
-$nama = $data['nama'];
+if ($query && mysqli_num_rows($query) > 0) {
+    $data = mysqli_fetch_assoc($query);
+    $nama = $data['nama'];
+} else {
+    $nama = "Penghuni Baru"; 
+}
 ?>
 
 <!DOCTYPE html>
