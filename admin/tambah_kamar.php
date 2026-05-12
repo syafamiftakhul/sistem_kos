@@ -17,10 +17,10 @@ $query_tipe = mysqli_query($koneksi, "SELECT * FROM tipe_kamar");
                 <p>Silakan isi data nomor kamar dan pilih tipe yang sesuai.</p>
             </div>
 
-            <form action="proses_tambah.php" method="POST">
+            <form action="proses_tambah_kamar.php" method="POST">
                 <div class="input-group">
                     <label>Nomor Kamar</label>
-                    <input type="text" name="id_kamar" placeholder="Contoh: B12" required>
+                    <input type="text" name="no_kamar" placeholder="Contoh: B12" required>
                 </div>
 
                 <div class="input-group">

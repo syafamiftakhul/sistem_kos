@@ -20,6 +20,6 @@ if (isset($_POST['simpan'])) {
         echo "Gagal simpan data: " . mysqli_error($koneksi);
     }
 } else {
-    header("Location: tipe_kamar.php");
+    header("Location: kamar.php");
 }
 ?>

@@ -8,6 +8,11 @@ $query_kamar = "SELECT kamar.*, tipe_kamar.nama_tipe, tipe_kamar.harga, customer
                 LEFT JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
                 LEFT JOIN customer ON kamar.no_ktp = customer.no_ktp";
 $result_kamar = mysqli_query($koneksi, $query_kamar);
+// Tambahin ini sementara buat ngecek
+if (!$result_kamar) {
+    die("Query Error: " . mysqli_error($koneksi));
+}
+echo "Jumlah data ditemukan: " . mysqli_num_rows($result_kamar);
 
 // Statistik untuk teks di bagian bawah tabel
 $total_kamar = mysqli_num_rows($result_kamar);
@@ -16,6 +21,8 @@ $query_stats = mysqli_query($koneksi, "SELECT
     SUM(CASE WHEN status_kamar = 'kosong' THEN 1 ELSE 0 END) as tersedia 
     FROM kamar");
 $stats = mysqli_fetch_assoc($query_stats);
+
+echo "Cek query: SELECT * FROM kamar";
 ?>
 <!DOCTYPE html>
 <html lang="id">
