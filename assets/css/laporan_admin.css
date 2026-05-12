@@ -4,17 +4,7 @@
     --accent-blue: #81A6C6;
     --light-blue: #AACDDC;
     --white: #FFFFFF;
-    --radius-panel: 25px;
-    --text-dark: #333333;
-    --text-muted: #888888;
-    --green: #4CAF50;
-    --red: #F44336;
-}
-
-body { 
-    font-family: 'Inter', sans-serif; 
-    background-color: var(--bg-main); 
-    margin: 0;
+    --radius-panel: 35px; 
 }
 
 .dashboard-wrapper { display: flex; min-height: 100vh; }
@@ -44,16 +34,10 @@ body {
     color: #333;
 }
 
-.nav-link.active {
-    background: #AACDDC;
-    border-radius: 15px;
-    margin: 0 15px;
-}
-
 .menu-text, .logo-text { display: none; margin-left: 15px; }
 .sidebar-admin.expand .menu-text, .sidebar-admin.expand .logo-text { display: inline-block; }
 
-.main-content { padding: 40px; flex-grow: 1; }
+
 
 /* Header Styling */
 .header-top {
