@@ -1,6 +1,8 @@
 <?php
 session_start();
 include '../koneksi.php';
+/** @var mysqli $koneksi */
+
 
 if (!isset($_SESSION['id_user'])) {
     header("Location: ../login.php");
@@ -58,15 +60,15 @@ $nama = $data['nama'];
                     </h2>
                 </div>
 
-                <?php if (isset($_SESSION['id_user']) && $_SESSION['akses'] == 1): ?>
+                <?php if (isset($_SESSION['id_user']) && $_SESSION['akses'] == 2): ?>
 
                     <h2 class="beranda"
-                        onclick="window.location.href='dashboard.php'"
+                        onclick="window.location.href='dashboard_user.php'"
                         style="margin: 0; font-size: 1rem; cursor: pointer;">
                         Dashboard Saya
                     </h2>
 
-                    <a href="logout.php"
+                    <a href="../logout.php"
                         style="text-decoration:none; color:red;">
                         Keluar
                     </a>

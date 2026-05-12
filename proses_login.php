@@ -22,11 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['akses'] = $row['akses'];
 
             // AKSES
-            if ($row['akses'] == 0) {
+            if ($row['akses'] == 1) {
 
                 // ADMIN
                 header("Location: admin/dashboard_admin.php");
-
             } else {
 
                 // USER
@@ -34,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             exit;
-
         } else {
 
             echo "<script>
@@ -42,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     window.location.href='login.php';
                   </script>";
         }
-
     } else {
 
         echo "<script>
@@ -51,4 +48,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               </script>";
     }
 }
-?>
