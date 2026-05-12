@@ -27,7 +27,7 @@ $nama = $data['nama'];
     <meta name="viewport" content="initial-scale=1, width=device-width" />
 
     <link rel="stylesheet" href="assets/css/global.css" />
-    <link rel="stylesheet" href="assets/css/dashboard_user.css" />
+    <link rel="stylesheet" href="assets/css/dashboard_admin.css" />
 
     <link
         rel="stylesheet"
