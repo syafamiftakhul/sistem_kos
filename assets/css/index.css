@@ -1,210 +1,134 @@
 /* HEADER */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-.header {
+.dashboard-user1-inner {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 66px;
-  background-color: white;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  z-index: 10;
+  background-color: var(--white);
+  padding: 15px 40px;
 }
 
-.header-container {
+.rectangle-parent {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1140px;
-  margin: 0 auto;
-  height: 100%;
-  padding: 0 20px;
 }
 
-.nav-brand {
+.frame-parent {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.icon-empty {
-  display: block;
-  background-color: #e2e8f0; /* Placeholder color */
-  border-radius: 4px;
-}
-
-.brand-logo .icon-empty {
+.key {
   width: 32px;
   height: 32px;
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.brand-title {
+.key .icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+.kos-aqsya-residence {
   font-size: 18px;
   font-weight: 700;
   color: var(--text-main);
   margin: 0;
 }
 
-.nav-links {
+.frame-group {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.nav-item {
+.beranda {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-main);
-  text-decoration: none;
-  cursor: pointer;
+  margin: 0;
 }
 
-.nav-profile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 16px;
-  border: 1.5px solid #83A6C4;
-  border-radius: 20px;
-  cursor: pointer;
-  background-color: white;
-  text-decoration: none;
-  gap: 8px;
-}
-
-.profile-icon {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.profile-name {
-  color: #83A6C4;
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.btn {
+.button-masuk, .button-daftar {
   padding: 8px 24px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
 }
 
-.btn-outline {
+.button-masuk {
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
   background: transparent;
 }
 
-.btn-primary {
+.button-daftar {
   background-color: var(--primary-color);
   color: var(--white);
   border: none;
 }
 
-/* HERO SECTION */
-.hero {
+.button-masuk-child, .button-daftar-child, .frame-item, .frame-inner, .rectangle-group .frame-inner {
+  display: none;
+}
+
+/* HERO IMAGE BACKGROUND */
+.tempimagettnyuq-1-parent {
   position: relative;
   width: 100%;
   height: 450px;
-  margin-top: 66px; /* Header space */
-  background-color: #555;
   overflow: hidden;
+  margin-top: 66px; /* Header space */
+  background-color: #555; /* Fallback */
 }
 
-.hero-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.hero-img {
+.tempimagettnyuq-1-icon {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: brightness(0.5);
 }
 
-.hero-overlay {
+.tempimagettnyuq-1-parent .frame-child {
+  display: none;
+}
+
+/* HERO CONTENT overlay */
+.dashboard-user1-child {
   position: absolute;
-  top: 0;
+  top: 180px;
   left: 0;
   width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* overlay shadow */
+  display: flex;
+  justify-content: center;
+  z-index: 5;
+  color: var(--white);
+  text-align: center;
 }
 
-.hero-content {
-  position: relative;
-  z-index: 10;
-  height: 100%;
+.frame-container {
+  max-width: 800px;
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  color: white;
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 20px;
   gap: 15px;
 }
 
-.hero-title {
+.kos-aqsya-residence2 {
   font-size: 40px;
   font-weight: 700;
   margin-bottom: 5px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.hero-location {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.icon-small {
-  width: 16px;
-  height: 16px;
-}
-
-.location-text {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.hero-rating {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  font-size: 14px;
-  background: rgba(0,0,0,0.3);
-  padding: 4px 12px;
-  border-radius: 20px;
-}
-
-.rating-score, .rating-reviews {
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.hero-desc {
-  margin-top: 15px;
-  font-size: 14px;
-  line-height: 1.6;
-  opacity: 0.95;
 }
 
 .location-on-parent {
@@ -342,30 +266,6 @@
 
 .options {
   display: none;
-}
-
-.select-dropdown {
-  width: 100%;
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px; /* fallback since var(--border-radius) may not be defined */
-  font-size: 14px;
-  background-color: var(--white);
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  cursor: pointer;
-  outline: none;
-  color: var(--text-main, #333);
-  font-family: inherit;
-  box-sizing: border-box;
-}
-
-.select-dropdown:focus {
-  border-color: #83A6C4;
 }
 
 /* KAMAR TERSEDIA - Cards Container */
@@ -588,27 +488,48 @@
   background-color: var(--dark-color);
   color: var(--white);
   padding: 50px 40px 20px;
+  position: relative;
 }
 
-/* container utama jadi 3 kolom */
+.information-child, .information-item {
+  display: none;
+}
+
 .footer-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 80px;
-  align-items: start;
-}
-
-/* kiri (judul + deskripsi) */
-.footer-info {
+  max-width: 1140px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 30px;
+}
+
+.footer-info {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 20px;
 }
 
 .kos-aqsya-residence3 {
   font-size: 20px;
   font-weight: 700;
   margin: 0;
+}
+
+.kontak-parent {
+  display: flex;
+  gap: 100px;
+}
+
+.kontak {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.contact-details {
+  display: flex;
+  justify-content: space-between;
 }
 
 .description-container {
@@ -621,50 +542,14 @@
   opacity: 0.8;
 }
 
-/* MATIIN struktur lama yang ganggu */
-.kontak-parent {
-  display: none;
-}
-
-/* bagian kanan (kontak & alamat jadi 2 kolom dalam grid utama) */
-.contact-details {
-  display: contents; /* biar ikut grid utama */
-}
-
-/* isi kontak & alamat */
 .contact-data {
-  display: contents;
-}
-
-/* kolom tengah (kontak) */
-.ibu-rum-081234456567::before {
-  content: "Kontak";
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  opacity: 1;
-}
-
-/* kolom kanan (alamat) */
-.jl-mangu-indah-no88-kaliwun-container::before {
-  content: "Alamat";
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  opacity: 1;
-}
-
-/* isi text */
-.ibu-rum-081234456567,
-.jl-mangu-indah-no88-kaliwun-container {
+  display: flex;
+  gap: 50px;
   font-size: 14px;
   line-height: 1.6;
   opacity: 0.8;
 }
 
-/* copyright */
 .kos-aqsya-residence-all-right-wrapper {
   text-align: center;
   margin-top: 40px;
@@ -677,36 +562,4 @@
   margin: 0;
   opacity: 0.6;
   font-weight: 400;
-}
-
-/* Style untuk kotak profil user di navbar */
-.user-profile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 16px;
-  border: 1.5px solid #83A6C4; /* Warna biru sesuai gambar */
-  border-radius: 20px;
-  cursor: pointer;
-  background-color: white;
-  text-decoration: none;
-}
-
-.user-profile svg {
-  margin-right: 8px;
-}
-
-.user-name-text {
-  color: #83A6C4;
-  font-weight: 600;
-  font-size: 13px;
-  font-family: 'Inter', sans-serif;
-}
-
-.logout-link {
-  margin-left: 12px;
-  font-size: 11px;
-  color: #ff6b6b;
-  text-decoration: none;
-  font-weight: bold;
 }
