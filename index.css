@@ -1,0 +1,565 @@
+/* HEADER */
+.dashboard-user1-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background-color: var(--white);
+  padding: 15px 40px;
+}
+
+.rectangle-parent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.frame-parent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.key {
+  width: 32px;
+  height: 32px;
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.key .icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+.kos-aqsya-residence {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.frame-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.beranda {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.button-masuk, .button-daftar {
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button-masuk {
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  background: transparent;
+}
+
+.button-daftar {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+}
+
+.button-masuk-child, .button-daftar-child, .frame-item, .frame-inner, .rectangle-group .frame-inner {
+  display: none;
+}
+
+/* HERO IMAGE BACKGROUND */
+.tempimagettnyuq-1-parent {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
+  margin-top: 66px; /* Header space */
+  background-color: #555; /* Fallback */
+}
+
+.tempimagettnyuq-1-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.5);
+}
+
+.tempimagettnyuq-1-parent .frame-child {
+  display: none;
+}
+
+/* HERO CONTENT overlay */
+.dashboard-user1-child {
+  position: absolute;
+  top: 180px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 5;
+  color: var(--white);
+  text-align: center;
+}
+
+.frame-container {
+  max-width: 800px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.kos-aqsya-residence2 {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.location-on-parent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.location-on-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+}
+
+.star-parent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 14px;
+  background: rgba(0,0,0,0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.star-icon {
+  width: 16px;
+  height: 16px;
+  /* Yellow star if possible, otherwise leave it */
+}
+
+.jl-mangu-indah, .h2, .ulasan {
+  margin: 0;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.kos-modern-dan {
+  margin-top: 15px;
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+/* FASILITAS KOS */
+.frame-section {
+  padding: 50px 40px;
+  background-color: var(--white);
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.fasilitas-kos {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.facility-icons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.fasilitas1, .fasilitas-2, .fasilitas-3, .fasilitas-4, .fasilitas-5, .fasilitas-6, .fasilitas-7 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background-color: var(--bg-light);
+  border-radius: var(--border-radius);
+  gap: 10px;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.fasilitas1-child {
+  display: none;
+}
+
+.wifi-icon, .coffee-icon, .icon2, .icon3, .icon4, .icon5 {
+  width: 28px;
+  height: 28px;
+  opacity: 0.6;
+}
+
+/* FILTERS */
+.select-fields-parent {
+  padding: 40px 40px 60px;
+  background-color: var(--bg-light);
+}
+
+.select-fields {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.select-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 250px;
+}
+
+.select-fields-child, .description {
+  display: none;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  background-color: var(--white);
+}
+
+.options {
+  display: none;
+}
+
+/* KAMAR TERSEDIA - Cards Container */
+.kamar-tersedia-parent {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.kamar-tersedia {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* Aligning images and content using Flexbox */
+.room-status {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 0; /* Remove gap between images and content */
+}
+
+.room-status > * {
+  flex: 1;
+  position: relative;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  height: 200px;
+  background: #eee;
+}
+
+.frame-parent4 {
+  display: flex;
+  gap: 20px;
+}
+
+.frame-parent4 > * {
+  flex: 1;
+  background: var(--white);
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid #eee;
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Image styling */
+.tempimagedb346c-1-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rectangle-icon, .star-icon-two-child {
+  display: none;
+}
+
+.status-containers-inner, .status-rows, .status-containers2 > div:nth-child(2) {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #8bc34a; /* Green for tersedia */
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tersedia {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.star-icon-two, .star-containers, .rectangle-parent3 {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: var(--white);
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.star-icon2, .star-icon4 {
+  width: 14px;
+  height: 14px;
+}
+
+.h22 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* Card content styling */
+.deluxe-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.room-info, .deluxe-info {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.deluxe-content-child {
+  display: none;
+}
+
+.deluxe-room-a1, .standard-room {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+  color: var(--text-main);
+}
+
+.single-1, .single-12 {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 15px;
+}
+
+.amenity-items-parent, .feature-info, .rectangle-parent5 {
+  display: flex;
+  gap: 10px;
+}
+
+.amenity-items, .feature-a-c, .rectangle-parent4, .rectangle-parent5 {
+  background: var(--bg-light);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--primary-color);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.amenity-items-child, .rectangle-div {
+  display: none;
+}
+
+.wifi, .bed {
+  margin: 0;
+  font-size: 12px;
+}
+
+/* Card Price section */
+.line-parent, .price-info {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+}
+
+.line-div, .room-types-item {
+  display: none;
+}
+
+.price-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.mulai-dari {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.price-range {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.rp-1000000-parent {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.rp-1000000, .rp-700000 {
+  font-size: 16px; /* slightly smaller to fit */
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.bulan {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.button-daftar2 {
+  background-color: #8da9c4; /* Muted blue */
+  color: var(--white);
+  padding: 8px 12px; /* reduced padding */
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.button-daftar-item {
+  display: none;
+}
+
+/* FOOTER */
+.information {
+  background-color: var(--dark-color);
+  color: var(--white);
+  padding: 50px 40px 20px;
+  position: relative;
+}
+
+.information-child, .information-item {
+  display: none;
+}
+
+.footer-content {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.footer-info {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 20px;
+}
+
+.kos-aqsya-residence3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.kontak-parent {
+  display: flex;
+  gap: 100px;
+}
+
+.kontak {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.contact-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.description-container {
+  max-width: 400px;
+}
+
+.kos-modern-dan2 {
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.contact-data {
+  display: flex;
+  gap: 50px;
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.kos-aqsya-residence-all-right-wrapper {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.kos-aqsya-residence4 {
+  font-size: 12px;
+  margin: 0;
+  opacity: 0.6;
+  font-weight: 400;
+}

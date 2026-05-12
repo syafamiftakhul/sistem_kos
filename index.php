@@ -36,7 +36,7 @@
         </div>
 
         <?php if (isset($_SESSION['id_user'])): ?>
-          <h2 class="beranda" onclick="window.location.href='user/dashboard_user.php'" style="margin: 0; font-size: 1rem; cursor: pointer;">Dashboard Saya</h2>
+          <h2 class="beranda" onclick="window.location.href='dashboard.php'" style="margin: 0; font-size: 1rem; cursor: pointer;">Dashboard Saya</h2>
           <a href="logout.php" class="logout-link" style="text-decoration: none; color: red;">Keluar</a>
         <?php else: ?>
           <a href="login.php" class="button-masuk" style="text-decoration: none; border: 1px solid #007bff; padding: 8px 20px; border-radius: 5px;">Masuk</a>
@@ -249,43 +249,33 @@
       </div>
       </div>
     </main>
-    <section class="information">
-      <div class="information-child"></div>
-      <section class="footer-content">
-        <div class="footer-info">
-          <h2 class="kos-aqsya-residence3">Kos Aqsya Residence</h2>
-          <div class="kontak-parent">
-            <h2 class="kontak">Kontak</h2>
-            <h2 class="kontak">Alamat</h2>
-          </div>
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-col footer-col-info">
+          <h2 class="footer-title">Kos Aqsya Residence</h2>
+          <p class="footer-desc">
+            Kos modern dan nyaman dengan fasilitas lengkap di lokasi
+            strategis Kaliwungu. Dekat dengan pusat bisnis, kampus, dan
+            transportasi umum. Lingkungan aman dan nyaman.
+          </p>
         </div>
-        <div class="contact-details">
-          <div class="description-container">
-            <div class="kos-modern-dan2">
-              Kos modern dan nyaman dengan fasilitas lengkap di lokasi
-              strategis Kaliwungu. Dekat dengan pusat bisnis, kampus, dan
-              transportasi umum. Lingkung...
-            </div>
-          </div>
-          <div class="contact-data">
-            <div class="ibu-rum-081234456567">
-              Ibu Rum<br />081234456567<br />kosbudherum@gmail.com
-            </div>
-            <div class="jl-mangu-indah-no88-kaliwun-container">
-              <div class="jl-mangu-indah2">
-                Jl. Mangu Indah No.88, Kaliwungu, Kab. Kendal
-              </div>
-            </div>
-          </div>
+        <div class="footer-col footer-col-contact">
+          <h2 class="footer-title">Kontak</h2>
+          <p class="footer-text">
+            Ibu Rum<br />081234456567<br />kosbudherum@gmail.com
+          </p>
         </div>
-      </section>
-      <div class="information-item"></div>
-      <div class="kos-aqsya-residence-all-right-wrapper">
-        <h2 class="kos-aqsya-residence4">
-          © 2026 Kos Aqsya Residence. All rights reserved.
-        </h2>
+        <div class="footer-col footer-col-address">
+          <h2 class="footer-title">Alamat</h2>
+          <p class="footer-text">
+            Jl. Mangu Indah No.88, Kaliwungu, Kab. Kendal<br />Jawa Tengah, 51372
+          </p>
+        </div>
       </div>
-    </section>
+      <div class="footer-copyright">
+        <p>© 2026 Kos Aqsya Residence. All rights reserved.</p>
+      </div>
+    </footer>
     </div>
 </body>
 
