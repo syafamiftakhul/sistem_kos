@@ -1,30 +1,20 @@
 <?php
 session_start();
 include '../koneksi.php';
-/** @var mysqli $koneksi */
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+if (!isset($_SESSION['id_user'])) {
+    header("Location: ../login.php");
+    exit;
+}
+
+$id_user = $_SESSION['id_user'];
 
 $query = mysqli_query($koneksi,
-"SELECT * FROM user WHERE email='$email' AND password='$password'");
+"SELECT * FROM customer WHERE id_user='$id_user'");
 
-if(mysqli_num_rows($query) > 0){
+$data = mysqli_fetch_assoc($query);
 
-    $data = mysqli_fetch_assoc($query);
-
-    $_SESSION['id_user'] = $data['id_user'];
-    $_SESSION['akses'] = $data['akses'];
-
-    if($data['akses'] == 1){
-        header("Location: dashboard_user.php");
-    } else {
-        header("Location: dashboard_admin.php");
-    }
-
-} else {
-    echo "Login gagal";
-}
+$nama = $data['nama'];
 ?>
 
 <!DOCTYPE html>
