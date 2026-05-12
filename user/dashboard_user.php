@@ -16,7 +16,7 @@ if ($query && mysqli_num_rows($query) > 0) {
     $data = mysqli_fetch_assoc($query);
     $nama = $data['nama'];
 } else {
-    $nama = "Penghuni Baru"; 
+    $nama = "Penghuni Baru Ya"; 
 }
 ?>
 
