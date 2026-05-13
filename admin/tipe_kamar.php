@@ -1,29 +1,29 @@
 <?php
 session_start();
-// Uncomment jika butuh proteksi session:
-// if (!isset($_SESSION['login'])) {
-//     header("Location: ../login.php");
-//     exit;
-// }
+include "../koneksi.php";
+/** @var mysqli $koneksi */
+
+$query_tipe = mysqli_query($koneksi, "SELECT * FROM tipe_kamar");
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Tipe Kamar - Aqsya Kos</title>
+    <link rel="stylesheet" href="../assets/css/dashboard_admin.css">
     <link rel="stylesheet" href="../assets/css/tipe_kamar_admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <div class="dashboard-wrapper">
         <aside class="sidebar-admin" id="sidebar">
             <div class="sidebar-logo">
                 <img src="../assets/img/logo-menu.png" alt="Menu" id="btn-menu" style="cursor: pointer;">
-                <div class="logo-text" style="margin-left: 10px; display: none;">
-                    <div style="font-weight: bold; font-size: 16px; color: #333;">Aqsya Kos</div>
-                    <div style="font-size: 11px; color: #888;">Manajemen Kos</div>
-                </div>
+                <span class="logo-text" style="font-weight: bold; margin-left: 10px;">Aqsya Kos</span>
             </div>
 
             <nav class="nav-icons">
@@ -55,14 +55,15 @@ session_start();
                     <img src="../assets/img/report-icon.png" alt="Reports">
                     <span class="menu-text">Laporan</span>
                 </a>
-                <a href="tipe_kamar.php" class="nav-link active">
-                    <img src="../assets/img/type-icon.png" alt="Type">
-                    <span class="menu-text">Tipe Kamar</span>
+                <a href="tipe_kamar.php" class='nav-link'>
+                    <img src='../assets/img/type-icon.png' alt='Type'>
+                    <span class='menu-text'>Tipe Kamar</span>
                 </a>
                 <a href="logout.php" class="nav-link">
                     <img src="../assets/img/logout-icon.png" alt="Logout">
                     <span class="menu-text">Logout</span>
                 </a>
+                <!-- ... icon menu lainnya ... -->
             </nav>
         </aside>
 
@@ -77,9 +78,9 @@ session_start();
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="cari nama, email atau role...">
                 </div>
-                <button class="btn-tambah" id="btn-tambah-tipe">
+                <a href="tambah_tipe_kamar.php" class="btn-tambah" id="btn-tambah-tipe">
                     <i class="fas fa-plus"></i> Tambah Tipe Kamar
-                </button>
+                </a>
             </div>
 
             <!-- Table Container -->
@@ -91,73 +92,86 @@ session_start();
                             <th>Nama Tipe</th>
                             <th>Fasilitas</th>
                             <th>Harga</th>
+                            <th style="text-align: center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td colspan="4" style="text-align: center; color: #888;">Belum ada data</td>
-                        </tr>
+                        <?php
+                        if (mysqli_num_rows($query_tipe) > 0) {
+                            while ($row = mysqli_fetch_assoc($query_tipe)) {
+                        ?>
+                                <tr>
+                                    <td style="vertical-align: middle;"><strong>#<?= $row['id_tipe']; ?></strong></td>
+                                    <td style="vertical-align: middle;"><?= $row['nama_tipe']; ?></td>
+                                    <td style="vertical-align: middle;">
+                                        <span style="font-size: 13px; color: #666; line-height: 1.5;">
+                                            <?= nl2br($row['fasilitas'] ?? '-'); ?>
+                                        </span>
+                                    </td>
+                                    <td style="vertical-align: middle; font-weight: bold;">
+                                        Rp <?= number_format($row['harga'], 0, ',', '.'); ?>
+                                    </td>
+                                    <td style="vertical-align: middle; text-align: center;">
+                                        <div style="display: flex; gap: 15px; justify-content: center; align-items: center;">
+                                            <a href="edit_tipe.php?id=<?= $row['id_tipe']; ?>" style="color: #81A6C6;">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="hapus_tipe.php?id=<?= $row['id_tipe']; ?>" style="color: #F44336;" onclick="return confirm('Yakin mau hapus tipe ini?')">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                        <?php
+                            }
+                        } else {
+                            echo '<tr><td colspan="5" style="text-align: center; color: #888; padding: 20px;">Belum ada data</td></tr>';
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
-            
-            <!-- Modal Overlay -->
-            <div class="modal-overlay" id="modal-tipe">
-                <div class="modal-box">
-                    <i class="fas fa-times close-btn" id="close-modal"></i>
-                    <h2>Tambah Tipe</h2>
-                    <form action="proses_tambah_tipe.php" method="POST">
-                        <div class="form-group">
-                            <label>Id Tipe</label>
-                            <input type="text" name="id_tipe" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Nama Tipe</label>
-                            <input type="text" name="nama_tipe" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Fasilitas</label>
-                            <input type="text" name="fasilitas" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Harga</label>
-                            <input type="number" name="harga" required>
-                        </div>
-                        <button type="submit" class="btn-submit">Simpan</button>
-                    </form>
-                </div>
+            </tbody>
+            </table>
+        </div>
+
+        <!-- Modal Overlay -->
+        <div class="modal-overlay" id="modal-tipe">
+            <div class="modal-box">
+                <i class="fas fa-times close-btn" id="close-modal"></i>
+                <h2>Tambah Tipe</h2>
+                <form action="proses_tambah_tipe.php" method="POST">
+                    <div class="form-group">
+                        <label>Id Tipe</label>
+                        <input type="text" name="id_tipe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Tipe</label>
+                        <input type="text" name="nama_tipe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fasilitas</label>
+                        <input type="text" name="fasilitas" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Harga</label>
+                        <input type="number" name="harga" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Simpan</button>
+                </form>
             </div>
         </div>
     </div>
+    </div>
 
     <script>
-        // Sidebar Toggle
         const btnMenu = document.getElementById('btn-menu');
         const sidebar = document.getElementById('sidebar');
 
         btnMenu.onclick = function() {
             sidebar.classList.toggle('expand');
         }
-
-        // Modal Logic
-        const btnTambah = document.getElementById('btn-tambah-tipe');
-        const modalTipe = document.getElementById('modal-tipe');
-        const closeModal = document.getElementById('close-modal');
-
-        btnTambah.onclick = function() {
-            modalTipe.classList.add('active');
-        }
-
-        closeModal.onclick = function() {
-            modalTipe.classList.remove('active');
-        }
-
-        // Tutup modal kalau klik di luar box
-        window.onclick = function(event) {
-            if (event.target == modalTipe) {
-                modalTipe.classList.remove('active');
-            }
-        }
     </script>
 </body>
+
 </html>
