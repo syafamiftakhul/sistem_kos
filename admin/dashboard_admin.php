@@ -17,13 +17,13 @@ $total_kamar = mysqli_fetch_assoc($query_kamar)['total'] ?? 0;
 $query_stat_kamar = mysqli_query($koneksi, "
     SELECT 
         SUM(CASE WHEN status_kamar = 'terisi' THEN 1 ELSE 0 END) as terisi,
-        SUM(CASE WHEN status_kamar = 'kosong' THEN 1 ELSE 0 END) as kosong
+        SUM(CASE WHEN status_kamar = 'tersedia' THEN 1 ELSE 0 END) as kosong 
     FROM kamar");
 $stat_kamar   = mysqli_fetch_assoc($query_stat_kamar);
 $total_terisi = $stat_kamar['terisi'] ?? 0;
 $total_kosong = $stat_kamar['kosong'] ?? 0;
 
-$query_user = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM customer");
+$query_user = mysqli_query($koneksi, "SELECT COUNT(DISTINCT no_ktp) as total FROM kamar WHERE no_ktp IS NOT NULL AND no_ktp != ''");
 $total_user = mysqli_fetch_assoc($query_user)['total'] ?? 0;
 
 $query_user_baru = mysqli_query($koneksi, "
