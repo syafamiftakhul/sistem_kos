@@ -1,4 +1,33 @@
-<?php session_start(); ?>
+<?php 
+session_start(); 
+include 'koneksi.php';
+
+$nama = "User";
+if (isset($_SESSION['id_user'])) {
+    $id_user = $_SESSION['id_user'];
+    $akses = $_SESSION['akses'];
+    
+    $query_user = mysqli_query($koneksi, "SELECT email FROM user WHERE id_user='$id_user'");
+    if ($query_user && mysqli_num_rows($query_user) > 0) {
+        $data_user = mysqli_fetch_assoc($query_user);
+        $nama = $data_user['email'];
+    }
+    
+    if ($akses == 2) {
+        $query = mysqli_query($koneksi, "SELECT * FROM customer WHERE id_user='$id_user'");
+        if ($query && mysqli_num_rows($query) > 0) {
+            $data = mysqli_fetch_assoc($query);
+            $nama = $data['nama'];
+        }
+    } else if ($akses == 1) {
+        $query = mysqli_query($koneksi, "SELECT * FROM admin WHERE id_user='$id_user'");
+        if ($query && mysqli_num_rows($query) > 0) {
+            $data = mysqli_fetch_assoc($query);
+            $nama = $data['nama'];
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html>
 
@@ -7,7 +36,7 @@
   <meta name="viewport" content="initial-scale=1, width=device-width" />
 
   <link rel="stylesheet" href="assets/css/global.css" />
-  <link rel="stylesheet" href="assets/css/index.css?v=2" />
+  <link rel="stylesheet" href="assets/css/index.css?v=3" />
 
   <link
     rel="stylesheet"
@@ -36,11 +65,23 @@
         </div>
 
         <?php if (isset($_SESSION['id_user'])): ?>
-          <h2 class="beranda" onclick="window.location.href='dashboard.php'" style="margin: 0; font-size: 1rem; cursor: pointer;">Dashboard Saya</h2>
-          <a href="logout.php" class="logout-link" style="text-decoration: none; color: red;">Keluar</a>
+          <?php if ($_SESSION['akses'] == 1): ?>
+             <h2 class="beranda" onclick="window.location.href='admin/dashboard_admin.php'" style="margin: 0; font-size: 1rem; cursor: pointer;">Dashboard Admin</h2>
+          <?php else: ?>
+             <h2 class="beranda" onclick="window.location.href='user/dashboard_user.php'" style="margin: 0; font-size: 1rem; cursor: pointer;">Dashboard Saya</h2>
+          <?php endif; ?>
+          
+          <div style="display: flex; align-items: center; gap: 8px; border: 1px solid #81A6C6; padding: 6px 15px; border-radius: 20px; color: #81A6C6; font-weight: 500;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+              </svg>
+              <span><?php echo htmlspecialchars($nama); ?></span>
+          </div>
+          <a href="logout.php" class="logout-link" style="text-decoration: none; color: red; font-size: 0.9rem;">Keluar</a>
         <?php else: ?>
-          <a href="login.php" class="button-masuk" style="text-decoration: none; border: 1px solid #81A6C6; padding: 8px 20px; border-radius: 5px;">Masuk</a>
-          <a href="daftar.php" class="button-daftar" style="text-decoration: none; background: #81A6C6; color: white; padding: 8px 20px; border-radius: 5px;">Daftar</a>
+          <a href="login.php" class="button-masuk" style="text-decoration: none; border: 1px solid #81A6C6; color: #81A6C6; padding: 8px 20px; border-radius: 5px; font-weight: 500;">Masuk</a>
+          <a href="daftar.php" class="button-daftar" style="text-decoration: none; background: #81A6C6; color: white; padding: 8px 20px; border-radius: 5px; font-weight: 500;">Daftar</a>
         <?php endif; ?>
       </nav>
     </header>

@@ -16,7 +16,13 @@ if ($query && mysqli_num_rows($query) > 0) {
     $data = mysqli_fetch_assoc($query);
     $nama = $data['nama'];
 } else {
-    $nama = "Penghuni Baru Ya"; 
+    $query_user = mysqli_query($koneksi, "SELECT email FROM user WHERE id_user='$id_user'");
+    if ($query_user && mysqli_num_rows($query_user) > 0) {
+        $data_user = mysqli_fetch_assoc($query_user);
+        $nama = $data_user['email'];
+    } else {
+        $nama = "User"; 
+    }
 }
 ?>
 
@@ -27,8 +33,8 @@ if ($query && mysqli_num_rows($query) > 0) {
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
 
-    <link rel="stylesheet" href="assets/css/global.css" />
-    <link rel="stylesheet" href="assets/css/dashboard_admin.css" />
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/index.css?v=3" />
 
     <link
         rel="stylesheet"
@@ -44,8 +50,8 @@ if ($query && mysqli_num_rows($query) > 0) {
 
             <div class="frame-parent" style="display: flex; align-items: center; gap: 15px;">
                 <div class="key">
-                    <a href="index.php">
-                        <img class="icon" src="assets/img/key.png" alt="Logo Kos" style="width: 25px; height: 25px; object-fit: contain;">
+                    <a href="../index.php">
+                        <img class="icon" src="../assets/img/key.png" alt="Logo Kos" style="width: 25px; height: 25px; object-fit: contain;">
                     </a>
                 </div>
                 <h3 class="kos-aqsya-residence" style="margin: 0; font-size: 1.2rem; font-weight: 700;">Kos Aqsya Residence</h3>
@@ -55,7 +61,7 @@ if ($query && mysqli_num_rows($query) > 0) {
 
                 <div class="beranda-wrapper">
                     <h2 class="beranda"
-                        onclick="window.location.href='index.php'"
+                        onclick="window.location.href='../index.php'"
                         style="margin: 0; font-size: 1rem; cursor: pointer;">
                         Beranda
                     </h2>
@@ -69,22 +75,30 @@ if ($query && mysqli_num_rows($query) > 0) {
                         Dashboard Saya
                     </h2>
 
+                    <div style="display: flex; align-items: center; gap: 8px; border: 1px solid #81A6C6; padding: 6px 15px; border-radius: 20px; color: #81A6C6; font-weight: 500;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                        </svg>
+                        <span><?php echo htmlspecialchars($nama); ?></span>
+                    </div>
+
                     <a href="../logout.php"
-                        style="text-decoration:none; color:red;">
+                        style="text-decoration:none; color:red; font-size: 0.9rem;">
                         Keluar
                     </a>
 
                 <?php else: ?>
 
-                    <a href="login.php"
+                    <a href="../login.php"
                         class="button-masuk"
-                        style="text-decoration:none; border:1px solid #007bff; padding:8px 20px; border-radius:5px;">
+                        style="text-decoration:none; border:1px solid #81A6C6; color:#81A6C6; padding:8px 20px; border-radius:5px; font-weight: 500;">
                         Masuk
                     </a>
 
-                    <a href="daftar.php"
+                    <a href="../daftar.php"
                         class="button-daftar"
-                        style="text-decoration:none; background:#81A6C6; color:white; padding:8px 20px; border-radius:5px;">
+                        style="text-decoration:none; background:#81A6C6; color:white; padding:8px 20px; border-radius:5px; font-weight: 500;">
                         Daftar
                     </a>
 
@@ -96,7 +110,7 @@ if ($query && mysqli_num_rows($query) > 0) {
 
     <div class="dashboard-user1">
         <div class="hero-section" style="position: relative; width: 100%; height: 500px; overflow: hidden; margin: 0;">
-            <img src="assets/img/bedroom1.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+            <img src="../assets/img/bedroom1.jpg" style="width: 100%; height: 100%; object-fit: cover;">
 
             <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"></div>
 
@@ -104,7 +118,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                 <h1 style="font-size: 48px; margin: 0; font-weight: 700;">Kos Aqsya Residence</h1>
 
                 <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 15px;">
-                    <img src="assets/img/map.png" style="width: 20px; filter: brightness(0) invert(1);">
+                    <img src="../assets/img/map.png" style="width: 20px; filter: brightness(0) invert(1);">
                     <span style="font-size: 18px;">Jl. Mangu Indah No.88, Kaliwungu, Kab. Kendal</span>
                 </div>
 
@@ -129,7 +143,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                     <div class="fasilitas1">
                         <div class="fasilitas1-child"></div>
                         <div class="icon-rows">
-                            <img class="wifi-icon" alt="" src="assets/img/wifi.png" />
+                            <img class="wifi-icon" alt="" src="../assets/img/wifi.png" />
                         </div>
                         <div class="wifi-100mbps">WiFi<br />100Mbps</div>
                     </div>
@@ -141,7 +155,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                             <img
                                 class="wifi-icon"
                                 alt=""
-                                src="assets/img/car.png" />
+                                src="../assets/img/car.png" />
                         </div>
                         <div class="parkir-motor">Parkir Motor<br />& Mobil</div>
                     </div>
@@ -149,7 +163,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                 <div class="fasilitas-3">
                     <div class="fasilitas1-child"></div>
                     <div class="coffee-wrapper">
-                        <img class="coffee-icon" alt="" src="assets/img/coffee.img" />
+                        <img class="coffee-icon" alt="" src="../assets/img/coffee.img" />
                     </div>
                     <div class="parkir-motor">Dapur<br />Bersama</div>
                 </div>
@@ -157,7 +171,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                     <div class="fasilitas1-child"></div>
                     <div class="shield-wrapper">
                         <div class="shield">
-                            <img class="icon2" alt="" src="assets/img/cctv.png" />
+                            <img class="icon2" alt="" src="../assets/img/cctv.png" />
                         </div>
                     </div>
                     <h3 class="cctv">CCTV</h3>
@@ -166,7 +180,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                     <div class="fasilitas1-child"></div>
                     <div class="message-circle-wrapper">
                         <div class="shield">
-                            <img class="icon3" alt="" src="assets/img/couch.png" />
+                            <img class="icon3" alt="" src="../assets/img/couch.png" />
                         </div>
                     </div>
                     <h3 class="cctv">Ruang Tamu</h3>
@@ -174,7 +188,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                 <div class="fasilitas-6">
                     <div class="fasilitas1-child"></div>
                     <div class="shield">
-                        <img class="icon4" alt="" src="assets/img/ac.png" />
+                        <img class="icon4" alt="" src="../assets/img/ac.png" />
                     </div>
                     <div class="ac-wrapper">
                         <h3 class="ac">AC</h3>
@@ -185,7 +199,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                         <div class="fasilitas1-child"></div>
                         <div class="users-wrapper">
                             <div class="shield">
-                                <img class="icon5" alt="" src="assets/img/shower.png" />
+                                <img class="icon5" alt="" src="../assets/img/shower.png" />
                             </div>
                         </div>
                         <div class="parkir-motor">Kamar Mandi<br />Bersama</div>
@@ -225,7 +239,7 @@ if ($query && mysqli_num_rows($query) > 0) {
 
                 <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
                     <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-                        <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room 1" style="width: 100%; height: 100%; object-fit: cover;" />
+                        <img class="tempimagedb346c-1-icon" src="../assets/img/bedroom1.jpg" alt="Room 1" style="width: 100%; height: 100%; object-fit: cover;" />
                         <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: #8bc34a; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
                             <h3 class="tersedia" style="margin:0;">Tersedia</h3>
                         </div>
@@ -249,7 +263,7 @@ if ($query && mysqli_num_rows($query) > 0) {
 
                 <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
                     <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-                        <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room 2" style="width: 100%; height: 100%; object-fit: cover;" />
+                        <img class="tempimagedb346c-1-icon" src="../assets/img/bedroom1.jpg" alt="Room 2" style="width: 100%; height: 100%; object-fit: cover;" />
                         <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: #8bc34a; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
                             <h3 class="tersedia" style="margin:0;">Tersedia</h3>
                         </div>
@@ -273,7 +287,7 @@ if ($query && mysqli_num_rows($query) > 0) {
 
                 <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
                     <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-                        <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room 3" style="width: 100%; height: 100%; object-fit: cover;" />
+                        <img class="tempimagedb346c-1-icon" src="../assets/img/bedroom1.jpg" alt="Room 3" style="width: 100%; height: 100%; object-fit: cover;" />
                         <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: #8bc34a; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
                             <h3 class="tersedia" style="margin:0;">Tersedia</h3>
                         </div>
