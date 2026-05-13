@@ -70,7 +70,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                 <?php if (isset($_SESSION['id_user']) && $_SESSION['akses'] == 2): ?>
 
                     <h2 class="beranda"
-                        onclick="window.location.href='dashboard_user.php'"
+                        onclick="window.location.href='dashboard_private_user.php'"
                         style="margin: 0; font-size: 1rem; cursor: pointer;">
                         Dashboard Saya
                     </h2>

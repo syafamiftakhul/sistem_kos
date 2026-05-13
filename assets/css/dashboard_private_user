@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary: #81A6C6;
+    --soft-purple: #9176FF;
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --bg-light: #f8fafc;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    color: var(--text-dark);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Header & Logo */
+.navbar-custom {
+    padding: 15px 5%;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+}
+
+.logo-icon {
+    background: var(--primary);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.logo-name {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 18px;
+    letter-spacing: -0.5px;
+}
+
+/* Layout */
+.main-content {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.btn-back {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.dashboard-title { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+.dashboard-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 40px; }
+
+h3 { font-size: 18px; font-weight: 700; margin: 30px 0 15px 0; }
+
+/* Pesanan Card */
+.card-booking {
+    border: 2px solid var(--soft-purple);
+    border-radius: 16px;
+    padding: 24px;
+    background: white;
+    box-shadow: 0 10px 25px -5px rgba(145, 118, 255, 0.1);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.booking-id { font-weight: 700; font-size: 16px; display: block; }
+.booking-date { color: var(--text-muted); font-size: 13px; margin-top: 4px; display: block; }
+
+.btn-confirm {
+    background: #E2EAD3;
+    color: #5F7461;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.grid-info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-box label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+.info-box span { font-weight: 700; font-size: 13px; }
+
+.btn-complaint {
+    background: #F1F5F9;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* Empty State */
+.empty-text {
+    color: #94A3B8;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 20px 0;
+}
