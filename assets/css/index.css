@@ -484,82 +484,57 @@
 }
 
 /* FOOTER */
-.information {
+.footer {
   background-color: var(--dark-color);
   color: var(--white);
   padding: 50px 40px 20px;
-  position: relative;
+  font-family: 'Inter', sans-serif;
+  margin-top: auto;
 }
 
-.information-child, .information-item {
-  display: none;
-}
-
-.footer-content {
+.footer-container {
   max-width: 1140px;
   margin: 0 auto;
   display: flex;
-  flex-direction: column;
-  gap: 30px;
+  justify-content: flex-start;
+  gap: 80px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.footer-info {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding-bottom: 20px;
+.footer-col-info {
+  max-width: 350px;
 }
 
-.kos-aqsya-residence3 {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0;
-}
-
-.kontak-parent {
-  display: flex;
-  gap: 100px;
-}
-
-.kontak {
-  font-size: 16px;
+.footer-title {
+  font-size: 18px;
   font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.footer-desc, .footer-text {
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.8;
   margin: 0;
 }
 
-.contact-details {
-  display: flex;
-  justify-content: space-between;
-}
-
-.description-container {
-  max-width: 400px;
-}
-
-.kos-modern-dan2 {
-  font-size: 14px;
-  line-height: 1.6;
-  opacity: 0.8;
-}
-
-.contact-data {
-  display: flex;
-  gap: 50px;
-  font-size: 14px;
-  line-height: 1.6;
-  opacity: 0.8;
-}
-
-.kos-aqsya-residence-all-right-wrapper {
+.footer-copyright {
   text-align: center;
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255,255,255,0.1);
+  margin-top: 20px;
 }
 
-.kos-aqsya-residence4 {
-  font-size: 12px;
+.footer-copyright p {
+  font-size: 14px;
+  opacity: 0.8;
   margin: 0;
-  opacity: 0.6;
-  font-weight: 400;
+}
+
+/* Responsiveness for footer */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    gap: 30px;
+  }
 }
