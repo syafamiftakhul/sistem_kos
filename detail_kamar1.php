@@ -10,7 +10,7 @@ if ($query && mysqli_num_rows($query) > 0) {
     $id_tipe = $data['id_tipe']; // Ambil ID-nya buat dipake di tombol nanti
 } else {
     // Kalau ini muncul, berarti tabel tipe_kamar lu beneran kosong atau koneksi salah
-    $data = ['nama_tipe' => 'DB Kosong', 'harga' => 0];
+    $data = ['nama_tipe' => 'Deluxe Room A1', 'harga' => 0];
     $id_tipe = 0;
 }
 ?>
