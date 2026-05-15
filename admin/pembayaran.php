@@ -2,24 +2,48 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-// Ambil filter status dari URL (default 'Semua')
-$filter = isset($_GET['status']) ? $_GET['status'] : 'Semua';
+// 1. Ambil filter status dari URL
+$filter = isset($_GET['status']) ? $_GET['status'] : 'semua';
 
-// Query dasar JOIN antara Transaksi dan Customer sesuai ERD
-$query = "SELECT t.*, c.nama 
-          FROM transaksi t 
-          JOIN customer c ON t.no_ktp = c.no_ktp";
+// QUERY JOIN: Kita ambil data dari Pesanan sebagai pusatnya
+$query = "SELECT p.*, c.nama, k.nomor_kamar, 
+                 p.status_pesanan as status_transaksi, 
+                 tk.harga as jml_bayar
+          FROM pesanan p
+          JOIN customer c ON p.no_ktp = c.no_ktp
+          JOIN kamar k ON p.id_kamar = k.id_kamar
+          JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe";
 
-if ($filter != 'Semua') {
-    $query .= " WHERE t.status_transaksi = '$filter'";
+if ($filter != 'semua') {
+    $query .= " WHERE p.status_pesanan = '$filter'";
 }
 
 $result = mysqli_query($koneksi, $query);
 
-// Hitung Ringkasan Income (Berdasarkan status di DB lu)
-$total_lunas = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'lunas'"))['total'] ?? 0;
-$total_pending = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'pending'"))['total'] ?? 0;
-$total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'terlambat'"))['total'] ?? 0;
+// Ambil filter status dan paksa jadi huruf kecil
+$filter = isset($_GET['status']) ? strtolower($_GET['status']) : 'semua';
+
+
+
+// 3. Hitung Ringkasan Income dari tabel PESANAN (karena data transaksi lu masih kosong)
+// Kita ambil harga dari tipe_kamar berdasarkan pesanan yang lunas
+$q_lunas = "SELECT SUM(tk.harga) as total 
+            FROM pesanan p
+            JOIN kamar k ON p.id_kamar = k.id_kamar
+            JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe
+            WHERE p.status_pesanan = 'lunas'";
+
+$res_lunas = mysqli_query($koneksi, $q_lunas);
+$total_lunas = mysqli_fetch_assoc($res_lunas)['total'] ?? 0;
+
+// Hitung Pending
+$q_pending = "SELECT SUM(tk.harga) as total FROM pesanan p 
+              JOIN kamar k ON p.id_kamar = k.id_kamar 
+              JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe 
+              WHERE p.status_pesanan = 'pending'";
+$total_pending = mysqli_fetch_assoc(mysqli_query($koneksi, $q_pending))['total'] ?? 0;
+
+$total_terlambat = 0; // Set default dulu
 ?>
 
 <!DOCTYPE html>
@@ -98,10 +122,10 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
                 </div>
 
                 <div class="category-filter">
-                    <a href="?status=Semua" class="cat-item <?= $filter == 'Semua' ? 'active' : '' ?>">Semua</a>
-                    <a href="?status=Lunas" class="cat-item <?= $filter == 'Lunas' ? 'active' : '' ?>">Lunas</a>
-                    <a href="?status=Pending" class="cat-item <?= $filter == 'Pending' ? 'active' : '' ?>">Pending</a>
-                    <a href="?status=Terlambat" class="cat-item <?= $filter == 'Terlambat' ? 'active' : '' ?>">Terlambat</a>
+                    <a href="?status=Semua" class="cat-item <?= $filter == 'semua' ? 'active' : '' ?>">Semua</a>
+                    <a href="?status=Lunas" class="cat-item <?= $filter == 'lunas' ? 'active' : '' ?>">Lunas</a>
+                    <a href="?status=Pending" class="cat-item <?= $filter == 'pending' ? 'active' : '' ?>">Pending</a>
+                    <a href="?status=Terlambat" class="cat-item <?= $filter == 'batal' ? 'active' : '' ?>">Terlambat</a>
                 </div>
 
                 <div class="table-container">
@@ -147,7 +171,7 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
                 <div class="income-summary">
                     <div class="income-card lunas">
                         <span class="label">Total Lunas</span>
-                        <h3>Rp <?= number_format($total_lunas / 1000000, 1) ?> jt</h3>
+                        <h3>Rp <?= number_format($total_lunas, 0, ',', '.') ?></h3>
                     </div>
                     <div class="income-card pending">
                         <span class="label">Total Pending</span>
