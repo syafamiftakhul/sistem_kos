@@ -1,23 +1,19 @@
 <?php
 include '../koneksi.php';
 /** @var mysqli $koneksi */
-
 $query = "SELECT 
             c.no_ktp, 
-            c.id_user,
             c.nama, 
             c.no_hp, 
             c.alamat,
-            c.jenis_kelamin,
             c.kontak_keluarga,
             k.nomor_kamar, 
-            t.tgl_masuk, 
-            t.status_transaksi
-          FROM transaksi t
-          JOIN customer c ON t.no_ktp = c.no_ktp
-          JOIN pesanan p ON t.id_pesanan = p.id_pesanan
+            p.tgl_pesan, 
+            p.status_pesanan
+          FROM pesanan p
+          JOIN customer c ON p.no_ktp = c.no_ktp
           JOIN kamar k ON p.id_kamar = k.id_kamar
-          WHERE t.status_transaksi = 'lunas'";
+          WHERE p.status_pesanan = 'lunas'"; 
 
 $result = mysqli_query($koneksi, $query);
 ?>
