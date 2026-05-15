@@ -2,7 +2,11 @@
 session_start();
 include "koneksi.php";
 
-// Ambil id_tipe, kalau gak ada dari URL, coba ambil id (siapa tau lu typo)
+if (!isset($_SESSION['id_user'])) {
+    echo "<script>alert('Login dulu bre!'); window.location='login.php';</script>";
+    exit;
+}
+
 $id_tipe = $_GET['id_tipe'] ?? $_GET['id'] ?? '';
 
 $query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar WHERE id_tipe = '$id_tipe'");
@@ -86,7 +90,7 @@ if ($data_tipe) {
             </div>
             <div class="input-group">
               <label>NIK (no_ktp) *</label>
-              <input type="text" name="no_ktp" required>
+              <input type="text" name="no_ktp" pattern="\d{16}" title="NIK harus 16 digit angka" required>
             </div>
             <div class="input-group">
               <label>Nomor Telepon (no_hp) *</label>
@@ -123,7 +127,7 @@ if ($data_tipe) {
           <div class="form-grid">
             <div class="input-group">
               <label>Tanggal Masuk *</label>
-              <input type="date" name="tgl_masuk" required>
+              <input type="date" name="tgl_masuk" min="<?= date('Y-m-d'); ?>" required>
             </div>
             <div class="input-group">
               <label>Durasi (Bulan) *</label>
