@@ -3,49 +3,48 @@ session_start();
 include "koneksi.php";
 
 if (isset($_POST['konfirmasi'])) {
-    // 1. Ambil data dari form (tambahin sesuai field yang lu punya)
-    $no_ktp = $_POST['no_ktp'] ?? ''; 
-    
+    // 1. Ambil semua data dari hidden input tadi
+    $no_ktp    = $_POST['no_ktp'];
+    $nama      = $_POST['nama'];
+    $no_hp     = $_POST['no_hp'];
+    $alamat    = $_POST['alamat'];
+    $id_user   = $_SESSION['id_user'];
+    $tgl_masuk = $_POST['tgl_masuk'];
+    $total     = $_POST['total_bayar'];
+
     // 2. Urusan File Foto
     $nama_file = $_FILES['bukti_transfer']['name'];
     $tmp_file  = $_FILES['bukti_transfer']['tmp_name'];
-    $ukuran    = $_FILES['bukti_transfer']['size'];
-    $error     = $_FILES['bukti_transfer']['error'];
+    $ekstensi  = pathinfo($nama_file, PATHINFO_EXTENSION);
+    $nama_baru = "STRUK_" . time() . "_" . uniqid() . "." . $ekstensi;
+    $tujuan    = "assets/uploads/" . $nama_baru;
 
-    // Cek apakah ada file yang diupload
-    if ($error === 0) {
-        // Validasi Ukuran (2MB = 2.097.152 bytes)
-        if ($ukuran > 2097152) {
-            echo "<script>alert('Gagal! File kegedean (Maks 2MB)'); window.history.back();</script>";
-            exit;
+    if (move_uploaded_file($tmp_file, $tujuan)) {
+
+        // A. Simpan/Update ke tabel customer
+        $query_cust = "INSERT INTO customer (no_ktp, id_user, nama, no_hp, alamat) 
+                       VALUES ('$no_ktp', '$id_user', '$nama', '$no_hp', '$alamat')
+                       ON DUPLICATE KEY UPDATE nama='$nama', no_hp='$no_hp'";
+        mysqli_query($koneksi, $query_cust);
+
+        // B. Cari kamar kosong (Gue asumsiin id_tipe ada di session atau lu kirim jg)
+        // Lu bisa tambahin id_tipe di hidden input tadi jg biar gampang
+        $id_kamar = 1; // Contoh aja, mending cari pake query SELECT id_kamar FROM kamar WHERE status='kosong' LIMIT 1
+
+        // C. Insert ke Pesanan
+        $tgl_skrg = date('Y-m-d');
+        $q_pesan = "INSERT INTO pesanan (no_ktp, id_kamar, tgl_pesan, status_pesanan) 
+                    VALUES ('$no_ktp', '$id_kamar', '$tgl_skrg', 'pending')";
+        mysqli_query($koneksi, $q_pesan);
+        $id_pesanan = mysqli_insert_id($koneksi);
+
+        // D. Insert ke Transaksi
+        // D. Insert ke Transaksi - Tambahin kolom tgl_masuk di sini
+        $q_trans = "INSERT INTO transaksi (id_pesanan, no_ktp, tgl_transaksi, tgl_masuk, jml_bayar, bukti_transaksi, status_transaksi) 
+            VALUES ('$id_pesanan', '$no_ktp', '$tgl_skrg', '$tgl_masuk', '$total', '$nama_baru', 'pending')";
+
+        if (mysqli_query($koneksi, $q_trans)) {
+            echo "<script>alert('Pembayaran Berhasil Dikirim!'); window.location='user/dashboard_private_user.php';</script>";
         }
-
-        // Bikin nama file unik biar gak ketuker
-        $ekstensi = pathinfo($nama_file, PATHINFO_EXTENSION);
-        $nama_baru = "STRUK_" . time() . "_" . uniqid() . "." . $ekstensi;
-        $tujuan    = "uploads/" . $nama_baru;
-
-        // 3. Proses Pindah File & Simpan ke DB
-        if (move_uploaded_file($tmp_file, $tujuan)) {
-            
-            // Query Update (Gue asumsiin datanya udah ada tinggal update bukti & status)
-            // Sesuaikan nama kolom 'bukti_transaksi' dengan yang di TablePlus tadi
-            $query = "UPDATE transaksi SET 
-                      bukti_transaksi = '$nama_baru', 
-                      status_transaksi = 'pending' 
-                      WHERE no_ktp = '$no_ktp' AND status_transaksi != 'lunas'
-                      ORDER BY id_transaksi DESC LIMIT 1";
-
-            if (mysqli_query($koneksi, $query)) {
-                echo "<script>alert('Mantap! Bukti transfer udah kekirim. Tunggu admin ACC ya!'); window.location='index.php';</script>";
-            } else {
-                echo "Error DB: " . mysqli_error($koneksi);
-            }
-        } else {
-            echo "Gagal upload file ke folder. Cek permission folder uploads lu bre!";
-        }
-    } else {
-        echo "Waduh, filenya nggak kebaca atau rusak bre.";
     }
 }
-?>

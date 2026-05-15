@@ -45,60 +45,60 @@ if ($query && mysqli_num_rows($query) > 0) {
 </head>
 
 <body>
-    <section class="dashboard-user1-inner" style="position: absolute; width: 100%; top: 0; left: 0; z-index: 100; background: rgba(255,255,255,0.9);">
+    <section class="dashboard-user1-inner" style="position: absolute; width: 100%; top: 0; left: 0; z-index: 100; background: #ffffff; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);">
         <header class="rectangle-parent" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; width: 100%; box-sizing: border-box;">
 
             <div class="frame-parent" style="display: flex; align-items: center; gap: 15px;">
-                <div class="key">
-                    <a href="../index.php">
-                        <img class="icon" src="../assets/img/key.png" alt="Logo Kos" style="width: 25px; height: 25px; object-fit: contain;">
+                <div class="key" style="background-color: #81A6C6; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <a href="../index.php" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                        <img class="icon" src="../assets/img/key.png" alt="Logo Kos" style="width: 24px; height: 24px; object-fit: contain; filter: brightness(0) invert(1);">
                     </a>
                 </div>
-                <h3 class="kos-aqsya-residence" style="margin: 0; font-size: 1.2rem; font-weight: 700;">Kos Aqsya Residence</h3>
+                <h3 class="kos-aqsya-residence" style="margin: 0; font-size: 1.1rem; font-weight: 500; color: #000;">Kos Aqsya Residence</h3>
             </div>
 
-            <nav class="frame-group" style="display: flex; align-items: center; gap: 25px;">
+            <nav class="frame-group" style="display: flex; align-items: center; gap: 30px;">
 
                 <div class="beranda-wrapper">
                     <h2 class="beranda"
                         onclick="window.location.href='../index.php'"
-                        style="margin: 0; font-size: 1rem; cursor: pointer;">
+                        style="margin: 0; font-size: 0.95rem; cursor: pointer; color: #000; font-weight: 500;">
                         Beranda
                     </h2>
                 </div>
 
-                <?php if (isset($_SESSION['id_user']) && $_SESSION['akses'] == 2): ?>
+                <?php if (isset($_SESSION['id_user'])): ?>
 
                     <h2 class="beranda"
                         onclick="window.location.href='dashboard_private_user.php'"
-                        style="margin: 0; font-size: 1rem; cursor: pointer;">
+                        style="margin: 0; font-size: 0.95rem; cursor: pointer; color: #000; font-weight: 500;">
                         Dashboard Saya
                     </h2>
 
-                    <div style="display: flex; align-items: center; gap: 8px; border: 1px solid #81A6C6; padding: 6px 15px; border-radius: 20px; color: #81A6C6; font-weight: 500;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                        </svg>
-                        <span><?php echo htmlspecialchars($nama); ?></span>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="display: flex; align-items: center; gap: 8px; border: 1px solid #81A6C6; padding: 8px 16px; border-radius: 8px; color: #81A6C6; font-weight: 500; background: white;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                            </svg>
+                            <span style="font-size: 0.95rem;"><?php echo htmlspecialchars($nama); ?></span>
+                        </div>
+                        <a href="../logout.php" style="text-decoration:none; color:red; font-size: 0.95rem; font-weight: 500;">
+                            Keluar
+                        </a>
                     </div>
-
-                    <a href="../logout.php"
-                        style="text-decoration:none; color:red; font-size: 0.9rem;">
-                        Keluar
-                    </a>
 
                 <?php else: ?>
 
                     <a href="../login.php"
                         class="button-masuk"
-                        style="text-decoration:none; border:1px solid #81A6C6; color:#81A6C6; padding:8px 20px; border-radius:5px; font-weight: 500;">
+                        style="text-decoration:none; border:1px solid #81A6C6; color:#81A6C6; padding:8px 20px; border-radius:8px; font-weight: 500;">
                         Masuk
                     </a>
 
                     <a href="../daftar.php"
                         class="button-daftar"
-                        style="text-decoration:none; background:#81A6C6; color:white; padding:8px 20px; border-radius:5px; font-weight: 500;">
+                        style="text-decoration:none; background:#81A6C6; color:white; padding:8px 20px; border-radius:8px; font-weight: 500;">
                         Daftar
                     </a>
 
@@ -209,31 +209,7 @@ if ($query && mysqli_num_rows($query) > 0) {
         </div>
     </section>
     <main class="select-fields-parent">
-        <section class="select-fields">
-            <div class="select-fields-child"></div>
-            <div class="select-field">
-                <div class="label">Tipe Kamar</div>
-                <div class="description">Description</div>
-                <select class="select-dropdown">
-                    <option value="">Semua Tipe Kamar</option>
-                    <option value="deluxe_a1">Deluxe Room A1</option>
-                    <option value="deluxe_a2">Deluxe Room A2</option>
-                    <option value="standard">Standard Room</option>
-                </select>
-            </div>
-            <div class="select-field">
-                <div class="label">Range Harga</div>
-                <div class="description">Description</div>
-                <select class="select-dropdown">
-                    <option value="">Semua Harga</option>
-                    <option value="under_500">&lt; Rp 500.000</option>
-                    <option value="500_800">Rp 500.000 - Rp 800.000</option>
-                    <option value="over_800">&gt; Rp 800.000</option>
-                </select>
-            </div>
-        </section>
-        <main class="select-fields-parent">
-            <h2 class="kamar-tersedia">Kamar Tersedia</h2>
+        <h2 class="kamar-tersedia">Kamar Tersedia</h2>
 
             <div class="frame-parent4" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
 
@@ -255,7 +231,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                             <div class="mulai-dari">Mulai Dari</div>
                             <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
                                 <h2 class="rp-1000000" style="margin:0;">Rp 1.000.000 <small>/bln</small></h2>
-                                <a href="detail_kamar1.php" class="button-daftar2" style="text-decoration:none;">Detail</a>
+                                <a href="../detail_kamar1.php" class="button-daftar2" style="text-decoration:none;">Detail</a>
                             </div>
                         </div>
                     </div>
