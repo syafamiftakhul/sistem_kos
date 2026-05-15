@@ -1,8 +1,6 @@
 <?php
 session_start();
 include "koneksi.php";
-
-// Ambil id_tipe, kalau gak ada dari URL, coba ambil id (siapa tau lu typo)
 $id_tipe = $_GET['id_tipe'] ?? $_GET['id'] ?? '';
 
 $query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar WHERE id_tipe = '$id_tipe'");
@@ -12,11 +10,43 @@ if ($data_tipe) {
     $tampil_tipe = $data_tipe['nama_tipe'];
     $tampil_harga = $data_tipe['harga'];
 } else {
-    // Kalau masih 0, kita coba tarik data pertama yang ada di tabel biar gak kosong banget
-    $res = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1");
-    $d = mysqli_fetch_array($res);
-    $tampil_tipe = $d['nama_tipe'] ?? "Database Kosong";
-    $tampil_harga = $d['harga'] ?? 0;
+    // Hardcode fallback jika tabel kosong
+    if ($id_tipe == 2) {
+        $tampil_tipe = "Deluxe Room A2";
+        $tampil_harga = 700000;
+    } elseif ($id_tipe == 3) {
+        $tampil_tipe = "Standard Room";
+        $tampil_harga = 400000;
+    } elseif ($id_tipe == 1) {
+        $tampil_tipe = "Deluxe Room A1";
+        $tampil_harga = 1000000;
+    } else {
+        $res = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1");
+        $d = mysqli_fetch_array($res);
+        $tampil_tipe = $d['nama_tipe'] ?? "Database Kosong";
+        $tampil_harga = $d['harga'] ?? 0;
+        if ($d) {
+            $id_tipe = $d['id_tipe']; 
+        }
+    }
+}
+
+$back_link = "index.php";
+
+// Ambil ID kamar pertama dari database untuk detail_kamar1 (tanpa ORDER BY, persis seperti di detail_kamar1.php)
+$q1 = mysqli_query($koneksi, "SELECT id_tipe FROM tipe_kamar LIMIT 1");
+$row1 = mysqli_fetch_assoc($q1);
+$id_kamar1 = $row1 ? $row1['id_tipe'] : 1;
+
+// Ambil ID kamar kedua dari database untuk detail_kamar2
+$q2 = mysqli_query($koneksi, "SELECT id_tipe FROM tipe_kamar LIMIT 1 OFFSET 1");
+$row2 = mysqli_fetch_assoc($q2);
+$id_kamar2 = $row2 ? $row2['id_tipe'] : 2;
+
+if ($id_tipe == $id_kamar1) {
+    $back_link = "detail_kamar1.php";
+} elseif ($id_tipe == $id_kamar2 || $id_tipe == 2) {
+    $back_link = "detail_kamar2.php";
 }
 ?>
 <!DOCTYPE html>
@@ -44,7 +74,7 @@ if ($data_tipe) {
     </header>
 
     <main class="booking-container">
-      <a href="detail.php" class="back-link">
+      <a href="<?php echo $back_link; ?>" class="back-link">
         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
