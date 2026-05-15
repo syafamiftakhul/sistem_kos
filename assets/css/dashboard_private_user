@@ -2,7 +2,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #ffffff;
+    background-color: #FAFAFA; /* Diubah sedikit ke abu-abu super muda agar kartu putih lebih stand-out */
     margin: 0;
     color: #111827;
     -webkit-font-smoothing: antialiased;
@@ -14,17 +14,33 @@ body {
     padding: 0 20px;
 }
 
-.dashboard-title { font-size: 24px; font-weight: 700; margin: 0 0 8px 0; color: #111827; }
-.dashboard-subtitle { color: #6B7280; font-size: 14px; margin: 0 0 40px 0; }
+.dashboard-title { 
+    font-size: 24px; 
+    font-weight: 700; 
+    margin: 0 0 8px 0; 
+    color: #111827; 
+}
 
-h3 { font-size: 20px; font-weight: 700; margin: 40px 0 16px 0; color: #111827; }
+.dashboard-subtitle { 
+    color: #6B7280; 
+    font-size: 14px; 
+    margin: 0 0 40px 0; 
+}
 
+h3 { 
+    font-size: 18px; /* Diperkecil sedikit agar hirarkinya pas di bawah H1/Title */
+    font-weight: 700; 
+    margin: 40px 0 16px 0; 
+    color: #111827; 
+}
+
+/* KARTU UTAMA */
 .card-box {
     border: 1px solid #E5E7EB;
-    border-radius: 4px;
+    border-radius: 8px; /* Diubah ke 8px agar lebih modern dan luwes */
     padding: 24px;
     background: #ffffff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .card-top {
@@ -34,18 +50,41 @@ h3 { font-size: 20px; font-weight: 700; margin: 40px 0 16px 0; color: #111827; }
     margin-bottom: 24px;
 }
 
-.booking-id { font-weight: 700; font-size: 16px; margin-bottom: 8px; color: #111827; }
-.booking-date { color: #6B7280; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-
-.badge-confirm {
-    background: #C5E1A5;
-    color: #ffffff;
-    padding: 6px 20px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 13px;
+.booking-id { 
+    font-weight: 700; 
+    font-size: 16px; 
+    margin-bottom: 8px; 
+    color: #111827; 
 }
 
+.booking-date { 
+    color: #6B7280; 
+    font-size: 14px; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+}
+
+/* BADGE STATUS (Perbaikan Kontras) */
+.badge-confirm {
+    background: #DCFCE7; /* Hijau muda lembut */
+    color: #15803D;      /* Teks hijau tua (Kontras tinggi, mudah dibaca) */
+    padding: 6px 16px;
+    border-radius: 9999px; /* Bentuk pill/kapsul biasanya lebih cocok untuk badge status */
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.badge-proses {
+    background: #FEF3C7; /* Kuning/Oranye muda lembut */
+    color: #B45309;      /* Teks cokelat/oranye tua */
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* GRID INFO */
 .grid-info {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -53,33 +92,57 @@ h3 { font-size: 20px; font-weight: 700; margin: 40px 0 16px 0; color: #111827; }
     margin-bottom: 24px;
 }
 
-.info-label { font-size: 12px; color: #9CA3AF; margin-bottom: 4px; }
-.info-value { font-weight: 600; font-size: 14px; color: #111827; }
-.price-value { color: #81A6C6; }
+/* Responsif untuk HP agar grid tidak hancur */
+@media (max-width: 600px) {
+    .grid-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 
+.info-label { 
+    font-size: 12px; 
+    color: #9CA3AF; 
+    margin-bottom: 4px; 
+    text-transform: uppercase; /* Membuat label terlihat lebih rapi seperti dashboard profesional */
+    letter-spacing: 0.05em;
+}
+
+.info-value { 
+    font-weight: 600; 
+    font-size: 14px; 
+    color: #111827; 
+}
+
+.price-value { 
+    color: #1E3A8A; /* Diubah ke Navy pekat agar kontrasnya dapet, atau sesuaikan warna brand Anda */
+    font-weight: 700;
+}
+
+/* TOMBOL KELUHAN */
 .btn-complaint {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     background: #F3F4F6;
-    color: #6B7280;
+    color: #374151;
     font-size: 13px;
     font-weight: 500;
     padding: 8px 16px;
     border-radius: 6px;
     text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid #E5E7EB;
 }
-.btn-complaint:hover { background: #E5E7EB; }
+.btn-complaint:hover { 
+    background: #E5E7EB; 
+    color: #111827;
+}
 
-.keluhan-title { font-weight: 700; font-size: 16px; color: #111827; }
-
-.badge-proses {
-    background: #FDCB82;
-    color: #ffffff;
-    padding: 6px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
+/* KELUHAN SECTION */
+.keluhan-title { 
+    font-weight: 700; 
+    font-size: 16px; 
+    color: #111827; 
 }
 
 .keluhan-room {
@@ -93,9 +156,10 @@ h3 { font-size: 20px; font-weight: 700; margin: 40px 0 16px 0; color: #111827; }
 
 .keluhan-desc {
     font-size: 14px;
-    font-weight: 600;
-    color: #111827;
+    font-weight: 500;
+    color: #374151;
     margin-bottom: 24px;
+    line-height: 1.5;
 }
 
 .keluhan-date {
@@ -103,8 +167,11 @@ h3 { font-size: 20px; font-weight: 700; margin: 40px 0 16px 0; color: #111827; }
     color: #9CA3AF;
 }
 
+/* STYLE SAAT DATA KOSONG (EMPTY STATE) */
 .empty-text {
     color: #9CA3AF;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center; /* Membuat teks kosong berada di tengah card */
+    padding: 16px 0;
 }
