@@ -122,7 +122,7 @@ if (isset($_SESSION['id_user'])) {
           <div class="fasilitas1">
             <div class="fasilitas1-child"></div>
             <div class="icon-rows">
-              <img class="wifi-icon" alt="" src="assets/img/wifi.png" />
+              <img class="wifi-icon" alt="wifi" src="img/wifii.png"/>
             </div>
             <div class="wifi-100mbps">WiFi<br />100Mbps</div>
           </div>
