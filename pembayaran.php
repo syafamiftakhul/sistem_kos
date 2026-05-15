@@ -18,6 +18,16 @@ $total_bayar    = $harga_satuan * $periode;
 $date           = new DateTime($tgl_masuk);
 $date->modify("+$periode month");
 $tgl_keluar     = $date->format('d-m-Y');
+
+// Ambil detail kamar buat ditampilin di ringkasan
+$query_detail = mysqli_query($koneksi, "SELECT kamar.nomor_kamar, tipe_kamar.nama_tipe 
+                                        FROM kamar 
+                                        JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
+                                        WHERE kamar.id_kamar = '$id_kamar'");
+$detail = mysqli_fetch_assoc($query_detail);
+
+// Gabungin nama tipe dan nomor kamarnya
+$nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -148,15 +158,14 @@ $tgl_keluar     = $date->format('d-m-Y');
 
             <input type="hidden" name="konfirmasi" value="1">
             <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
-            </form>
+          </form>
         </div>
 
         <div class="summary-card">
           <h3>Rincian Pesanan</h3>
-
           <div class="summary-item">
             <div class="label">Kamar</div>
-            <div class="value">Deluxe Room A1</div>
+            <div class="value"><?php echo $nama_kamar_lengkap; ?></div>
           </div>
           <div class="summary-item">
             <div class="label">Nama Penghuni</div>
