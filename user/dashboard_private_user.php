@@ -55,14 +55,14 @@ if ($no_ktp) {
         <p class="dashboard-subtitle">Kelola pemesanan dan keluhan Anda</p>
 
         <h3>Pesanan Saya</h3>
-        <?php if ($no_ktp && $booking) : ?>
+        <?php if (!empty($no_ktp) && !empty($booking)) : ?>
             <div class="card-box">
                 <div class="card-top">
                     <div>
                         <div class="booking-id">Booking #<?= $booking['id_pesanan']; ?></div>
                         <div class="booking-date"><i class="far fa-calendar"></i> 14/08/2025 - 15-11-2025</div>
                     </div>
-                    <div class="badge-confirm">Confirm</div>
+                    <span class="badge-confirm">Terkonfirmasi</span>
                 </div>
 
                 <div class="grid-info">
@@ -79,8 +79,8 @@ if ($no_ktp) {
                         <div class="info-value"><?= htmlspecialchars($booking['nama_tipe'] . ' Room ' . $booking['nomor_kamar']); ?></div>
                     </div>
                     <div>
-                        <div class="info-label">Total Price</div>
-                        <div class="info-value price-value">Rp<?= number_format($booking['harga'], 0, ',', '.'); ?></div>
+                        <div class="info-label">Total Harga</div>
+                        <div class="info-value price-value">Rp <?= number_format($booking['harga'], 0, ',', '.'); ?></div>
                     </div>
                 </div>
 
@@ -89,11 +89,13 @@ if ($no_ktp) {
                 </a>
             </div>
         <?php else : ?>
-            <p class="empty-text">Anda belum melakukan riwayat pesanan</p>
+            <div class="card-box">
+                <p class="empty-text">Anda belum memiliki riwayat pemesanan kamar saat ini.</p>
+            </div>
         <?php endif; ?>
 
         <h3>Keluhan Saya</h3>
-        <?php if ($no_ktp && $keluhan) : ?>
+        <?php if (!empty($no_ktp) && !empty($keluhan)) : ?>
             <div class="card-box">
                 <div class="card-top" style="margin-bottom: 12px;">
                     <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek']); ?></div>
@@ -101,7 +103,7 @@ if ($no_ktp) {
                 </div>
                 
                 <div class="keluhan-room">
-                    <i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($keluhan['nama_tipe'] . ' Room ' . $keluhan['nomor_kamar']); ?>
+                    <i class="fas fa-door-open"></i> <?= htmlspecialchars($keluhan['nama_tipe'] . ' - Room ' . $keluhan['nomor_kamar']); ?>
                 </div>
                 
                 <div class="keluhan-desc">
@@ -109,11 +111,13 @@ if ($no_ktp) {
                 </div>
                 
                 <div class="keluhan-date">
-                    Dikirim pada <?= htmlspecialchars(date('j/n/Y', strtotime($keluhan['tgl_lapor']))); ?>
+                    Diajukan pada <?= htmlspecialchars(date('d M Y', strtotime($keluhan['tgl_lapor']))); ?>
                 </div>
             </div>
         <?php else : ?>
-            <p class="empty-text">Lakukan pemesanan untuk bisa memberi pengaduan pada kamar anda</p>
+            <div class="card-box">
+                <p class="empty-text">Silakan lakukan pemesanan kamar terlebih dahulu untuk mengirimkan pengaduan.</p>
+            </div>
         <?php endif; ?>
     </div>
 
