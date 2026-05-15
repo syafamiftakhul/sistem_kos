@@ -11,6 +11,9 @@ $tgl_masuk      = $_POST['tgl_masuk'] ?? date('Y-m-d');
 $periode        = (int)($_POST['periode'] ?? 1);
 $harga_satuan   = (int)($_POST['harga_satuan'] ?? 0);
 
+// SOLUSI: Tangkap id_kamar dari form booking sebelumnya
+$id_kamar       = $_POST['id_kamar'] ?? ''; 
+
 // Hitung total
 $total_bayar    = $harga_satuan * $periode;
 
@@ -131,10 +134,11 @@ $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
           </div>
 
           <form action="proses_konfirmasi.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="nama" value="<?php echo $nama; ?>">
-            <input type="hidden" name="no_ktp" value="<?php echo $no_ktp; ?>">
-            <input type="hidden" name="no_hp" value="<?php echo $no_hp; ?>">
-            <input type="hidden" name="alamat" value="<?php echo $alamat; ?>">
+            <input type="hidden" name="id_kamar" value="<?php echo $id_kamar; ?>">
+            <input type="hidden" name="nama" value="<?php echo htmlspecialchars($nama); ?>">
+            <input type="hidden" name="no_ktp" value="<?php echo htmlspecialchars($no_ktp); ?>">
+            <input type="hidden" name="no_hp" value="<?php echo htmlspecialchars($no_hp); ?>">
+            <input type="hidden" name="alamat" value="<?php echo htmlspecialchars($alamat); ?>">
             <input type="hidden" name="tgl_masuk" value="<?php echo $tgl_masuk; ?>">
             <input type="hidden" name="periode" value="<?php echo $periode; ?>">
             <input type="hidden" name="total_bayar" value="<?php echo $total_bayar; ?>">
