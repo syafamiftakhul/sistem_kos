@@ -2,6 +2,9 @@
 session_start();
 include "koneksi.php";
 
+$jenis_kelamin   = $_POST['jenis_kelamin'] ?? '';
+$kontak_keluarga = $_POST['kontak_keluarga'] ?? '';
+
 $id_tipe = $_GET['id_tipe'] ?? $_GET['id'] ?? '';
 
 $query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar WHERE id_tipe = '$id_tipe'");
