@@ -39,9 +39,6 @@ if ($query && mysqli_num_rows($query) > 0) {
     <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
-    <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" />
 </head>
 
 <body>
