@@ -2,18 +2,19 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-// Pake ini di kamar.php biar gak error no_ktp lagi
-$query_kamar = "SELECT kamar.*, tipe_kamar.nama_tipe, tipe_kamar.harga 
+// Query buat nampilin data tabel
+$query_kamar = "SELECT kamar.*, tipe_kamar.nama_tipe, tipe_kamar.harga, customer.nama as nama_penghuni 
                 FROM kamar 
-                LEFT JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe";
-$result_kamar = mysqli_query($koneksi, $query_kamar);
+                LEFT JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
+                LEFT JOIN customer ON kamar.no_ktp = customer.no_ktp";
 
-// Ini yang tadi ketinggalan:
+$result_kamar = mysqli_query($koneksi, $query_kamar);
 $total_kamar = mysqli_num_rows($result_kamar);
 
+// Query Statistik: Pakai 'kosong' bukan 'tersedia'
 $query_stats = mysqli_query($koneksi, "SELECT 
     SUM(CASE WHEN status_kamar = 'terisi' THEN 1 ELSE 0 END) as terisi,
-    SUM(CASE WHEN status_kamar = 'tersedia' THEN 1 ELSE 0 END) as tersedia 
+    SUM(CASE WHEN status_kamar = 'kosong' THEN 1 ELSE 0 END) as tersedia 
     FROM kamar");
 $stats = mysqli_fetch_assoc($query_stats);
 ?>
