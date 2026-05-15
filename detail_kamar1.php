@@ -1,4 +1,5 @@
 <?php
+session_start();
 include "koneksi.php";
 
 // Kita gak usah pakai WHERE dulu, ambil aja data yang ada di tabel tipe_kamar
@@ -9,7 +10,7 @@ if ($query && mysqli_num_rows($query) > 0) {
     $id_tipe = $data['id_tipe']; // Ambil ID-nya buat dipake di tombol nanti
 } else {
     // Kalau ini muncul, berarti tabel tipe_kamar lu beneran kosong atau koneksi salah
-    $data = ['nama_tipe' => 'DB Kosong', 'harga' => 0];
+    $data = ['nama_tipe' => 'Deluxe Room A1', 'harga' => 0];
     $id_tipe = 0;
 }
 ?>
@@ -191,26 +192,40 @@ if ($query && mysqli_num_rows($query) > 0) {
         </div>
 
         <div class="right-col">
-          <div class="booking-card">
-            <div class="price-header">
-              <h2>Rp <?php echo number_format($data['harga'], 0, ',', '.'); ?></h2>
-              <span>per bulan</span>
-            </div>
+    <div class="booking-card">
+        <div class="price-header">
+            <h2>Rp <?php echo number_format($data['harga'], 0, ',', '.'); ?></h2>
+            <span>per bulan</span>
+        </div>
 
-            <div class="booking-details">
-              <div class="detail-box">
+        <div class="booking-details">
+            <div class="detail-box">
                 <div class="box-label">Minimal Tinggal</div>
                 <div class="box-val">1 Month</div>
-              </div>
-              <div class="detail-box">
+            </div>
+            <div class="detail-box">
                 <div class="box-label">Deposit</div>
                 <div class="box-val">Rp 500.000</div>
-              </div>
             </div>
+        </div>
 
-            <button class="btn-pesan" onclick="window.location.href='booking.php?id_tipe=<?php echo $id_tipe; ?>'" style="cursor: pointer;">
-    Pesan Sekarang
-</button>
+        <?php if (isset($_SESSION['id_user'])) : ?>
+            <!-- Jika sudah login, tombol normal -->
+            <button class="btn-pesan" 
+                    onclick="window.location.href='booking.php?id_tipe=<?php echo $id_tipe; ?>'" 
+                    style="cursor: pointer;">
+                Pesan Sekarang
+            </button>
+        <?php else : ?>
+            <!-- Jika belum login, arahkan ke login.php -->
+            <button class="btn-pesan" 
+                    onclick="alert('Silakan login terlebih dahulu untuk melakukan pemesanan!'); window.location.href='login.php';" 
+                    style="cursor: pointer; background: #6c757d;">
+                Login untuk Memesan
+            </button>
+        <?php endif; ?>
+    </div>
+</div>
           </div>
         </div>
 
