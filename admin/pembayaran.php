@@ -48,6 +48,7 @@ $total_terlambat = 0; // Set default dulu
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Manajemen Pembayaran - Aqsya Kos</title>
@@ -102,97 +103,98 @@ $total_terlambat = 0; // Set default dulu
                     <span class="menu-text">Logout</span>
                 </a>
             </nav>
-        </aside> <div class="main-content">
+        </aside>
+        <div class="main-content">
 
 
-        <main class="main-content">
-            <header>
-                <div class="header-title">
-                    <h1>Manajemen Pembayaran</h1>
-                    <p>Kelola Data Pembayaran Kos-kosan</p>
-                </div>
-            </header>
-
-            <section class="data-section">
-                <div class="action-bar">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Masukkan nama, kamar, atau telepon..">
+            <main class="main-content">
+                <header>
+                    <div class="header-title">
+                        <h1>Manajemen Pembayaran</h1>
+                        <p>Kelola Data Pembayaran Kos-kosan</p>
                     </div>
-                </div>
+                </header>
 
-                <div class="category-filter">
-                    <a href="?status=Semua" class="cat-item <?= $filter == 'semua' ? 'active' : '' ?>">Semua</a>
-                    <a href="?status=Lunas" class="cat-item <?= $filter == 'lunas' ? 'active' : '' ?>">Lunas</a>
-                    <a href="?status=Pending" class="cat-item <?= $filter == 'pending' ? 'active' : '' ?>">Pending</a>
-                    <a href="?status=Terlambat" class="cat-item <?= $filter == 'batal' ? 'active' : '' ?>">Terlambat</a>
-                </div>
+                <section class="data-section">
+                    <div class="action-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Masukkan nama, kamar, atau telepon..">
+                        </div>
+                    </div>
 
-                <div class="table-container">
-                    <table class="pembayaran-table">
-                        <thead>
-                            <tr>
-                                <th>Penghuni</th>
-                                <th>Kamar</th>
-                                <th>Periode</th>
-                                <th>Jumlah</th>
-                                <th>Tanggal Bayar</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (mysqli_num_rows($result) > 0) : ?>
-                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                    <div class="category-filter">
+                        <a href="pembayaran.php?status=semua" class="cat-item <?= ($filter == 'semua') ? 'active' : '' ?>">Semua</a>
+                        <a href="pembayaran.php?status=lunas" class="cat-item <?= ($filter == 'lunas') ? 'active' : '' ?>">Lunas</a>
+                        <a href="pembayaran.php?status=pending" class="cat-item <?= ($filter == 'pending') ? 'active' : '' ?>">Pending</a>
+                        <a href="pembayaran.php?status=terlambat" class="cat-item <?= ($filter == 'terlambat') ? 'active' : '' ?>">Terlambat</a>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="pembayaran-table">
+                            <thead>
+                                <tr>
+                                    <th>Penghuni</th>
+                                    <th>Kamar</th>
+                                    <th>Periode</th>
+                                    <th>Jumlah</th>
+                                    <th>Tanggal Bayar</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($result && mysqli_num_rows($result) > 0) : ?>
+                                    <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                                        <tr>
+                                            <td><strong><?= htmlspecialchars($row['nama']) ?></strong></td>
+                                            <td><span class="badge-kamar">Kamar <?= htmlspecialchars($row['nomor_kamar']) ?></span></td>
+                                            <td><?= htmlspecialchars($row['periode'] ?? 'Bulan Ini') ?></td>
+                                            <td>Rp <?= number_format($row['jml_bayar'], 0, ',', '.') ?></td>
+                                            <td>-</td>
+                                            <td>
+                                                <span class="badge-status <?= strtolower($row['status_transaksi']) ?>">
+                                                    <?= htmlspecialchars($row['status_transaksi']) ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php else : ?>
                                     <tr>
-                                        <td><strong><?= htmlspecialchars($row['nama']) ?></strong></td>
-                                        <td><span class="badge-kamar">Kamar <?= $row['nomor_kamar'] ?></span></td>
-                                        <td><?= $row['periode'] ?></td>
-                                        <td>Rp <?= number_format($row['jml_bayar'], 0, ',', '.') ?></td>
-                                        <td><?= ($row['tgl_transaksi'] && $row['tgl_transaksi'] != '0000-00-00') ? date('d M Y', strtotime($row['tgl_transaksi'])) : '-' ?></td>
-                                        <td>
-                                            <span class="badge-status <?= strtolower($row['status_transaksi']) ?>">
-                                                <?= $row['status_transaksi'] ?>
-                                            </span>
+                                        <td colspan="6" style="text-align: center; padding: 50px; color: #999;">
+                                            <i class="fas fa-receipt" style="font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.3;"></i>
+                                            Belum ada data pembayaran untuk kategori <strong><?= htmlspecialchars($filter) ?></strong>.
                                         </td>
                                     </tr>
-                                <?php endwhile; ?>
-                            <?php else : ?>
-                                <tr>
-                                    <td colspan="6" style="text-align: center; padding: 50px; color: #999;">
-                                        <i class="fas fa-receipt" style="font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.3;"></i>
-                                        Belum ada data pembayaran untuk kategori <strong><?= $filter ?></strong>.
-                                    </td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <div class="income-summary">
-                    <div class="income-card lunas">
-                        <span class="label">Total Lunas</span>
-                        <h3>Rp <?= number_format($total_lunas, 0, ',', '.') ?></h3>
+                    <div class="income-summary">
+                        <div class="income-card lunas">
+                            <span class="label">Total Lunas</span>
+                            <h3>Rp <?= number_format($total_lunas, 0, ',', '.') ?></h3>
+                        </div>
+                        <div class="income-card pending">
+                            <span class="label">Total Pending</span>
+                            <h3>Rp <?= number_format($total_pending / 1000000, 1) ?> jt</h3>
+                        </div>
+                        <div class="income-card terlambat">
+                            <span class="label">Total Terlambat</span>
+                            <h3>Rp <?= number_format($total_terlambat / 1000000, 1) ?> jt</h3>
+                        </div>
                     </div>
-                    <div class="income-card pending">
-                        <span class="label">Total Pending</span>
-                        <h3>Rp <?= number_format($total_pending / 1000000, 1) ?> jt</h3>
-                    </div>
-                    <div class="income-card terlambat">
-                        <span class="label">Total Terlambat</span>
-                        <h3>Rp <?= number_format($total_terlambat / 1000000, 1) ?> jt</h3>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-    <script>
-        const btnMenu = document.getElementById('btn-menu');
-        const sidebar = document.getElementById('sidebar');
+                </section>
+            </main>
+        </div>
+        <script>
+            const btnMenu = document.getElementById('btn-menu');
+            const sidebar = document.getElementById('sidebar');
 
-        btnMenu.onclick = function() {
-            sidebar.classList.toggle('expand');
-        }
-    </script>
+            btnMenu.onclick = function() {
+                sidebar.classList.toggle('expand');
+            }
+        </script>
 </body>
 
 </html>
