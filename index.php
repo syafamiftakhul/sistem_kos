@@ -122,7 +122,7 @@ if (isset($_SESSION['id_user'])) {
           <div class="fasilitas1">
             <div class="fasilitas1-child"></div>
             <div class="icon-rows">
-              <img class="wifi-icon" alt="wifi" src="img/wifii.png"/>
+            <img class="wifi-icon" alt="wifi" src="assets/img/wifii.png"/>
             </div>
             <div class="wifi-100mbps">WiFi<br />100Mbps</div>
           </div>
@@ -132,9 +132,9 @@ if (isset($_SESSION['id_user'])) {
             <div class="fasilitas1-child"></div>
             <div class="directions-car-wrapper">
               <img
-                class="wifi-icon"
-                alt=""
-                src="assets/img/car.png" />
+                class="parkir-icon"
+                alt="parkir"
+                src="assets/img/parkir.png" />
             </div>
             <div class="parkir-motor">Parkir Motor<br />& Mobil</div>
           </div>
@@ -142,7 +142,7 @@ if (isset($_SESSION['id_user'])) {
         <div class="fasilitas-3">
           <div class="fasilitas1-child"></div>
           <div class="coffee-wrapper">
-            <img class="coffee-icon" alt="" src="assets/img/coffee.img" />
+          <img class="coffe-icon" alt="" src="assets/img/dapur.png" />
           </div>
           <div class="parkir-motor">Dapur<br />Bersama</div>
         </div>
@@ -159,7 +159,7 @@ if (isset($_SESSION['id_user'])) {
           <div class="fasilitas1-child"></div>
           <div class="message-circle-wrapper">
             <div class="shield">
-              <img class="icon3" alt="" src="assets/img/couch.png" />
+              <img class="icon3" alt="" src="assets/img/tamu.png" />
             </div>
           </div>
           <h3 class="cctv">Ruang Tamu</h3>
@@ -178,7 +178,7 @@ if (isset($_SESSION['id_user'])) {
             <div class="fasilitas1-child"></div>
             <div class="users-wrapper">
               <div class="shield">
-                <img class="icon5" alt="" src="assets/img/shower.png" />
+                <img class="icon5" alt="" src="assets/img/kamarmandi.png" />
               </div>
             </div>
             <div class="parkir-motor">Kamar Mandi<br />Bersama</div>
