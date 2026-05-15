@@ -17,9 +17,9 @@ if ($filter != 'Semua') {
 $result = mysqli_query($koneksi, $query);
 
 // Hitung Ringkasan Income (Berdasarkan status di DB lu)
-$total_lunas = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Lunas'"))['total'] ?? 0;
-$total_pending = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Pending'"))['total'] ?? 0;
-$total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Terlambat'"))['total'] ?? 0;
+$total_lunas = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'lunas'"))['total'] ?? 0;
+$total_pending = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'pending'"))['total'] ?? 0;
+$total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'terlambat'"))['total'] ?? 0;
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +121,7 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
                                 <?php while ($row = mysqli_fetch_assoc($result)) : ?>
                                     <tr>
                                         <td><strong><?= htmlspecialchars($row['nama']) ?></strong></td>
-                                        <td><span class="badge-kamar">Kamar <?= $row['id_kamar'] ?></span></td>
+                                        <td><span class="badge-kamar">Kamar <?= $row['nomor_kamar'] ?></span></td>
                                         <td><?= $row['periode'] ?></td>
                                         <td>Rp <?= number_format($row['jml_bayar'], 0, ',', '.') ?></td>
                                         <td><?= ($row['tgl_transaksi'] && $row['tgl_transaksi'] != '0000-00-00') ? date('d M Y', strtotime($row['tgl_transaksi'])) : '-' ?></td>
