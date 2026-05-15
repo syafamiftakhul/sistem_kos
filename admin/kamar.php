@@ -2,10 +2,10 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-$query_kamar = "SELECT kamar.*, tipe_kamar.nama_tipe, tipe_kamar.harga, customer.nama as nama_penghuni 
+// Pake ini di kamar.php biar gak error no_ktp lagi
+$query_kamar = "SELECT kamar.*, tipe_kamar.nama_tipe, tipe_kamar.harga 
                 FROM kamar 
-                LEFT JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
-                LEFT JOIN customer ON kamar.no_ktp = customer.no_ktp";
+                LEFT JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe";
 $result_kamar = mysqli_query($koneksi, $query_kamar);
 
 // Ini yang tadi ketinggalan:

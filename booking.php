@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "koneksi.php";
+
 $id_tipe = $_GET['id_tipe'] ?? $_GET['id'] ?? '';
 
 $query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar WHERE id_tipe = '$id_tipe'");
@@ -26,7 +27,7 @@ if ($data_tipe) {
         $tampil_tipe = $d['nama_tipe'] ?? "Database Kosong";
         $tampil_harga = $d['harga'] ?? 0;
         if ($d) {
-            $id_tipe = $d['id_tipe']; 
+            $id_tipe = $d['id_tipe']; // Update id_tipe agar tombol kembali berfungsi jika tidak ada di URL
         }
     }
 }

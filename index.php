@@ -20,7 +20,7 @@ if (isset($_SESSION['id_user'])) {
             $nama = $data['nama'];
         }
     } else if ($akses == 1) {
-        $query = mysqli_query($koneksi, "SELECT * FROM admin WHERE id_user='$id_user'");
+        $query = mysqli_query($koneksi, "SELECT * FROM user WHERE id_user='$id_user'");
         if ($query && mysqli_num_rows($query) > 0) {
             $data = mysqli_fetch_assoc($query);
             $nama = $data['nama'];
@@ -187,30 +187,6 @@ if (isset($_SESSION['id_user'])) {
       </div>
     </div>
   </section>
-  <main class="select-fields-parent">
-    <section class="select-fields">
-      <div class="select-fields-child"></div>
-      <div class="select-field">
-        <div class="label">Tipe Kamar</div>
-        <div class="description">Description</div>
-        <select class="select-dropdown">
-          <option value="">Semua Tipe Kamar</option>
-          <option value="deluxe_a1">Deluxe Room A1</option>
-          <option value="deluxe_a2">Deluxe Room A2</option>
-          <option value="standard">Standard Room</option>
-        </select>
-      </div>
-      <div class="select-field">
-        <div class="label">Range Harga</div>
-        <div class="description">Description</div>
-        <select class="select-dropdown">
-          <option value="">Semua Harga</option>
-          <option value="under_500">&lt; Rp 500.000</option>
-          <option value="500_800">Rp 500.000 - Rp 800.000</option>
-          <option value="over_800">&gt; Rp 800.000</option>
-        </select>
-      </div>
-    </section>
     <main class="select-fields-parent">
       <h2 class="kamar-tersedia">Kamar Tersedia</h2>
 
