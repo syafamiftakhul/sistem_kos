@@ -177,11 +177,10 @@ if ($query && mysqli_num_rows($query) > 0) {
                                 <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
                                     <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
                                 </svg>
-                                <span>Kamar Mandi Bersama</span>
+                                <span>Kamar Mandi bersama</span>
                             </div>
                         </div>
                     </section>
-
                 </div>
 
                 <div class="right-col">
