@@ -8,8 +8,8 @@ if (isset($_POST['simpan'])) {
     $harga     = $_POST['harga'];
     $fasilitas = $_POST['fasilitas'];
 
-    $query = "INSERT INTO tipe_kamar (id_tipe, nama_tipe, harga, fasilitas) 
-              VALUES ('$id_tipe', '$nama_tipe', '$harga', '$fasilitas')";
+    $query = "INSERT INTO tipe_kamar (nama_tipe, harga, fasilitas) 
+          VALUES ('$nama_tipe', '$harga', '$fasilitas')";
 
     if (mysqli_query($koneksi, $query)) {
         echo "<script>

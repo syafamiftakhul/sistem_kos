@@ -119,10 +119,17 @@ $tgl_keluar     = $date->format('d-m-Y');
           </div>
 
           <form action="proses_konfirmasi.php" method="POST" enctype="multipart/form-data">
-            <div class="upload-box" id="drop-zone">
-              <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()">
+            <input type="hidden" name="nama" value="<?php echo $nama; ?>">
+            <input type="hidden" name="no_ktp" value="<?php echo $no_ktp; ?>">
+            <input type="hidden" name="no_hp" value="<?php echo $no_hp; ?>">
+            <input type="hidden" name="alamat" value="<?php echo $alamat; ?>">
+            <input type="hidden" name="tgl_masuk" value="<?php echo $tgl_masuk; ?>">
+            <input type="hidden" name="periode" value="<?php echo $periode; ?>">
+            <input type="hidden" name="total_bayar" value="<?php echo $total_bayar; ?>">
 
-              <label for="file-upload" id="upload-label" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div class="upload-box" id="drop-zone">
+              <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
+              <label for="file-upload" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
 
                 <div id="pre-upload">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #6c757d; margin-bottom: 10px;">
@@ -130,24 +137,18 @@ $tgl_keluar     = $date->format('d-m-Y');
                     <polyline points="17 8 12 3 7 8"></polyline>
                     <line x1="12" y1="3" x2="12" y2="15"></line>
                   </svg>
-                  <p id="file-name" style="color: #495057; font-weight: 500;"><span>Pilih file</span> atau seret dan lepas</p>
-                  <div class="hint" style="color: #6c757d; font-size: 12px; margin-top: 5px;">PNG, JPG, JPEG dibawah 2MB</div>
+                  <p style="color: #495057; font-weight: 500;">Pilih file bukti transfer</p>
                 </div>
 
                 <div id="post-upload" style="display: none; width: 100%; height: 200px; overflow: hidden; border-radius: 8px;">
-                  <img id="image-preview" src="#" alt="Preview"
-                    style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;">
-                  <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.5); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px;">
-                    Klik foto untuk ganti
-                  </div>
+                  <img id="image-preview" src="#" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-
               </label>
             </div>
 
             <input type="hidden" name="konfirmasi" value="1">
             <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
-          </form>
+            </form>
         </div>
 
         <div class="summary-card">
@@ -198,32 +199,32 @@ $tgl_keluar     = $date->format('d-m-Y');
   <script>
     // Fungsi ini harus di LUAR, jangan di dalem fungsi lain!
     function previewImage() {
-    const input = document.getElementById('file-upload');
-    const preUpload = document.getElementById('pre-upload');
-    const postUpload = document.getElementById('post-upload');
-    const imagePreview = document.getElementById('image-preview');
+      const input = document.getElementById('file-upload');
+      const preUpload = document.getElementById('pre-upload');
+      const postUpload = document.getElementById('post-upload');
+      const imagePreview = document.getElementById('image-preview');
 
-    if (input.files && input.files[0]) {
+      if (input.files && input.files[0]) {
         const file = input.files[0];
         const fileSize = file.size / 1024 / 1024; // Itung ke MB
 
         // 1. Validasi Maksimal 2MB
         if (fileSize > 2) {
-            alert("Waduh bre, filenya kegedean! Maksimal 2MB ya.");
-            input.value = ""; // Reset input biar gak jadi ke-upload
-            return;
+          alert("Waduh bre, filenya kegedean! Maksimal 2MB ya.");
+          input.value = ""; // Reset input biar gak jadi ke-upload
+          return;
         }
 
         // 2. Kalau aman, lanjut nampilin preview
         const reader = new FileReader();
         reader.onload = function(e) {
-            imagePreview.src = e.target.result;
-            preUpload.style.display = 'none';
-            postUpload.style.display = 'block';
+          imagePreview.src = e.target.result;
+          preUpload.style.display = 'none';
+          postUpload.style.display = 'block';
         }
         reader.readAsDataURL(file);
+      }
     }
-}
 
     // Fungsi showPayment lu yang lama tetep taruh sini juga boleh, 
     // tapi jangan bungkus previewImage ya!

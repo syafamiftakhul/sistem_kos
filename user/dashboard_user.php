@@ -255,7 +255,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                             <div class="mulai-dari">Mulai Dari</div>
                             <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
                                 <h2 class="rp-1000000" style="margin:0;">Rp 1.000.000 <small>/bln</small></h2>
-                                <a href="detail_kamar1.php" class="button-daftar2" style="text-decoration:none;">Detail</a>
+                                <a href="../detail_kamar1.php" class="button-daftar2" style="text-decoration:none;">Detail</a>
                             </div>
                         </div>
                     </div>
