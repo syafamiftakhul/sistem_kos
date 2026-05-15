@@ -23,7 +23,7 @@ if (!$result_pesanan) {
 }
 
 $total_pesanan = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan"))['jml'];
-$total_disetujui = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'Disetujui'"))['jml'];
+$total_disetujui = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'lunas'"))['jml'];
 $total_pending = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'Pending'"))['jml'];
 $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'Selesai'"))['jml'];
 ?>
@@ -188,17 +188,6 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                     <i class="fas fa-clock"></i>
                 </div>
             </div>
-
-            <div class="summary-card selesai">
-                <div class="card-content">
-                    <span class="label">Selesai</span>
-                    <h3><?= $total_selesai ?></h3>
-                </div>
-                <div class="card-icon brown">
-                    <i class="fas fa-user-check"></i>
-                </div>
-            </div>
-        </div>
     </div>
     <script>
         const btnMenu = document.getElementById('btn-menu');
