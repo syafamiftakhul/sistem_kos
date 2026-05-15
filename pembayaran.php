@@ -11,6 +11,9 @@ $tgl_masuk      = $_POST['tgl_masuk'] ?? date('Y-m-d');
 $periode        = (int)($_POST['periode'] ?? 1);
 $harga_satuan   = (int)($_POST['harga_satuan'] ?? 0);
 
+// SOLUSI: Tangkap id_kamar dari form booking sebelumnya
+$id_kamar       = $_POST['id_kamar'] ?? ''; 
+
 // Hitung total
 $total_bayar    = $harga_satuan * $periode;
 
@@ -24,7 +27,9 @@ $query_detail = mysqli_query($koneksi, "SELECT kamar.nomor_kamar, tipe_kamar.nam
                                         FROM kamar 
                                         JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
                                         WHERE kamar.id_kamar = '$id_kamar'");
-$detail = mysqli_fetch_assoc($query_detail);
+
+// Berikan nilai default jika query gagal atau id_kamar tidak ditemukan / bernilai null
+$detail = mysqli_fetch_assoc($query_detail) ?? ['nama_tipe' => 'Tidak Diketahui', 'nomor_kamar' => '-'];
 
 // Gabungin nama tipe dan nomor kamarnya
 $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
@@ -129,10 +134,11 @@ $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
           </div>
 
           <form action="proses_konfirmasi.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="nama" value="<?php echo $nama; ?>">
-            <input type="hidden" name="no_ktp" value="<?php echo $no_ktp; ?>">
-            <input type="hidden" name="no_hp" value="<?php echo $no_hp; ?>">
-            <input type="hidden" name="alamat" value="<?php echo $alamat; ?>">
+            <input type="hidden" name="id_kamar" value="<?php echo $id_kamar; ?>">
+            <input type="hidden" name="nama" value="<?php echo htmlspecialchars($nama); ?>">
+            <input type="hidden" name="no_ktp" value="<?php echo htmlspecialchars($no_ktp); ?>">
+            <input type="hidden" name="no_hp" value="<?php echo htmlspecialchars($no_hp); ?>">
+            <input type="hidden" name="alamat" value="<?php echo htmlspecialchars($alamat); ?>">
             <input type="hidden" name="tgl_masuk" value="<?php echo $tgl_masuk; ?>">
             <input type="hidden" name="periode" value="<?php echo $periode; ?>">
             <input type="hidden" name="total_bayar" value="<?php echo $total_bayar; ?>">
@@ -165,7 +171,7 @@ $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
           <h3>Rincian Pesanan</h3>
           <div class="summary-item">
             <div class="label">Kamar</div>
-            <div class="value"><?php echo $nama_kamar_lengkap; ?></div>
+            <div class="value"><?php echo htmlspecialchars($nama_kamar_lengkap); ?></div>
           </div>
           <div class="summary-item">
             <div class="label">Nama Penghuni</div>
@@ -206,7 +212,6 @@ $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
     </main>
   </div>
   <script>
-    // Fungsi ini harus di LUAR, jangan di dalem fungsi lain!
     function previewImage() {
       const input = document.getElementById('file-upload');
       const preUpload = document.getElementById('pre-upload');
@@ -215,7 +220,7 @@ $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
 
       if (input.files && input.files[0]) {
         const file = input.files[0];
-        const fileSize = file.size / 1024 / 1024; // Itung ke MB
+        const fileSize = file.size / 1024 / 1024; // Hitung ke MB
 
         // 1. Validasi Maksimal 2MB
         if (fileSize > 2) {
@@ -235,8 +240,6 @@ $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
       }
     }
 
-    // Fungsi showPayment lu yang lama tetep taruh sini juga boleh, 
-    // tapi jangan bungkus previewImage ya!
     function showPayment(type) {
       const bankBox = document.getElementById('detail-bank');
       const walletBox = document.getElementById('detail-wallet');
