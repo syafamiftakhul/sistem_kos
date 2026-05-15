@@ -10,8 +10,8 @@ if (isset($_POST['simpan'])) {
 
     // Masukin ke kolom nomor_kamar
     $query = "INSERT INTO kamar (nomor_kamar, id_tipe, status_kamar, no_ktp) 
-              VALUES ('$nomor_kamar', '$id_tipe', '$status_kamar', NULL)";
-
+          VALUES ('$nomor_kamar', '$id_tipe', 'kosong', NULL)";
+          
     if (mysqli_query($koneksi, $query)) {
         echo "<script>alert('Kamar $nomor_kamar berhasil ditambah!'); window.location='kamar.php';</script>";
     } else {

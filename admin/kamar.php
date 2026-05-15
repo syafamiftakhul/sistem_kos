@@ -2,18 +2,21 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
+// SEKARANG KITA JOIN KE CUSTOMER KARENA no_ktp SUDAH ADA
 $query_kamar = "SELECT kamar.*, tipe_kamar.nama_tipe, tipe_kamar.harga, customer.nama as nama_penghuni 
                 FROM kamar 
                 LEFT JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
                 LEFT JOIN customer ON kamar.no_ktp = customer.no_ktp";
+
 $result_kamar = mysqli_query($koneksi, $query_kamar);
 
-// Ini yang tadi ketinggalan:
+// Ini buat ngitung total
 $total_kamar = mysqli_num_rows($result_kamar);
 
+// Query Statistik tetep sama
 $query_stats = mysqli_query($koneksi, "SELECT 
     SUM(CASE WHEN status_kamar = 'terisi' THEN 1 ELSE 0 END) as terisi,
-    SUM(CASE WHEN status_kamar = 'tersedia' THEN 1 ELSE 0 END) as tersedia 
+    SUM(CASE WHEN status_kamar = 'kosong' THEN 1 ELSE 0 END) as tersedia
     FROM kamar");
 $stats = mysqli_fetch_assoc($query_stats);
 ?>
