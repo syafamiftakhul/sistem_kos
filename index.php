@@ -20,7 +20,7 @@ if (isset($_SESSION['id_user'])) {
             $nama = $data['nama'];
         }
     } else if ($akses == 1) {
-        $query = mysqli_query($koneksi, "SELECT * FROM admin WHERE id_user='$id_user'");
+        $query = mysqli_query($koneksi, "SELECT * FROM user WHERE id_user='$id_user'");
         if ($query && mysqli_num_rows($query) > 0) {
             $data = mysqli_fetch_assoc($query);
             $nama = $data['nama'];
