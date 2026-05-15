@@ -10,7 +10,7 @@ if ($query && mysqli_num_rows($query) > 0) {
     $data = mysqli_fetch_array($query);
     $id_tipe = $data['id_tipe'];
 } else {
-    $data = ['nama_tipe' => 'Standard Room', 'harga' =>  400000 ];
+    $data = ['nama_tipe' => 'Standard Room', 'harga' =>  400000];
     $id_tipe = 3;
 }
 ?>
@@ -118,7 +118,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                                 </div>
                                 <div class="info-text">
                                     <div class="info-label">Ukuran Ruangan</div>
-                                    <div class="info-val">15m²</div>
+                                    <div class="info-val">15 m²</div>
                                 </div>
                             </div>
                             <div class="info-item">
