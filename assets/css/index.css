@@ -194,37 +194,72 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
 }
 
 .fasilitas1, .fasilitas-2, .fasilitas-3, .fasilitas-4, .fasilitas-5, .fasilitas-6, .fasilitas-7 {
+  width: 120px;
+  height: 120px;
+
+  background-color: var(--bg-light);
+  border-radius: 12px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
-  background-color: var(--bg-light);
-  border-radius: var(--border-radius);
+
+  padding: 12px;
   gap: 10px;
-  padding: 10px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-muted);
+
+  text-align: center;
+
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+
+  transition: 0.3s;
 }
 
 .fasilitas1-child {
   display: none;
 }
 
-.wifi-icon, .coffee-icon, .icon2, .icon3, .icon4, .icon5 {
-  width: 28px;
-  height: 28px;
-  opacity: 0.6;
-  object-fit: contain;
+.fasilitas1:hover,
+.fasilitas-2:hover,
+.fasilitas-3:hover,
+.fasilitas-4:hover,
+.fasilitas-5:hover,
+.fasilitas-6:hover,
+.fasilitas-7:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* FILTERS */
+.wifi-icon, .parkir-icon, .dapur-icon, .icon2.icon2, .icon3, .icon4, .icon5 {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  display: block;
+  opacity: 0.8;
+}
+/*khusus icon parkir*/
+.parkir-icon {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 5px;
+}
+.fasilitas-2 {
+  padding-top: 8px;
+}
+.wifi-100mbps,
+.parkir-motor,
+.cctv,
+.ac {
+  line-height: 1.4;
+}
+
+
 .select-fields-parent {
   padding: 40px 40px 60px;
   background-color: var(--bg-light);
