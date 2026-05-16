@@ -3,9 +3,9 @@ session_start();
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-if (!isset($_SESSION['akses']) || $_SESSION['akses'] != 1) {
+if (!isset($_SESSION['akses']) || $_SESSION['akses'] != 'admin') {
     header("Location: ../login.php");
-    exit();
+    exit;
 }
 
 $bulan_ini = date('m');
