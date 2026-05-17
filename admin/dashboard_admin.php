@@ -1,11 +1,13 @@
 <?php
 session_start();
+file_put_contents('../debug_session.txt', "SESSION AT DASHBOARD: " . var_export($_SESSION, true) . "\n");
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-if (!isset($_SESSION['akses']) || $_SESSION['akses'] != 'admin') {
+if (!isset($_SESSION['akses']) || ($_SESSION['akses'] != 'admin' && $_SESSION['akses'] != 1)) {
+    file_put_contents('../debug_session.txt', "FAILED VALIDATION AT LINE 6: " . var_export($_SESSION, true) . "\n", FILE_APPEND);
     header("Location: ../login.php");
-    exit;
+    exit();
 }
 
 $bulan_ini = date('m');
