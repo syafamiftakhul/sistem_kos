@@ -65,7 +65,7 @@ if (isset($_SESSION['id_user'])) {
         </div>
 
         <?php if (isset($_SESSION['id_user'])): ?>
-          <?php if ($_SESSION['akses'] == 1): ?>
+          <?php if ($_SESSION['akses'] == 'admin'): ?>
             <h2 class="beranda" onclick="window.location.href='admin/dashboard_admin.php'" style="margin: 0; font-size: 1rem; cursor: pointer;">Dashboard Admin</h2>
           <?php else: ?>
             <h2 class="beranda" onclick="window.location.href='user/dashboard_user.php'" style="margin: 0; font-size: 1rem; cursor: pointer;">Dashboard Saya</h2>

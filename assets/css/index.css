@@ -1,4 +1,16 @@
 /* HEADER */
+/* TAMBAHKAN INI DI BAGIAN PALING ATAS CSS */
+* {
+  font-family: 'Inter', sans-serif !important;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif !important;
+  margin: 0;
+  padding: 0;
+}
+
 .dashboard-user1-inner {
   position: absolute;
   top: 0;
@@ -38,6 +50,7 @@
 }
 
 .kos-aqsya-residence {
+  font-family: 'Inter', sans-serif !important; /* Tambahkan ini */
   font-size: 18px;
   font-weight: 700;
   color: var(--text-main);
@@ -125,7 +138,8 @@
 }
 
 .kos-aqsya-residence2 {
-  font-size: 40px;
+  font-family: 'Inter', sans-serif; /* Tambahkan ini */
+  font-size: 36px;                 /* Sesuaikan dari 40px ke 36px agar proporsional */
   font-weight: 700;
   margin-bottom: 5px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
