@@ -23,13 +23,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['no_ktp']  = $row['no_ktp'] ?? null;
             $_SESSION['nama']    = $row['nama'];
 
+<<<<<<< HEAD
 
+=======
+            // AKSES
+>>>>>>> tampilan-awal
             if ($row['akses'] == 'admin') {
 
                 // ADMIN
                 header("Location: admin/dashboard_admin.php");
             } else {
-
+            
                 // USER
                 header("Location: user/dashboard_user.php");
             }
