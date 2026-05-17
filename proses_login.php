@@ -24,12 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['nama']    = $row['nama'];
 
             // AKSES
-            if ($row['akses'] == 1) {
+            if ($row['akses'] == 'admin') {
 
                 // ADMIN
                 header("Location: admin/dashboard_admin.php");
             } else {
-
+            
                 // USER
                 header("Location: user/dashboard_user.php");
             }
