@@ -65,12 +65,14 @@ $jml_tunggak = mysqli_fetch_assoc($query_jml_tunggak)['total'] ?? 0;
 $query_pesanan = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM pesanan WHERE status_pesanan = 2");
 $total_pesanan = mysqli_fetch_assoc($query_pesanan)['total'] ?? 0;
 
-$query_pembayaran = "SELECT pesanan.*, customer.nama, tipe_kamar.nama_tipe 
+$query_pembayaran = "SELECT pesanan.*, customer.nama, tipe_kamar.nama_tipe, transaksi.jml_bayar 
                      FROM pesanan 
                      JOIN customer ON pesanan.no_ktp = customer.no_ktp 
                      JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
                      JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
+                     LEFT JOIN transaksi ON pesanan.id_pesanan = transaksi.id_pesanan
                      ORDER BY pesanan.tgl_pesan DESC LIMIT 5";
+                     
 $result_pembayaran = mysqli_query($koneksi, $query_pembayaran);
 
 $query_kontrak = "SELECT customer.nama, tipe_kamar.nama_tipe, pesanan.tgl_pesan,
@@ -161,7 +163,7 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
                 <p>Ringkasan Manajemen Kos Anda</p>
             </header>
 
-            
+
 
             <section class="stats-row">
                 <!-- Total Kamar -->
@@ -219,26 +221,25 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
                     <?php
                     if (mysqli_num_rows($result_pembayaran) > 0) {
                         while ($row = mysqli_fetch_assoc($result_pembayaran)) {
-                            // Logika warna badge berdasarkan status
-                            // Status 2 = Lunas (Success), Status 1 = Pending (Warning)
-                            $status_class = ($row['status'] == 2) ? 'success' : 'warning';
-                            $status_label = ($row['status'] == 2) ? 'Lunas' : 'Pending';
 
-                            // Format Tanggal
-                            $tanggal = date('d M Y', strtotime($row['tanggal_bayar']));
+                            // SINKRONISASI ERD: Cek berdasarkan teks enum di database ('lunas' atau 'pending')
+                            $is_lunas = ($row['status_pesanan'] == 'lunas');
+
+                            $status_class = $is_lunas ? 'success' : 'warning';
+                            $status_label = $is_lunas ? 'Lunas' : 'Pending';
+
+                            // Format Tanggal (Pastiin kolomnya sesuai, di database lu adanya tgl_pesan)
+                            $tanggal = date('d M Y', strtotime($row['tgl_pesan']));
                     ?>
                             <div class="data-item">
                                 <div class="item-info">
                                     <strong><?php echo htmlspecialchars($row['nama']); ?></strong>
-                                    <!-- Menampilkan nama_tipe dari tabel tipe_kamar -->
-                                    <span><?php echo $row['nama_tipe']; ?> • <?php echo date('d M Y', strtotime($row['tgl_pesan'])); ?></span>
+                                    <span><?php echo $row['nama_tipe']; ?> • <?php echo $tanggal; ?></span>
                                 </div>
                                 <div class="item-status">
-                                    <!-- jml_bayar diambil dari tabel transaksi jika perlu, 
-             tapi karena ini list pesanan, kita pakai nominal statis atau ambil dari tabel transaksi -->
-                                    <strong>Rp. <?php echo number_format($row['jml_bayar'], 0, ',', '.'); ?></strong>
-                                    <span class="badge <?php echo ($row['status_pesanan'] == 2) ? 'success' : 'warning'; ?>">
-                                        <?php echo ($row['status_pesanan'] == 2) ? 'Lunas' : 'Pending'; ?>
+                                    <strong>Rp. <?php echo number_format((float)($row['jml_bayar'] ?? 0), 0, ',', '.'); ?></strong>
+                                    <span class="badge <?php echo $status_class; ?>">
+                                        <?php echo $status_label; ?>
                                     </span>
                                 </div>
                             </div>
