@@ -51,18 +51,21 @@ if ($no_ktp) {
     </header>
 
     <div class="main-content">
+        <a href="dashboard_user.php" style="color: #6B7280; text-decoration: none; display: inline-flex; align-items: center; margin-bottom: 24px; font-size: 14px; font-weight: 500;">
+            <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Kembali
+        </a>
         <h2 class="dashboard-title">Dashboard Saya</h2>
         <p class="dashboard-subtitle">Kelola pemesanan dan keluhan Anda</p>
 
         <h3>Pesanan Saya</h3>
-        <?php if ($no_ktp && $booking) : ?>
+        <?php if (!empty($no_ktp) && !empty($booking)) : ?>
             <div class="card-box">
                 <div class="card-top">
                     <div>
                         <div class="booking-id">Booking #<?= $booking['id_pesanan']; ?></div>
                         <div class="booking-date"><i class="far fa-calendar"></i> 14/08/2025 - 15-11-2025</div>
                     </div>
-                    <div class="badge-confirm">Confirm</div>
+                    <span class="badge-confirm">Confirm</span>
                 </div>
 
                 <div class="grid-info">
@@ -80,7 +83,7 @@ if ($no_ktp) {
                     </div>
                     <div>
                         <div class="info-label">Total Price</div>
-                        <div class="info-value price-value">Rp<?= number_format($booking['harga'], 0, ',', '.'); ?></div>
+                        <div class="info-value price-value">Rp <?= number_format($booking['harga'], 0, ',', '.'); ?></div>
                     </div>
                 </div>
 
@@ -89,11 +92,11 @@ if ($no_ktp) {
                 </a>
             </div>
         <?php else : ?>
-            <p class="empty-text">Anda belum melakukan riwayat pesanan</p>
+            <p class="empty-text" style="margin-top: -10px; margin-bottom: 30px;">Anda belum melakukan riwayat pesanan</p>
         <?php endif; ?>
 
         <h3>Keluhan Saya</h3>
-        <?php if ($no_ktp && $keluhan) : ?>
+        <?php if (!empty($no_ktp) && !empty($keluhan)) : ?>
             <div class="card-box">
                 <div class="card-top" style="margin-bottom: 12px;">
                     <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek']); ?></div>
@@ -109,11 +112,11 @@ if ($no_ktp) {
                 </div>
                 
                 <div class="keluhan-date">
-                    Dikirim pada <?= htmlspecialchars(date('j/n/Y', strtotime($keluhan['tgl_lapor']))); ?>
+                    Dikirim pada <?= htmlspecialchars(date('d/n/Y', strtotime($keluhan['tgl_lapor']))); ?>
                 </div>
             </div>
         <?php else : ?>
-            <p class="empty-text">Lakukan pemesanan untuk bisa memberi pengaduan pada kamar anda</p>
+            <p class="empty-text" style="margin-top: -10px;">Lakukan pemesanan untuk bisa memberi pengaduan pada kamar anda</p>
         <?php endif; ?>
     </div>
 
