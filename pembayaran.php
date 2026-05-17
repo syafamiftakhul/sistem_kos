@@ -22,15 +22,22 @@ $date           = new DateTime($tgl_masuk);
 $date->modify("+$periode month");
 $tgl_keluar     = $date->format('d-m-Y');
 
-// Ambil detail kamar buat ditampilin di ringkasan
-$query_detail = mysqli_query($koneksi, "SELECT kamar.nomor_kamar, tipe_kamar.nama_tipe 
+// Ambil detail kamar acak yang tipenya sesuai dengan pilihan user
+$query_detail = mysqli_query($koneksi, "SELECT kamar.id_kamar, kamar.nomor_kamar, tipe_kamar.nama_tipe 
                                         FROM kamar 
                                         JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
-                                        WHERE kamar.id_kamar = '$id_kamar'");
+                                        WHERE kamar.id_tipe = '$id_tipe' 
+                                        LIMIT 1");
 $detail = mysqli_fetch_assoc($query_detail);
 
-// Gabungin nama tipe dan nomor kamarnya
-$nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
+// Validasi biar gak error "offset on null" kalau data kamar di DB beneran kosong
+if ($detail) {
+    $id_kamar = $detail['id_kamar']; // Dapetin ID kamarnya buat disimpen nanti
+    $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
+} else {
+    $id_kamar = '';
+    $nama_kamar_lengkap = "Kamar Belum Tersedia";
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
