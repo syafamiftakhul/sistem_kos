@@ -20,7 +20,7 @@ if (isset($_POST['konfirmasi'])) {
     $tujuan    = "assets/uploads/" . $nama_baru;
 
     if (move_uploaded_file($tmp_file, $tujuan)) {
-        
+
         // A. Simpan/Update ke tabel customer
         $query_cust = "INSERT INTO customer (no_ktp, id_user, nama, no_hp, alamat) 
                        VALUES ('$no_ktp', '$id_user', '$nama', '$no_hp', '$alamat')
@@ -39,9 +39,10 @@ if (isset($_POST['konfirmasi'])) {
         $id_pesanan = mysqli_insert_id($koneksi);
 
         // D. Insert ke Transaksi
-        $q_trans = "INSERT INTO transaksi (id_pesanan, no_ktp, tgl_transaksi, jml_bayar, bukti_transaksi, status_transaksi) 
-                    VALUES ('$id_pesanan', '$no_ktp', '$tgl_skrg', '$total', '$nama_baru', 'pending')";
-        
+        // D. Insert ke Transaksi - Tambahin kolom tgl_masuk di sini
+        $q_trans = "INSERT INTO transaksi (id_pesanan, no_ktp, tgl_transaksi, tgl_masuk, jml_bayar, bukti_transaksi, status_transaksi) 
+            VALUES ('$id_pesanan', '$no_ktp', '$tgl_skrg', '$tgl_masuk', '$total', '$nama_baru', 'pending')";
+
         if (mysqli_query($koneksi, $q_trans)) {
             echo "<script>alert('Pembayaran Berhasil Dikirim!'); window.location='user/dashboard_private_user.php';</script>";
         }

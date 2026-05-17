@@ -49,6 +49,9 @@
   color: var(--text-muted);
   margin-bottom: 25px;
   transition: var(--transition);
+  position: relative;
+  z-index: 10;
+  cursor: pointer;
 }
 
 .back-link:hover {
