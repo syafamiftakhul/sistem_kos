@@ -19,18 +19,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // SESSION
             $_SESSION['id_user'] = $row['id_user'];
-            $_SESSION['akses']   = ($row['akses'] == 'admin') ? 1 : 2;
+            $_SESSION['akses']   = $row['akses'];
             $_SESSION['no_ktp']  = $row['no_ktp'];
             $_SESSION['nama']    = $row['nama'];
 
             // AKSES
-            if ($row['akses'] == 'admin') {
+            if ($row['akses'] == 'admin' || $row['akses'] == 1) {
+
                 // ADMIN
                 header("Location: admin/dashboard_admin.php");
             } else {
-                // USER / PENGHUNI
+
+                // USER
                 header("Location: user/dashboard_user.php");
             }
+
             exit;
         } else {
 
