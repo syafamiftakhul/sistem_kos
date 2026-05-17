@@ -7,6 +7,7 @@ $nama           = $_POST['nama'] ?? 'Guest';
 $no_ktp         = $_POST['no_ktp'] ?? '';
 $no_hp          = $_POST['no_hp'] ?? '';
 $alamat         = $_POST['alamat'] ?? '';
+$id_tipe        = $_POST['id_tipe'] ?? '';
 $tgl_masuk      = $_POST['tgl_masuk'] ?? date('Y-m-d');
 $periode        = (int)($_POST['periode'] ?? 1);
 $harga_satuan   = (int)($_POST['harga_satuan'] ?? 0);
@@ -26,16 +27,10 @@ $tgl_keluar     = $date->format('d-m-Y');
 $query_detail = mysqli_query($koneksi, "SELECT kamar.id_kamar, kamar.nomor_kamar, tipe_kamar.nama_tipe 
                                         FROM kamar 
                                         JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
-<<<<<<< HEAD
                                         WHERE kamar.id_tipe = '$id_tipe' 
                                         LIMIT 1");
 $detail = mysqli_fetch_assoc($query_detail);
-=======
-                                        WHERE kamar.id_kamar = '$id_kamar'");
 
-// Berikan nilai default jika query gagal atau id_kamar tidak ditemukan / bernilai null
-$detail = mysqli_fetch_assoc($query_detail) ?? ['nama_tipe' => 'Tidak Diketahui', 'nomor_kamar' => '-'];
->>>>>>> tampilan-awal
 
 // Validasi biar gak error "offset on null" kalau data kamar di DB beneran kosong
 if ($detail) {
@@ -53,12 +48,12 @@ if ($detail) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pembayaran - Kos Aqsya Residence</title>
-  <link rel="stylesheet" href="assets/css/global.css" />
-  <link rel="stylesheet" href="assets/css/detail.css" />
-  <link rel="stylesheet" href="assets/css/booking.css" />
+  <link rel="stylesheet" href="../assets/css/global.css" />
+  <link rel="stylesheet" href="../assets/css/detail.css" />
+  <link rel="stylesheet" href="../assets/css/booking.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 </head>
-
+  
 <body>
   <div class="dashboard-user1">
     <header class="detail-header">
