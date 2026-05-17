@@ -5,7 +5,7 @@ include '../koneksi.php';
 
 $id_user = $_SESSION['id_user'] ?? '';
 
-$query_cek_customer = mysqli_query($koneksi, "SELECT no_ktp FROM customer WHERE id_user = '$id_user'");
+$query_cek_customer = mysqli_query($koneksi, "SELECT no_ktp, no_hp FROM customer WHERE id_user = '$id_user'");
 $data_customer = mysqli_fetch_assoc($query_cek_customer);
 
 $no_ktp = $data_customer['no_ktp'] ?? null;
@@ -15,12 +15,13 @@ $booking = null;
 $keluhan = null;
 
 if ($no_ktp) {
-    // Mengambil data pesanan aktif (status_pesanan = 2 artinya disetujui/berjalan)
-    $query_booking = mysqli_query($koneksi, "SELECT pesanan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe, tipe_kamar.harga 
+    // Query booking disatukan dengan tabel transaksi menggunakan LEFT JOIN agar tgl_masuk & periode terbaca
+    $query_booking = mysqli_query($koneksi, "SELECT pesanan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe, tipe_kamar.harga, transaksi.tgl_masuk, transaksi.periode 
         FROM pesanan 
         JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
         JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
-        WHERE pesanan.no_ktp = '$no_ktp' AND pesanan.status_pesanan = 2 LIMIT 1");
+        LEFT JOIN transaksi ON pesanan.id_pesanan = transaksi.id_pesanan
+        WHERE pesanan.no_ktp = '$no_ktp' AND pesanan.status_pesanan = 'lunas' LIMIT 1");
     $booking = mysqli_fetch_assoc($query_booking);
 
     // Mengambil data keluhan terakhir
@@ -36,6 +37,7 @@ if ($no_ktp) {
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,6 +45,7 @@ if ($no_ktp) {
     <link rel="stylesheet" href="../assets/css/dashboard_private_user.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
     <header style="display: flex; align-items: center; padding: 16px 40px; border-bottom: 1px solid #E5E7EB; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
@@ -66,10 +69,20 @@ if ($no_ktp) {
             <div class="card-box">
                 <div class="card-top">
                     <div>
-                        <div class="booking-id">Booking #<?= htmlspecialchars($booking['id_pesanan']); ?></div>
+                        <div class="booking-id">Booking #<?= $booking['id_pesanan']; ?></div>
                         <div class="booking-date">
-                            <i class="far fa-calendar-alt"></i> 
-                            <?= date('d M Y', strtotime($booking['tgl_masuk'])); ?> - <?= date('d M Y', strtotime($booking['tgl_keluar'])); ?>
+                            <i class="far fa-calendar"></i> 
+                            <?php 
+                            if (!empty($booking['tgl_masuk'])) {
+                                $tgl_masuk_dt = new DateTime($booking['tgl_masuk']);
+                                $periode_bulan = (int)($booking['periode'] ?? 1);
+                                echo $tgl_masuk_dt->format('d M Y') . " - ";
+                                $tgl_masuk_dt->modify("+$periode_bulan month");
+                                echo $tgl_masuk_dt->format('d M Y');
+                            } else {
+                                echo date('d M Y', strtotime($booking['tgl_pesan']));
+                            }
+                            ?>
                         </div>
                     </div>
                     <span class="badge-confirm">Terkonfirmasi</span>
@@ -82,20 +95,19 @@ if ($no_ktp) {
                     </div>
                     <div>
                         <div class="info-label">Nomor Telepon</div>
-                        <div class="info-value"><?= htmlspecialchars($no_telp); ?></div>
                     </div>
                     <div>
                         <div class="info-label">Kamar</div>
                         <div class="info-value"><?= htmlspecialchars($booking['nama_tipe'] . ' - ' . $booking['nomor_kamar']); ?></div>
                     </div>
                     <div>
-                        <div class="info-label">Total Harga</div>
-                        <div class="info-value price-value">Rp <?= number_format($booking['harga'], 0, ',', '.'); ?></div>
+                        <div class="info-label">Total Price</div>
+                        <div class="info-value price-value">Rp <?= number_format((float)($booking['harga'] ?? 0), 0, ',', '.'); ?></div>
                     </div>
                 </div>
 
-                <a href="../pengaduan.php" class="btn-complaint">
-                    <i class="fas fa-exclamation-circle"></i> Laporkan Keluhan Kamar
+                <a href="pengaduan.php?id_kamar=<?= $booking['id_kamar']; ?>" class="btn-complaint" style="text-decoration: none; display: inline-block; text-align: center;">
+                    <i class="fas fa-exclamation-circle"></i> Tambahkan Pengaduan
                 </a>
             </div>
         <?php else : ?>
@@ -106,8 +118,8 @@ if ($no_ktp) {
         <?php if (!empty($no_ktp) && !empty($keluhan)) : ?>
             <div class="card-box">
                 <div class="card-top" style="margin-bottom: 12px;">
-                    <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek']); ?></div>
-                    <span class="badge-proses">Sedang Diproses</span>
+                    <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek'] ?? 'Keluhan Tanpa Subjek'); ?></div>
+                    <div class="badge-proses">Sedang Diproses</div>
                 </div>
                 
                 <div class="keluhan-room">
@@ -115,11 +127,11 @@ if ($no_ktp) {
                 </div>
                 
                 <div class="keluhan-desc">
-                    <?= nl2br(htmlspecialchars($keluhan['deskripsi'])); ?>
+                    <?= htmlspecialchars($keluhan['deskripsi'] ?? ''); ?>
                 </div>
                 
                 <div class="keluhan-date">
-                    Dikirim pada <?= htmlspecialchars(date('d/n/Y', strtotime($keluhan['tgl_lapor']))); ?>
+                    Dikirim pada <?= htmlspecialchars(date('d/m/Y', strtotime($keluhan['tgl_lapor']))); ?>
                 </div>
             </div>
         <?php else : ?>
@@ -128,4 +140,5 @@ if ($no_ktp) {
     </div>
 
 </body>
+
 </html>
