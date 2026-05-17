@@ -2,53 +2,29 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-// 1. Ambil filter status dari URL
-$filter = isset($_GET['status']) ? $_GET['status'] : 'semua';
+// Ambil filter status dari URL (default 'Semua')
+$filter = isset($_GET['status']) ? $_GET['status'] : 'Semua';
 
-// QUERY JOIN: Kita ambil data dari Pesanan sebagai pusatnya
-$query = "SELECT p.*, c.nama, k.nomor_kamar, 
-                 p.status_pesanan as status_transaksi, 
-                 tk.harga as jml_bayar
-          FROM pesanan p
-          JOIN customer c ON p.no_ktp = c.no_ktp
-          JOIN kamar k ON p.id_kamar = k.id_kamar
-          JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe";
+// Query dasar JOIN antara Transaksi dan Customer sesuai ERD
+$query = "SELECT t.*, c.nama, p.id_kamar 
+          FROM transaksi t 
+          JOIN customer c ON t.no_ktp = c.no_ktp
+          LEFT JOIN pesanan p ON t.id_pesanan = p.id_pesanan";
 
-if ($filter != 'semua') {
-    $query .= " WHERE p.status_pesanan = '$filter'";
+if ($filter != 'Semua') {
+    $query .= " WHERE t.status_transaksi = '$filter'";
 }
 
 $result = mysqli_query($koneksi, $query);
 
-// Ambil filter status dan paksa jadi huruf kecil
-$filter = isset($_GET['status']) ? strtolower($_GET['status']) : 'semua';
-
-
-
-// 3. Hitung Ringkasan Income dari tabel PESANAN (karena data transaksi lu masih kosong)
-// Kita ambil harga dari tipe_kamar berdasarkan pesanan yang lunas
-$q_lunas = "SELECT SUM(tk.harga) as total 
-            FROM pesanan p
-            JOIN kamar k ON p.id_kamar = k.id_kamar
-            JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe
-            WHERE p.status_pesanan = 'lunas'";
-
-$res_lunas = mysqli_query($koneksi, $q_lunas);
-$total_lunas = mysqli_fetch_assoc($res_lunas)['total'] ?? 0;
-
-// Hitung Pending
-$q_pending = "SELECT SUM(tk.harga) as total FROM pesanan p 
-              JOIN kamar k ON p.id_kamar = k.id_kamar 
-              JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe 
-              WHERE p.status_pesanan = 'pending'";
-$total_pending = mysqli_fetch_assoc(mysqli_query($koneksi, $q_pending))['total'] ?? 0;
-
-$total_terlambat = 0; // Set default dulu
+// Hitung Ringkasan Income (Berdasarkan status di DB lu)
+$total_lunas = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Lunas'"))['total'] ?? 0;
+$total_pending = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Pending'"))['total'] ?? 0;
+$total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Terlambat'"))['total'] ?? 0;
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <title>Manajemen Pembayaran - Aqsya Kos</title>
@@ -103,98 +79,97 @@ $total_terlambat = 0; // Set default dulu
                     <span class="menu-text">Logout</span>
                 </a>
             </nav>
-        </aside>
-        <div class="main-content">
+        </aside> <div class="main-content">
 
 
-            <main class="main-content">
-                <header>
-                    <div class="header-title">
-                        <h1>Manajemen Pembayaran</h1>
-                        <p>Kelola Data Pembayaran Kos-kosan</p>
+        <main class="main-content">
+            <header>
+                <div class="header-title">
+                    <h1>Manajemen Pembayaran</h1>
+                    <p>Kelola Data Pembayaran Kos-kosan</p>
+                </div>
+            </header>
+
+            <section class="data-section">
+                <div class="action-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Masukkan nama, kamar, atau telepon..">
                     </div>
-                </header>
+                </div>
 
-                <section class="data-section">
-                    <div class="action-bar">
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" placeholder="Masukkan nama, kamar, atau telepon..">
-                        </div>
-                    </div>
+                <div class="category-filter">
+                    <a href="?status=Semua" class="cat-item <?= $filter == 'Semua' ? 'active' : '' ?>">Semua</a>
+                    <a href="?status=Lunas" class="cat-item <?= $filter == 'Lunas' ? 'active' : '' ?>">Lunas</a>
+                    <a href="?status=Pending" class="cat-item <?= $filter == 'Pending' ? 'active' : '' ?>">Pending</a>
+                    <a href="?status=Terlambat" class="cat-item <?= $filter == 'Terlambat' ? 'active' : '' ?>">Terlambat</a>
+                </div>
 
-                    <div class="category-filter">
-                        <a href="pembayaran.php?status=semua" class="cat-item <?= ($filter == 'semua') ? 'active' : '' ?>">Semua</a>
-                        <a href="pembayaran.php?status=lunas" class="cat-item <?= ($filter == 'lunas') ? 'active' : '' ?>">Lunas</a>
-                        <a href="pembayaran.php?status=pending" class="cat-item <?= ($filter == 'pending') ? 'active' : '' ?>">Pending</a>
-                        <a href="pembayaran.php?status=terlambat" class="cat-item <?= ($filter == 'terlambat') ? 'active' : '' ?>">Terlambat</a>
-                    </div>
-
-                    <div class="table-container">
-                        <table class="pembayaran-table">
-                            <thead>
-                                <tr>
-                                    <th>Penghuni</th>
-                                    <th>Kamar</th>
-                                    <th>Periode</th>
-                                    <th>Jumlah</th>
-                                    <th>Tanggal Bayar</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if ($result && mysqli_num_rows($result) > 0) : ?>
-                                    <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                        <tr>
-                                            <td><strong><?= htmlspecialchars($row['nama']) ?></strong></td>
-                                            <td><span class="badge-kamar">Kamar <?= htmlspecialchars($row['nomor_kamar']) ?></span></td>
-                                            <td><?= htmlspecialchars($row['periode'] ?? 'Bulan Ini') ?></td>
-                                            <td>Rp <?= number_format($row['jml_bayar'], 0, ',', '.') ?></td>
-                                            <td>-</td>
-                                            <td>
-                                                <span class="badge-status <?= strtolower($row['status_transaksi']) ?>">
-                                                    <?= htmlspecialchars($row['status_transaksi']) ?>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    <?php endwhile; ?>
-                                <?php else : ?>
+                <div class="table-container">
+                    <table class="pembayaran-table">
+                        <thead>
+                            <tr>
+                                <th>Penghuni</th>
+                                <th>Kamar</th>
+                                <th>Periode</th>
+                                <th>Jumlah</th>
+                                <th>Tanggal Bayar</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (mysqli_num_rows($result) > 0) : ?>
+                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
                                     <tr>
-                                        <td colspan="6" style="text-align: center; padding: 50px; color: #999;">
-                                            <i class="fas fa-receipt" style="font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.3;"></i>
-                                            Belum ada data pembayaran untuk kategori <strong><?= htmlspecialchars($filter) ?></strong>.
+                                        <td><strong><?= htmlspecialchars($row['nama']) ?></strong></td>
+                                        <td><span class="badge-kamar">Kamar <?= $row['id_kamar'] ?></span></td>
+                                        <td><?= $row['periode'] ?></td>
+                                        <td>Rp <?= number_format($row['jml_bayar'], 0, ',', '.') ?></td>
+                                        <td><?= ($row['tgl_transaksi'] && $row['tgl_transaksi'] != '0000-00-00') ? date('d M Y', strtotime($row['tgl_transaksi'])) : '-' ?></td>
+                                        <td>
+                                            <span class="badge-status <?= strtolower($row['status_transaksi']) ?>">
+                                                <?= $row['status_transaksi'] ?>
+                                            </span>
                                         </td>
                                     </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                                <?php endwhile; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 50px; color: #999;">
+                                        <i class="fas fa-receipt" style="font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.3;"></i>
+                                        Belum ada data pembayaran untuk kategori <strong><?= $filter ?></strong>.
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
 
-                    <div class="income-summary">
-                        <div class="income-card lunas">
-                            <span class="label">Total Lunas</span>
-                            <h3>Rp <?= number_format($total_lunas, 0, ',', '.') ?></h3>
-                        </div>
-                        <div class="income-card pending">
-                            <span class="label">Total Pending</span>
-                            <h3>Rp <?= number_format($total_pending / 1000000, 1) ?> jt</h3>
-                        </div>
-                        <div class="income-card terlambat">
-                            <span class="label">Total Terlambat</span>
-                            <h3>Rp <?= number_format($total_terlambat / 1000000, 1) ?> jt</h3>
-                        </div>
+                <div class="income-summary">
+                    <div class="income-card lunas">
+                        <span class="label">Total Lunas</span>
+                        <h3>Rp <?= number_format($total_lunas / 1000000, 1) ?> jt</h3>
                     </div>
-                </section>
-            </main>
-        </div>
-        <script>
-            const btnMenu = document.getElementById('btn-menu');
-            const sidebar = document.getElementById('sidebar');
+                    <div class="income-card pending">
+                        <span class="label">Total Pending</span>
+                        <h3>Rp <?= number_format($total_pending / 1000000, 1) ?> jt</h3>
+                    </div>
+                    <div class="income-card terlambat">
+                        <span class="label">Total Terlambat</span>
+                        <h3>Rp <?= number_format($total_terlambat / 1000000, 1) ?> jt</h3>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script>
+        const btnMenu = document.getElementById('btn-menu');
+        const sidebar = document.getElementById('sidebar');
 
-            btnMenu.onclick = function() {
-                sidebar.classList.toggle('expand');
-            }
-        </script>
+        btnMenu.onclick = function() {
+            sidebar.classList.toggle('expand');
+        }
+    </script>
 </body>
 
 </html>

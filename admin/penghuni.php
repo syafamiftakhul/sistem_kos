@@ -2,19 +2,11 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-$query = "SELECT 
-            c.no_ktp, 
-            c.nama, 
-            c.no_hp, 
-            c.kontak_keluarga,
-            k.nomor_kamar, 
-            t.tgl_transaksi, 
-            p.status_pesanan
-          FROM pesanan p
-          JOIN customer c ON p.no_ktp = c.no_ktp
-          JOIN kamar k ON p.id_kamar = k.id_kamar
-          JOIN transaksi t ON p.id_pesanan = t.id_pesanan
-          WHERE p.status_pesanan = 'lunas'"; 
+$query = "SELECT c.nama, p.id_kamar, c.no_hp, t.tgl_masuk, t.periode, t.status_transaksi 
+          FROM transaksi t
+          JOIN pesanan p ON t.id_pesanan = p.id_pesanan
+          JOIN customer c ON t.no_ktp = c.no_ktp
+          WHERE t.status_transaksi = 'lunas'";
 
 $result = mysqli_query($koneksi, $query);
 ?>
@@ -117,18 +109,18 @@ $result = mysqli_query($koneksi, $query);
                                                 <span class="user-name"><?= htmlspecialchars($row['nama']); ?></span>
                                             </div>
                                         </td>
-                                        <td><span class="badge-kamar">Kamar <?= $row['nomor_kamar']; ?></span></td>
+                                        <td><span class="badge-kamar">Kamar <?= $row['id_kamar']; ?></span></td>
                                         <td>
                                             <div class="contact-info">
                                                 <div><i class="fas fa-phone-alt" style="margin-right: 8px; color: #81A6C6;"></i> <?= $row['no_hp']; ?></div>
                                             </div>
                                         </td>
-                                        <td><?= date('d M Y', strtotime($row['tgl_transaksi'])); ?></td>
+                                        <td><?= date('d M Y', strtotime($row['tgl_masuk'])); ?></td>
                                         <td><span class="status-active">Aktif</span></td>
                                         <td>
                                             <div class="action-btns">
-                                                <a href="edit_penghuni.php?id=<?= $row['nomor_kamar']; ?>" class="btn-edit"><i class="fas fa-edit"></i></a>
-                                                <a href="hapus_penghuni.php?id=<?= $row['nomor_kamar']; ?>" class="btn-delete" onclick="return confirm('Yakin ingin menghapus data penghuni?')"><i class="fas fa-trash"></i></a>
+                                                <a href="edit_penghuni.php?id=<?= $row['id_kamar']; ?>" class="btn-edit"><i class="fas fa-edit"></i></a>
+                                                <a href="hapus_penghuni.php?id=<?= $row['id_kamar']; ?>" class="btn-delete" onclick="return confirm('Yakin ingin menghapus data penghuni?')"><i class="fas fa-trash"></i></a>
                                             </div>
                                         </td>
                                     </tr>
