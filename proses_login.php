@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // SESSION
             $_SESSION['id_user'] = $row['id_user'];
-            $_SESSION['akses']   = $row['akses'];
-            $_SESSION['no_ktp']  = $row['no_ktp'];
+            $_SESSION['akses'] = $row['akses'];
+            $_SESSION['no_ktp']  = $row['no_ktp'] ?? null;
             $_SESSION['nama']    = $row['nama'];
 
             // AKSES
