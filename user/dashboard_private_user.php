@@ -72,11 +72,7 @@ if ($no_ktp) {
                             <?= date('d M Y', strtotime($booking['tgl_masuk'])); ?> - <?= date('d M Y', strtotime($booking['tgl_keluar'])); ?>
                         </div>
                     </div>
-<<<<<<< HEAD
-                    <span class="badge-confirm">Confirm</span>
-=======
                     <span class="badge-confirm">Terkonfirmasi</span>
->>>>>>> tampilan-awal
                 </div>
 
                 <div class="grid-info">
@@ -93,11 +89,7 @@ if ($no_ktp) {
                         <div class="info-value"><?= htmlspecialchars($booking['nama_tipe'] . ' - ' . $booking['nomor_kamar']); ?></div>
                     </div>
                     <div>
-<<<<<<< HEAD
-                        <div class="info-label">Total Price</div>
-=======
                         <div class="info-label">Total Harga</div>
->>>>>>> tampilan-awal
                         <div class="info-value price-value">Rp <?= number_format($booking['harga'], 0, ',', '.'); ?></div>
                     </div>
                 </div>
@@ -107,13 +99,7 @@ if ($no_ktp) {
                 </a>
             </div>
         <?php else : ?>
-<<<<<<< HEAD
             <p class="empty-text" style="margin-top: -10px; margin-bottom: 30px;">Anda belum melakukan riwayat pesanan</p>
-=======
-            <div class="card-box">
-                <p class="empty-text">Anda belum memiliki riwayat pemesanan kamar saat ini.</p>
-            </div>
->>>>>>> tampilan-awal
         <?php endif; ?>
 
         <h3>Keluhan Saya</h3>
