@@ -1,6 +1,7 @@
 <?php
 include '../koneksi.php';
 /** @var mysqli $koneksi */
+
 $query = "SELECT 
             c.no_ktp, 
             c.nama, 

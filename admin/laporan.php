@@ -8,13 +8,14 @@ $target_bulanan = 5000000;
 
 // Query yang sudah diperbaiki untuk MySQL strict mode
 $sql = "SELECT 
-            MONTH(tgl_transaksi) as bulan_num,
-            DATE_FORMAT(tgl_transaksi, '%M') as bulan_nama, 
-            SUM(jml_bayar) as total_pendapatan,
-            COUNT(DISTINCT id_kamar) as kamar_terisi
-        FROM transaksi 
-        WHERE YEAR(tgl_transaksi) = '$tahun_sekarang'
-        GROUP BY MONTH(tgl_transaksi), DATE_FORMAT(tgl_transaksi, '%M')
+            MONTH(t.tgl_transaksi) as bulan_num,
+            DATE_FORMAT(t.tgl_transaksi, '%M') as bulan_nama, 
+            SUM(t.jml_bayar) as total_pendapatan,
+            COUNT(DISTINCT p.id_kamar) as kamar_terisi
+        FROM transaksi t 
+        LEFT JOIN pesanan p ON t.id_pesanan = p.id_pesanan
+        WHERE YEAR(t.tgl_transaksi) = '$tahun_sekarang'
+        GROUP BY MONTH(t.tgl_transaksi), DATE_FORMAT(t.tgl_transaksi, '%M')
         ORDER BY bulan_num ASC";
 
 $result = mysqli_query($koneksi, $sql);

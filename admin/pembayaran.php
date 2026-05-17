@@ -6,9 +6,10 @@ include '../koneksi.php';
 $filter = isset($_GET['status']) ? $_GET['status'] : 'Semua';
 
 // Query dasar JOIN antara Transaksi dan Customer sesuai ERD
-$query = "SELECT t.*, c.nama 
+$query = "SELECT t.*, c.nama, p.id_kamar 
           FROM transaksi t 
-          JOIN customer c ON t.no_ktp = c.no_ktp";
+          JOIN customer c ON t.no_ktp = c.no_ktp
+          LEFT JOIN pesanan p ON t.id_pesanan = p.id_pesanan";
 
 if ($filter != 'Semua') {
     $query .= " WHERE t.status_transaksi = '$filter'";
