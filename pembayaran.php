@@ -1,5 +1,3 @@
-pembayaran.php:
-
 <?php
 
 session_start();
