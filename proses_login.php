@@ -23,8 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['no_ktp']  = $row['no_ktp'] ?? null;
             $_SESSION['nama']    = $row['nama'];
 
-            // AKSES
-            // AKSES (Ganti angka 1 menjadi string 'admin')
+
             if ($row['akses'] == 'admin') {
 
                 // ADMIN
