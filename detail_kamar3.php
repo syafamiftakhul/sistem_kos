@@ -1,10 +1,7 @@
 <?php
 include "koneksi.php";
+$query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar WHERE id_tipe = 3");
 
-// Ambil data untuk tipe kamar 2 (Deluxe Room A2)
-$query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar WHERE id_tipe = 2");
-
-// Jika query gagal atau tidak ada data, kita coba ambil data ke-2 dengan limit & offset
 if (!$query || mysqli_num_rows($query) == 0) {
     $query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1 OFFSET 1");
 }
@@ -13,9 +10,8 @@ if ($query && mysqli_num_rows($query) > 0) {
     $data = mysqli_fetch_array($query);
     $id_tipe = $data['id_tipe'];
 } else {
-    // Fallback data jika tabel kosong atau tidak ada data ke-2
-    $data = ['nama_tipe' => 'Deluxe Room A2', 'harga' => 700000];
-    $id_tipe = 2;
+    $data = ['nama_tipe' => 'Standard Room', 'harga' =>  400000];
+    $id_tipe = 3;
 }
 ?>
 
@@ -122,7 +118,7 @@ if ($query && mysqli_num_rows($query) > 0) {
                                 </div>
                                 <div class="info-text">
                                     <div class="info-label">Ukuran Ruangan</div>
-                                    <div class="info-val">20m²</div>
+                                    <div class="info-val">15 m²</div>
                                 </div>
                             </div>
                             <div class="info-item">
@@ -172,13 +168,6 @@ if ($query && mysqli_num_rows($query) > 0) {
                             </div>
                             <div class="fac-item">
                                 <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                                    <path d="M12 2v20"></path>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
-                                <span>AC</span>
-                            </div>
-                            <div class="fac-item">
-                                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
@@ -188,11 +177,10 @@ if ($query && mysqli_num_rows($query) > 0) {
                                 <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
                                     <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
                                 </svg>
-                                <span>Kamar Mandi Bersama</span>
+                                <span>Kamar Mandi bersama</span>
                             </div>
                         </div>
                     </section>
-
                 </div>
 
                 <div class="right-col">
@@ -214,14 +202,12 @@ if ($query && mysqli_num_rows($query) > 0) {
                         </div>
 
                         <?php if (isset($_SESSION['id_user'])) : ?>
-                            <!-- Jika sudah login, tombol normal -->
                             <button class="btn-pesan"
                                 onclick="window.location.href='booking.php?id_tipe=<?php echo $id_tipe; ?>'"
                                 style="cursor: pointer;">
                                 Pesan Sekarang
                             </button>
                         <?php else : ?>
-                            <!-- Jika belum login, arahkan ke login.php -->
                             <button class="btn-pesan"
                                 onclick="alert('Silakan login terlebih dahulu untuk melakukan pemesanan!'); window.location.href='login.php';"
                                 style="cursor: pointer; background: #6c757d;">

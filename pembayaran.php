@@ -3,13 +3,16 @@ session_start();
 include "koneksi.php";
 
 // Tangkap data dari form booking
-$nama           = $_POST['nama'] ?? 'Guest';
-$no_ktp         = $_POST['no_ktp'] ?? '';
-$no_hp          = $_POST['no_hp'] ?? '';
-$alamat         = $_POST['alamat'] ?? '';
-$tgl_masuk      = $_POST['tgl_masuk'] ?? date('Y-m-d');
-$periode        = (int)($_POST['periode'] ?? 1);
-$harga_satuan   = (int)($_POST['harga_satuan'] ?? 0);
+$nama            = $_POST['nama'] ?? 'Guest';
+$no_ktp          = $_POST['no_ktp'] ?? '';
+$no_hp           = $_POST['no_hp'] ?? '';
+$alamat          = $_POST['alamat'] ?? '';
+$jenis_kelamin   = $_POST['jenis_kelamin'] ?? '';   // BARU
+$kontak_keluarga = $_POST['kontak_keluarga'] ?? ''; // BARU
+$tgl_masuk       = $_POST['tgl_masuk'] ?? date('Y-m-d');
+$periode         = (int)($_POST['periode'] ?? 1);
+$harga_satuan    = (int)($_POST['harga_satuan'] ?? 0);
+$id_tipe         = $_POST['id_tipe'] ?? '';
 
 // Hitung total
 $total_bayar    = $harga_satuan * $periode;
@@ -19,15 +22,22 @@ $date           = new DateTime($tgl_masuk);
 $date->modify("+$periode month");
 $tgl_keluar     = $date->format('d-m-Y');
 
-// Ambil detail kamar buat ditampilin di ringkasan
-$query_detail = mysqli_query($koneksi, "SELECT kamar.nomor_kamar, tipe_kamar.nama_tipe 
+// Ambil detail kamar acak yang tipenya sesuai dengan pilihan user
+$query_detail = mysqli_query($koneksi, "SELECT kamar.id_kamar, kamar.nomor_kamar, tipe_kamar.nama_tipe 
                                         FROM kamar 
                                         JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
-                                        WHERE kamar.id_kamar = '$id_kamar'");
+                                        WHERE kamar.id_tipe = '$id_tipe' 
+                                        LIMIT 1");
 $detail = mysqli_fetch_assoc($query_detail);
 
-// Gabungin nama tipe dan nomor kamarnya
-$nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
+// Validasi biar gak error "offset on null" kalau data kamar di DB beneran kosong
+if ($detail) {
+    $id_kamar = $detail['id_kamar']; // Dapetin ID kamarnya buat disimpen nanti
+    $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
+} else {
+    $id_kamar = '';
+    $nama_kamar_lengkap = "Kamar Belum Tersedia";
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -133,6 +143,10 @@ $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
             <input type="hidden" name="no_ktp" value="<?php echo $no_ktp; ?>">
             <input type="hidden" name="no_hp" value="<?php echo $no_hp; ?>">
             <input type="hidden" name="alamat" value="<?php echo $alamat; ?>">
+
+            <input type="hidden" name="jenis_kelamin" value="<?php echo $jenis_kelamin; ?>">
+            <input type="hidden" name="kontak_keluarga" value="<?php echo $kontak_keluarga; ?>">
+
             <input type="hidden" name="tgl_masuk" value="<?php echo $tgl_masuk; ?>">
             <input type="hidden" name="periode" value="<?php echo $periode; ?>">
             <input type="hidden" name="total_bayar" value="<?php echo $total_bayar; ?>">
