@@ -18,7 +18,7 @@ if ($no_ktp) {
         FROM pesanan 
         JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
         JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
-        WHERE pesanan.no_ktp = '$no_ktp' AND pesanan.status_pesanan = 2 LIMIT 1");
+        WHERE pesanan.no_ktp = '$no_ktp' AND pesanan.status_pesanan = 'lunas' LIMIT 1");
     $booking = mysqli_fetch_assoc($query_booking);
 
     $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe 
@@ -33,12 +33,14 @@ if ($no_ktp) {
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Dashboard Saya - Aqsya Kos</title>
     <link rel="stylesheet" href="../assets/css/dashboard_private_user.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
     <nav class="navbar-custom">
@@ -60,7 +62,10 @@ if ($no_ktp) {
                 <div class="card-top">
                     <div>
                         <span class="booking-id">Booking #<?= $booking['id_pesanan']; ?></span>
-                        <span class="booking-date"><i class="far fa-calendar"></i> 14/08/2025 - 15/11/2025</span>
+                        <span class="booking-date">
+                            <i class="far fa-calendar"></i> <?= date('d M Y', strtotime($booking['tgl_pesan'])); ?>
+                        </span>
+
                     </div>
                     <button class="btn-confirm">Confirm</button>
                 </div>
@@ -84,9 +89,9 @@ if ($no_ktp) {
                     </div>
                 </div>
 
-                <button class="btn-complaint">
+                <a href="pengaduan.php?id_kamar=<?= $booking['id_kamar']; ?>" class="btn-complaint" style="text-decoration: none; display: inline-block; text-align: center;">
                     <i class="fas fa-exclamation-circle"></i> Tambahkan Pengaduan
-                </button>
+                </a>
             </div>
         <?php else : ?>
             <p class="empty-text">Anda belum melakukan riwayat pesanan</p>
@@ -94,10 +99,11 @@ if ($no_ktp) {
 
         <h3>Keluhan Saya</h3>
         <?php if ($no_ktp && $keluhan) : ?>
-            <?php else : ?>
+        <?php else : ?>
             <p class="empty-text">Lakukan pemesanan untuk bisa memberi pengaduan pada kamar anda</p>
         <?php endif; ?>
     </div>
 
 </body>
+
 </html>
