@@ -2,11 +2,12 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-$query = "SELECT c.nama, p.id_kamar, c.no_hp, t.tgl_masuk, t.periode, t.status_transaksi 
-          FROM transaksi t
-          JOIN pesanan p ON t.id_pesanan = p.id_pesanan
-          JOIN customer c ON t.no_ktp = c.no_ktp
-          WHERE t.status_transaksi = 'lunas'";
+$query = "SELECT c.nama, k.nomor_kamar, p.id_kamar, c.no_hp, t.tgl_masuk, t.periode 
+          FROM pesanan p
+          JOIN customer c ON p.no_ktp = c.no_ktp
+          JOIN kamar k ON p.id_kamar = k.id_kamar
+          LEFT JOIN transaksi t ON p.id_pesanan = t.id_pesanan
+          WHERE p.status_pesanan = 'lunas'";
 
 $result = mysqli_query($koneksi, $query);
 ?>
@@ -23,7 +24,7 @@ $result = mysqli_query($koneksi, $query);
 </head>
 <body>
     <div class="dashboard-wrapper">
-        <aside class="sidebar-admin" id="sidebar">
+        <aside class="sidebar-admin expand " id="sidebar">
             <div class="sidebar-logo">
                 <img src="../assets/img/logo-menu.png" alt="Menu" id="btn-menu" style="cursor: pointer;">
                 <span class="logo-text" style="font-weight: bold; margin-left: 10px;">Aqsya Kos</span>
@@ -109,7 +110,7 @@ $result = mysqli_query($koneksi, $query);
                                                 <span class="user-name"><?= htmlspecialchars($row['nama']); ?></span>
                                             </div>
                                         </td>
-                                        <td><span class="badge-kamar">Kamar <?= $row['id_kamar']; ?></span></td>
+                                        <td><span class="badge-kamar">Kamar <?= htmlspecialchars($row['nomor_kamar']); ?></span></td>
                                         <td>
                                             <div class="contact-info">
                                                 <div><i class="fas fa-phone-alt" style="margin-right: 8px; color: #81A6C6;"></i> <?= $row['no_hp']; ?></div>
