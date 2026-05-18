@@ -11,6 +11,7 @@ if (isset($_POST['konfirmasi'])) {
     $id_user   = $_SESSION['id_user'];
     $tgl_masuk = $_POST['tgl_masuk'];
     $total     = $_POST['total_bayar'];
+    $id_kamar = $_POST['id_kamar'];
 
     // 2. Urusan File Foto
     $nama_file = $_FILES['bukti_transfer']['name'];
@@ -27,9 +28,9 @@ if (isset($_POST['konfirmasi'])) {
                        ON DUPLICATE KEY UPDATE nama='$nama', no_hp='$no_hp'";
         mysqli_query($koneksi, $query_cust);
 
-        // B. Cari kamar kosong (Gue asumsiin id_tipe ada di session atau lu kirim jg)
-        // Lu bisa tambahin id_tipe di hidden input tadi jg biar gampang
-        $id_kamar = 1; // Contoh aja, mending cari pake query SELECT id_kamar FROM kamar WHERE status='kosong' LIMIT 1
+        if (empty($id_kamar)) {
+            die("ID kamar tidak ditemukan");
+        }
 
         // C. Insert ke Pesanan
         $tgl_skrg = date('Y-m-d');

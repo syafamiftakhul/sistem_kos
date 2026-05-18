@@ -10,6 +10,8 @@ $alamat         = $_POST['alamat'] ?? '';
 $tgl_masuk      = $_POST['tgl_masuk'] ?? date('Y-m-d');
 $periode        = (int)($_POST['periode'] ?? 1);
 $harga_satuan   = (int)($_POST['harga_satuan'] ?? 0);
+$id_kamar       = $_POST['id_kamar'] ?? '';
+echo $id_kamar;
 
 // Hitung total
 $total_bayar    = $harga_satuan * $periode;
@@ -27,7 +29,11 @@ $query_detail = mysqli_query($koneksi, "SELECT kamar.nomor_kamar, tipe_kamar.nam
 $detail = mysqli_fetch_assoc($query_detail);
 
 // Gabungin nama tipe dan nomor kamarnya
-$nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
+if ($detail) {
+    $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
+} else {
+    $nama_kamar_lengkap = "Kamar tidak ditemukan";
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -136,6 +142,8 @@ $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
             <input type="hidden" name="tgl_masuk" value="<?php echo $tgl_masuk; ?>">
             <input type="hidden" name="periode" value="<?php echo $periode; ?>">
             <input type="hidden" name="total_bayar" value="<?php echo $total_bayar; ?>">
+            <input type="hidden" name="id_kamar" value="<?php echo $id_kamar; ?>">
+            <form action="proses_konfirmasi.php" method="POST" enctype="multipart/form-data">
 
             <div class="upload-box" id="drop-zone">
               <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
