@@ -6,23 +6,66 @@ include '../koneksi.php';
 $tahun_sekarang = date('Y');
 $target_bulanan = 5000000;
 
+$periode_pilihan = $_GET['periode'] ?? '1_tahun';
+$kondisi_where_transaksi = "WHERE YEAR(t.tgl_transaksi) = '$tahun_sekarang'";
+$kondisi_where_pesanan   = "AND YEAR(p.tgl_pesan) = '$tahun_sekarang'";
+
+if ($periode_pilihan == '6_bulan') {
+    // Filter hanya 6 bulan ke belakang dari bulan sekarang
+    $kondisi_where_transaksi = "WHERE t.tgl_transaksi >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH)";
+    $kondisi_where_pesanan   = "AND p.tgl_pesan >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH)";
+} elseif ($periode_pilihan == 'keseluruhan') {
+    // Tanpa filter tahun alias loss semua riwayat keluar
+    $kondisi_where_transaksi = "WHERE 1=1";
+    $kondisi_where_pesanan   = "";
+}
+
 // Query yang sudah diperbaiki untuk MySQL strict mode
 $sql = "SELECT 
-            MONTH(t.tgl_transaksi) as bulan_num,
-            DATE_FORMAT(t.tgl_transaksi, '%M') as bulan_nama, 
-            SUM(t.jml_bayar) as total_pendapatan,
-            COUNT(DISTINCT p.id_kamar) as kamar_terisi
-        FROM transaksi t 
-        LEFT JOIN pesanan p ON t.id_pesanan = p.id_pesanan
-        WHERE YEAR(t.tgl_transaksi) = '$tahun_sekarang'
-        GROUP BY MONTH(t.tgl_transaksi), DATE_FORMAT(t.tgl_transaksi, '%M')
+            bulan_num,
+            bulan_nama,
+            SUM(jml_bayar) as total_pendapatan,
+            COUNT(DISTINCT id_kamar) as kamar_terisi
+        FROM (
+            SELECT 
+                MONTH(t.tgl_transaksi) as bulan_num,
+                DATE_FORMAT(t.tgl_transaksi, '%M') as bulan_nama, 
+                t.jml_bayar,
+                p.id_kamar
+            FROM transaksi t 
+            LEFT JOIN pesanan p ON t.id_pesanan = p.id_pesanan
+            $kondisi_where_transaksi
+
+            UNION ALL
+
+            SELECT 
+                MONTH(p.tgl_pesan) as bulan_num,
+                DATE_FORMAT(p.tgl_pesan, '%M') as bulan_nama,
+                1000000 as jml_bayar,
+                p.id_kamar
+            FROM pesanan p
+            LEFT JOIN transaksi t ON p.id_pesanan = t.id_pesanan
+            WHERE p.status_pesanan = 'lunas' 
+              AND t.id_transaksi IS NULL 
+              $kondisi_where_pesanan
+        ) as gabungan
+        GROUP BY bulan_num, bulan_nama
         ORDER BY bulan_num ASC";
 
 $result = mysqli_query($koneksi, $sql);
 
 $bulan_ini = date('m');
 $tahun_ini = date('Y');
-$query_pendapatan = mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE MONTH(tgl_transaksi) = '$bulan_ini' AND YEAR(tgl_transaksi) = '$tahun_ini'");
+
+$query_pendapatan = mysqli_query($koneksi, "
+    SELECT SUM(total) as total FROM (
+        SELECT IFNULL(t.jml_bayar, 1000000) as total
+        FROM pesanan p 
+        LEFT JOIN transaksi t ON p.id_pesanan = t.id_pesanan
+        WHERE (p.status_pesanan = 'lunas' OR t.status_transaksi = 'lunas')
+          AND MONTH(IFNULL(t.tgl_transaksi, p.tgl_pesan)) = '$bulan_ini'
+          AND YEAR(IFNULL(t.tgl_transaksi, p.tgl_pesan)) = '$tahun_ini'
+    ) as x");
 $data_pendapatan = mysqli_fetch_assoc($query_pendapatan);
 $total_pendapatan_bulan_ini = $data_pendapatan['total'] ?? 0;
 
@@ -40,8 +83,10 @@ $query_avg = mysqli_query($koneksi, "SELECT AVG(tipe_kamar.harga) as rata_rata
                                     WHERE kamar.status_kamar = 'terisi'");
 $rata_rata_sewa = mysqli_fetch_assoc($query_avg)['rata_rata'] ?? 0;
 
-$query_tunggakan = mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Pending'"); 
+$query_tunggakan = mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Pending'");
 $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
+
+
 ?>
 
 <!DOCTYPE html>
@@ -115,13 +160,14 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
                 <div class="header-actions">
                     <div class="periode-filter">
                         <span>Periode:</span>
-                        <select>
-                            <option>6 Bulan</option>
-                            <option>1 Tahun</option>
-                            <option>Keseluruhan</option>
+                        <?php $periode_pilihan = $_GET['periode'] ?? '1_tahun'; ?>
+                        <select id="filter-periode" onchange="gantiPeriode(this.value)">
+                            <option value="6_bulan" <?= $periode_pilihan == '6_bulan' ? 'selected' : '' ?>>6 Bulan</option>
+                            <option value="1_tahun" <?= $periode_pilihan == '1_tahun' ? 'selected' : '' ?>>1 Tahun</option>
+                            <option value="keseluruhan" <?= $periode_pilihan == 'keseluruhan' ? 'selected' : '' ?>>Keseluruhan</option>
                         </select>
                     </div>
-                    <a href="#" class="btn-export">
+                    <a href="export_pdf.php?periode=<?= $periode_pilihan; ?>" class="btn-export" target="_blank">
                         <i class="fas fa-download"></i> Export PDF
                     </a>
                 </div>
@@ -164,76 +210,80 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
                         <span>Perlu konfirmasi</span>
                     </div>
                 </div>
-        </div>
+            </div>
 
-        <!-- Table Container -->
-        <div class="table-container">
-            <table class="laporan-table">
-                <thead>
-                    <tr>
-                        <th>Bulan</th>
-                        <th>Pendapatan</th>
-                        <th>Target</th>
-                        <th>Kamar Terisi</th>
-                        <th>Tingkat Hunian</th>
-                        <th>Pencapaian</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (mysqli_num_rows($result) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($result)):
-                            // Logic Perhitungan
-                            $pendapatan = $row['total_pendapatan'];
-                            $persen_pencapaian = ($pendapatan / $target_bulanan) * 100;
-                            $query_kamar = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kamar");
-                            $data_kamar = mysqli_fetch_assoc($query_kamar);
-                            $total_kamar_tersedia = $data_kamar['total'];
+            <!-- Table Container -->
+            <div class="table-container">
+                <table class="laporan-table">
+                    <thead>
+                        <tr>
+                            <th>Bulan</th>
+                            <th>Pendapatan</th>
+                            <th>Target</th>
+                            <th>Kamar Terisi</th>
+                            <th>Tingkat Hunian</th>
+                            <th>Pencapaian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (mysqli_num_rows($result) > 0): ?>
+                            <?php while ($row = mysqli_fetch_assoc($result)):
+                                // Logic Perhitungan
+                                $pendapatan = $row['total_pendapatan'];
+                                $persen_pencapaian = ($pendapatan / $target_bulanan) * 100;
+                                $query_kamar = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kamar");
+                                $data_kamar = mysqli_fetch_assoc($query_kamar);
+                                $total_kamar_tersedia = $data_kamar['total'];
 
-                            if ($total_kamar_tersedia > 0) {
-                                $persen_hunian = ($row['kamar_terisi'] / $total_kamar_tersedia) * 100;
-                            } else {
-                                $persen_hunian = 0; // Biar nggak error kalau tabel kamar kosong
-                            }
+                                if ($total_kamar_tersedia > 0) {
+                                    $persen_hunian = ($row['kamar_terisi'] / $total_kamar_tersedia) * 100;
+                                } else {
+                                    $persen_hunian = 0; // Biar nggak error kalau tabel kamar kosong
+                                }
 
-                            // Warna status pencapaian
-                            $status_color = ($persen_pencapaian >= 100) ? '#2ecc71' : '#f39c12';
-                        ?>
+                                // Warna status pencapaian
+                                $status_color = ($persen_pencapaian >= 100) ? '#2ecc71' : '#f39c12';
+                            ?>
+                                <tr>
+                                    <td><strong><?= $row['bulan_nama']; ?></strong></td>
+                                    <td>Rp <?= number_format($pendapatan, 0, ',', '.'); ?></td>
+                                    <td>Rp <?= number_format($target_bulanan, 0, ',', '.'); ?></td>
+                                    <td><?= $row['kamar_terisi']; ?> Kamar</td>
+                                    <td>
+                                        <div style="font-size: 12px;"><?= round($persen_hunian); ?>%</div>
+                                        <div style="width: 100%; background: #eee; height: 5px; border-radius: 5px;">
+                                            <div style="width: <?= $persen_hunian; ?>%; background: #81A6C6; height: 100%; border-radius: 5px;"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span style="color: <?= $status_color; ?>; font-weight: bold;">
+                                            <?= round($persen_pencapaian, 1); ?>%
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
                             <tr>
-                                <td><strong><?= $row['bulan_nama']; ?></strong></td>
-                                <td>Rp <?= number_format($pendapatan, 0, ',', '.'); ?></td>
-                                <td>Rp <?= number_format($target_bulanan, 0, ',', '.'); ?></td>
-                                <td><?= $row['kamar_terisi']; ?> Kamar</td>
-                                <td>
-                                    <div style="font-size: 12px;"><?= round($persen_hunian); ?>%</div>
-                                    <div style="width: 100%; background: #eee; height: 5px; border-radius: 5px;">
-                                        <div style="width: <?= $persen_hunian; ?>%; background: #81A6C6; height: 100%; border-radius: 5px;"></div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span style="color: <?= $status_color; ?>; font-weight: bold;">
-                                        <?= round($persen_pencapaian, 1); ?>%
-                                    </span>
+                                <td colspan="6" style="text-align: center; color: #888; padding: 20px;">
+                                    Belum ada data transaksi di tahun <?= $tahun_sekarang; ?>
                                 </td>
                             </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: #888; padding: 20px;">
-                                Belum ada data transaksi di tahun <?= $tahun_sekarang; ?>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-        <script>
-            const btnMenu = document.getElementById('btn-menu');
-            const sidebar = document.getElementById('sidebar');
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                const btnMenu = document.getElementById('btn-menu');
+                const sidebar = document.getElementById('sidebar');
 
-            btnMenu.onclick = function() {
-                sidebar.classList.toggle('expand');
-            }
-        </script>
+                btnMenu.onclick = function() {
+                    sidebar.classList.toggle('expand');
+                }
+
+                function gantiPeriode(value) {
+                    window.location.href = "?periode=" + value;
+                }
+            </script>
 </body>
 
 </html>

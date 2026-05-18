@@ -4,7 +4,7 @@ include '../koneksi.php';
 
 $filter = isset($_GET['status']) ? $_GET['status'] : 'Semua';
 
-$query = "SELECT p.*, c.nama AS nama_penghuni, k.id_kamar 
+$query = "SELECT p.*, c.nama AS nama_penghuni, k.id_kamar, k.nomor_kamar 
           FROM pesanan p
           JOIN customer c ON p.no_ktp = c.no_ktp
           JOIN kamar k ON p.id_kamar = k.id_kamar";
@@ -120,7 +120,7 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                             <th>ID Pesanan</th>
                             <th>No. KTP</th>
                             <th>Nama Penghuni</th>
-                            <th>Nama Kamar</th>
+                            <th>Nomor Kamar</th>
                             <th>Tanggal Pesan</th>
                             <th>Status</th>
                             <th>Aksi</th>
@@ -133,7 +133,7 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                                     <td><strong><?php echo $row['id_pesanan']; ?></strong></td>
                                     <td><?php echo $row['no_ktp']; ?></td>
                                     <td><?php echo $row['nama_penghuni']; ?></td>
-                                    <td><?php echo $row['id_kamar']; ?></td>
+                                    <td><?php echo $row['nomor_kamar']; ?></td>
                                     <td><?= date('d M Y', strtotime($row['tgl_pesan'])); ?></td>
                                     <td>
                                         <span class="badge-status <?php echo strtolower($row['status_pesanan']); ?>">

@@ -30,7 +30,7 @@ $query = "SELECT
             p.status_pesanan, 
             c.nama, 
             NULL as id_transaksi, 
-            NULL as tgl_transaksi, 
+            p.tgl_pesan as tgl_transaksi, 
             '1' as periode,
             1000000 as jml_bayar,
             p.status_pesanan AS status_final
@@ -137,7 +137,7 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
             </nav>
         </aside>
 
-        <<main class="main-content">
+        <main class="main-content">
             <header>
                 <div class="header-title">
                     <h1>Manajemen Pembayaran</h1>
