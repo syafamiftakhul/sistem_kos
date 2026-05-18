@@ -3,14 +3,23 @@ session_start();
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-$id_user = $_SESSION['id_user'] ?? '';
+if (!isset($_SESSION['id_user'])) {
+    header("Location: ../login.php");
+    exit;
+}
 
-$query_cek_customer = mysqli_query($koneksi, "SELECT no_ktp, no_hp FROM customer WHERE id_user = '$id_user'");
+$id_user = $_SESSION['id_user'];
+
+$query_cek_customer = mysqli_query($koneksi, "SELECT no_ktp FROM customer WHERE id_user = '$id_user'");
 $data_customer = mysqli_fetch_assoc($query_cek_customer);
 
 $no_ktp = $data_customer['no_ktp'] ?? null;
+<<<<<<< HEAD
 // Perbaikan: Pastikan variabel ini membaca kolom yang benar dari query ('no_hp')
 $no_telp = $data_customer['no_hp'] ?? '-'; 
+=======
+$no_telp = $data_customer['no_telp'] ?? '-'; // Ambil nomor telepon dinamis dari database
+>>>>>>> fitur-user
 
 $booking = null;
 $keluhan = null;
@@ -24,6 +33,7 @@ if ($no_ktp) {
         WHERE pesanan.no_ktp = '$no_ktp' AND pesanan.status_pesanan = 'lunas' LIMIT 1");
     $booking = mysqli_fetch_assoc($query_booking);
 
+    // Mengambil data keluhan terakhir
     $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe 
         FROM pengaduan 
         JOIN kamar ON pengaduan.id_kamar = kamar.id_kamar 
@@ -47,7 +57,11 @@ if ($no_ktp) {
 
 <body>
 
+<<<<<<< HEAD
     <header>
+=======
+    <header style="display: flex; align-items: center; padding: 16px 40px; border-bottom: 1px solid #E5E7EB; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+>>>>>>> fitur-user
         <div style="background-color: #81A6C6; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
             <a href="../index.php" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
                 <img src="../assets/img/key.png" alt="Logo" style="width: 18px; filter: brightness(0) invert(1);">
@@ -61,7 +75,7 @@ if ($no_ktp) {
             <i class="fas fa-arrow-left"></i> Kembali
         </a>
         <h2 class="dashboard-title">Dashboard Saya</h2>
-        <p class="dashboard-subtitle">Kelola pemesanan dan keluhan Anda</p>
+        <p class="dashboard-subtitle">Pantau pesanan kamar dan sampaikan keluhan Anda di sini.</p>
 
         <h3>Pesanan Saya</h3>
         <?php if (!empty($no_ktp) && !empty($booking)) : ?>
@@ -84,21 +98,29 @@ if ($no_ktp) {
                             ?>
                         </div>
                     </div>
-                    <span class="badge-confirm">Confirm</span>
+                    <span class="badge-confirm">Terkonfirmasi</span>
                 </div>
 
                 <div class="grid-info">
                     <div>
                         <div class="info-label">Nama Penghuni</div>
-                        <div class="info-value"><?= htmlspecialchars($_SESSION['nama'] ?? 'User'); ?></div>
+                        <div class="info-value"><?= htmlspecialchars($data_customer['nama'] ?? 'User'); ?></div>
                     </div>
                     <div>
                         <div class="info-label">Nomor Telepon</div>
+<<<<<<< HEAD
                         <div class="info-value"><?= htmlspecialchars($no_telp); ?></div>
                     </div>
                     <div>
                         <div class="info-label">Kamar</div>
                         <div class="info-value"><?= htmlspecialchars($booking['nama_tipe'] . ' - Room ' . $booking['nomor_kamar']); ?></div>
+=======
+                        <div class="info-value">0273127394194</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Kamar</div>
+                        <div class="info-value"><?= htmlspecialchars($booking['nama_tipe'] . ' - ' . $booking['nomor_kamar']); ?></div>
+>>>>>>> fitur-user
                     </div>
                     <div>
                         <div class="info-label">Total Price</div>
@@ -119,6 +141,7 @@ if ($no_ktp) {
         <h3>Keluhan Saya</h3>
         <?php if (!empty($no_ktp) && !empty($keluhan)) : ?>
             <div class="card-box">
+<<<<<<< HEAD
                 <div class="card-top" style="margin-bottom: 4px;">
                     <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek'] ?? 'Keluhan Tanpa Subjek'); ?></div>
                     <span class="badge-proses">Sedang Diproses</span>
@@ -126,6 +149,15 @@ if ($no_ktp) {
                 
                 <div class="keluhan-room">
                     <i class="fas fa-map-marker-alt" style="font-size: 11px;"></i> <?= htmlspecialchars($keluhan['nama_tipe'] . ' - Room ' . $keluhan['nomor_kamar']); ?>
+=======
+                <div class="card-top" style="margin-bottom: 12px;">
+                    <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek']); ?></div>
+                    <div class="badge-proses">Sedang Diproses</div>
+                </div>
+                
+                <div class="keluhan-room">
+                    <i class="fas fa-door-open"></i> <?= htmlspecialchars($keluhan['nama_tipe'] . ' - Room ' . $keluhan['nomor_kamar']); ?>
+>>>>>>> fitur-user
                 </div>
                 
                 <div class="keluhan-desc">

@@ -193,6 +193,28 @@ h3 {
     color: #4B5563;
     font-size: 14px;
     font-weight: 400;
+
     margin: 0;
     text-align: left; /* Mengikuti mockup baru, rata kiri */
+    text-align: center; /* Membuat teks kosong berada di tengah card */
+    padding: 16px 0;
+}
+
+.badge-menunggu {
+    background: #FEE2E2; /* Merah muda lembut */
+    color: #991B1B;      /* Teks merah tua */
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-selesai {
+    background: #D1FAE5; /* Hijau muda lembut */
+    color: #065F46;      /* Teks hijau tua */
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+>>>>>>> fitur-user:assets/css/dashboard_private_user.css
 }
