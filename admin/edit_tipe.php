@@ -30,7 +30,7 @@ if (!$data) {
                 <form action="proses_edit_tipe.php" method="POST">
                 <div class="input-group">
                     <label>Id Tipe</label>
-                    <input type="text" name="id_tipe"  value="<?= $data['id_tipe']; ?>" placeholder="Contoh: T01" required>
+                    <input type="text" name="id_tipe"  value="<?= $data['id_tipe']; ?>" placeholder="Contoh: T01" readonly required>
                 </div>
 
                 <div class="input-group">
@@ -50,7 +50,7 @@ if (!$data) {
 
                 <div class="form-actions" style="display: flex; gap: 15px; margin-top: 20px;">
                     <a href="tipe_kamar.php" class="btn-batal" style="text-decoration: none; padding: 10px 20px; background: #eee; border-radius: 8px; color: #333;">Batal</a>
-                    <button type="submit" name="simpan" class="btn-simpan" style="padding: 10px 20px; background: #81A6C6; color: white; border: none; border-radius: 8px; cursor: pointer;">Simpan Tipe</button>
+                    <button type="submit" name="update" class="btn-simpan" style="padding: 10px 20px; background: #81A6C6; color: white; border: none; border-radius: 8px; cursor: pointer;">Simpan Tipe</button>
                 </div>
             </form>
         </div>
@@ -66,6 +66,6 @@ if (!$data) {
                 .then(res => res.text())
                 .then(data => { textarea.value = data; });
         }
-    </script>a
+    </script>
 </body>
 </html>
