@@ -65,6 +65,17 @@
     color: #333;
 
 }
+.nav-link i {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+    color: #888;
+    transition: 0.3s;
+    margin-right: 5px;
+}
+.nav-link.active i, .nav-link:hover i {
+    color: var(--accent-blue);
+}
 
 
 
@@ -196,6 +207,14 @@ body {
 
 
 
+.table-container {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    margin-bottom: 30px;
+}
+
 /* Table Khusus Pembayaran */
 
 .pembayaran-table {
@@ -245,6 +264,13 @@ body {
 .badge-status.pending { background: #F5F5F5; color: #757575; }
 
 .badge-status.terlambat { background: #FFEBEE; color: #C62828; }
+
+.badge-status.ditolak { background: #FFEBEE; color: #C62828; }
+
+/* Action Icons */
+.action-icons a { margin-right: 15px; text-decoration: none; font-size: 18px; }
+.action-icons .edit { color: #2ecc71; }
+.action-icons .delete { color: #ff5252; }
 
 
 

@@ -1,7 +1,13 @@
 <?php
-include "koneksi.php";
-$query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar WHERE id_tipe = 3");
+// 1. WAJIB NYALAKAN SESSION DI BARIS PALING ATAS!
+session_start(); 
 
+include "koneksi.php";
+
+// Ambil data untuk tipe kamar 2 (Deluxe Room A2)
+$query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1");
+
+// Jika query gagal atau tidak ada data, kita coba ambil data ke-2 dengan limit & offset
 if (!$query || mysqli_num_rows($query) == 0) {
     $query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1 OFFSET 1");
 }
@@ -10,8 +16,9 @@ if ($query && mysqli_num_rows($query) > 0) {
     $data = mysqli_fetch_array($query);
     $id_tipe = $data['id_tipe'];
 } else {
-    $data = ['nama_tipe' => 'Standard Room', 'harga' =>  400000];
-    $id_tipe = 3;
+    // Fallback data jika tabel kosong atau tidak ada data ke-2
+    $data = ['nama_tipe' => 'Deluxe Room A2', 'harga' => 700000];
+    $id_tipe = 2;
 }
 ?>
 
