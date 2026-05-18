@@ -2,7 +2,9 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-$query = "SELECT c.nama, k.nomor_kamar, p.id_kamar, c.no_hp, t.tgl_masuk, t.periode 
+$query = "SELECT c.nama, k.nomor_kamar, p.id_kamar, c.no_hp, 
+                 IFNULL(t.periode, '1') as periode,
+                 IFNULL(t.tgl_transaksi, p.tgl_pesan) AS tgl_masuk
           FROM pesanan p
           JOIN customer c ON p.no_ktp = c.no_ktp
           JOIN kamar k ON p.id_kamar = k.id_kamar
@@ -116,7 +118,7 @@ $result = mysqli_query($koneksi, $query);
                                                 <div><i class="fas fa-phone-alt" style="margin-right: 8px; color: #81A6C6;"></i> <?= $row['no_hp']; ?></div>
                                             </div>
                                         </td>
-                                        <td><?= date('d M Y', strtotime($row['tgl_masuk'])); ?></td>
+                                        <td><?= (!empty($row['tgl_masuk']) && $row['tgl_masuk'] != '0000-00-00') ? date('d M Y', strtotime($row['tgl_masuk'])) : '-'; ?></td>
                                         <td><span class="status-active">Aktif</span></td>
                                         <td>
                                             <div class="action-btns">

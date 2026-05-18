@@ -33,25 +33,25 @@ $query_user_baru = mysqli_query($koneksi, "
 $user_baru = mysqli_fetch_assoc($query_user_baru)['total'] ?? 0;
 
 $query_pendapatan = mysqli_query($koneksi, "
-    SELECT SUM(jml_bayar) as total FROM transaksi 
-    WHERE status_transaksi = 2 
-    AND MONTH(tgl_transaksi) = '$bulan_ini' 
-    AND YEAR(tgl_transaksi) = '$tahun_ini'");
+    SELECT SUM(IFNULL(t.jml_bayar, 1000000)) as total 
+    FROM pesanan p 
+    LEFT JOIN transaksi t ON p.id_pesanan = t.id_pesanan 
+    WHERE p.status_pesanan = 'lunas' OR t.status_transaksi = 'lunas'");
 $total_pendapatan = mysqli_fetch_assoc($query_pendapatan)['total'] ?? 0;
 
 $query_tunggakan = mysqli_query($koneksi, "
-    SELECT SUM(jml_bayar) as total FROM transaksi 
-    WHERE status_transaksi = 1 
-    AND MONTH(tgl_transaksi) = '$bulan_ini' 
-    AND YEAR(tgl_transaksi) = '$tahun_ini'");
+    SELECT SUM(IFNULL(t.jml_bayar, 1000000)) as total 
+    FROM pesanan p 
+    LEFT JOIN transaksi t ON p.id_pesanan = t.id_pesanan 
+    WHERE p.status_pesanan = 'pending' AND (t.status_transaksi IS NULL OR t.status_transaksi = 'pending')");
 $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
 
 $query_stat_bayar = mysqli_query($koneksi, "
     SELECT 
-        SUM(CASE WHEN status_transaksi = 2 THEN 1 ELSE 0 END) as lunas,
-        COUNT(*) as total_tagihan
-    FROM transaksi 
-    WHERE MONTH(tgl_transaksi) = '$bulan_ini'");
+        SUM(CASE WHEN p.status_pesanan = 'lunas' OR t.status_transaksi = 'lunas' THEN 1 ELSE 0 END) as lunas,
+        COUNT(p.id_pesanan) as total_tagihan
+    FROM pesanan p
+    LEFT JOIN transaksi t ON p.id_pesanan = t.id_pesanan");
 $stat_bayar    = mysqli_fetch_assoc($query_stat_bayar);
 $jml_lunas     = $stat_bayar['lunas'] ?? 0;
 $total_tagihan = $stat_bayar['total_tagihan'] ?? 0;
@@ -65,7 +65,7 @@ $jml_tunggak = mysqli_fetch_assoc($query_jml_tunggak)['total'] ?? 0;
 $query_pesanan = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM pesanan WHERE status_pesanan = 2");
 $total_pesanan = mysqli_fetch_assoc($query_pesanan)['total'] ?? 0;
 
-$query_pembayaran = "SELECT pesanan.*, customer.nama, tipe_kamar.nama_tipe, transaksi.jml_bayar 
+$query_pembayaran = "SELECT pesanan.*, customer.nama, tipe_kamar.nama_tipe, IFNULL(transaksi.jml_bayar, 1000000) as jml_bayar 
                      FROM pesanan 
                      JOIN customer ON pesanan.no_ktp = customer.no_ktp 
                      JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
@@ -223,7 +223,7 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
                         while ($row = mysqli_fetch_assoc($result_pembayaran)) {
 
                             // SINKRONISASI ERD: Cek berdasarkan teks enum di database ('lunas' atau 'pending')
-                            $is_lunas = ($row['status_pesanan'] == 'lunas');
+                            $is_lunas = ($row['status_pesanan'] == 'lunas' || ($row['status_transaksi'] ?? '') == 'lunas');
 
                             $status_class = $is_lunas ? 'success' : 'warning';
                             $status_label = $is_lunas ? 'Lunas' : 'Pending';

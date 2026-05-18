@@ -148,3 +148,28 @@ body {
 .income-card.terlambat .label { color: #C62828; }
 
 .income-card h3 { font-size: 28px; font-weight: 800; color: #333; }
+
+/* Tambahan Pengaturan Box Putih Pembungkus Tabel */
+.data-section {
+    background: var(--white);
+    padding: 30px;
+    border-radius: var(--radius-panel);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+    margin-top: 20px;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+/* Biar Badge Kamar Lu Makin Estetik */
+.badge-kamar {
+    background: #EBF2F7;
+    color: #4A709C;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
