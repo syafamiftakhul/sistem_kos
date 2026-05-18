@@ -10,21 +10,17 @@ if (!isset($_SESSION['id_user'])) {
 
 $id_user = $_SESSION['id_user'];
 
-$query_cek_customer = mysqli_query($koneksi, "SELECT no_ktp FROM customer WHERE id_user = '$id_user'");
+$query_cek_customer = mysqli_query($koneksi, "SELECT nama, no_ktp, no_hp FROM customer WHERE id_user = '$id_user'");
 $data_customer = mysqli_fetch_assoc($query_cek_customer);
 
 $no_ktp = $data_customer['no_ktp'] ?? null;
-<<<<<<< HEAD
-// Perbaikan: Pastikan variabel ini membaca kolom yang benar dari query ('no_hp')
-$no_telp = $data_customer['no_hp'] ?? '-'; 
-=======
 $no_telp = $data_customer['no_telp'] ?? '-'; // Ambil nomor telepon dinamis dari database
->>>>>>> fitur-user
 
 $booking = null;
 $keluhan = null;
 
 if ($no_ktp) {
+    // Query booking disatukan dengan tabel transaksi menggunakan LEFT JOIN agar tgl_masuk & periode terbaca
     $query_booking = mysqli_query($koneksi, "SELECT pesanan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe, tipe_kamar.harga, transaksi.tgl_masuk, transaksi.periode 
         FROM pesanan 
         JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
@@ -57,11 +53,7 @@ if ($no_ktp) {
 
 <body>
 
-<<<<<<< HEAD
-    <header>
-=======
     <header style="display: flex; align-items: center; padding: 16px 40px; border-bottom: 1px solid #E5E7EB; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
->>>>>>> fitur-user
         <div style="background-color: #81A6C6; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
             <a href="../index.php" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
                 <img src="../assets/img/key.png" alt="Logo" style="width: 18px; filter: brightness(0) invert(1);">
@@ -71,8 +63,8 @@ if ($no_ktp) {
     </header>
 
     <div class="main-content">
-        <a href="dashboard_user.php" class="btn-back">
-            <i class="fas fa-arrow-left"></i> Kembali
+        <a href="dashboard_user.php" style="color: #6B7280; text-decoration: none; display: inline-flex; align-items: center; margin-bottom: 24px; font-size: 14px; font-weight: 500;">
+            <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Kembali
         </a>
         <h2 class="dashboard-title">Dashboard Saya</h2>
         <p class="dashboard-subtitle">Pantau pesanan kamar dan sampaikan keluhan Anda di sini.</p>
@@ -89,11 +81,11 @@ if ($no_ktp) {
                             if (!empty($booking['tgl_masuk'])) {
                                 $tgl_masuk_dt = new DateTime($booking['tgl_masuk']);
                                 $periode_bulan = (int)($booking['periode'] ?? 1);
-                                echo $tgl_masuk_dt->format('d/m/Y') . " - ";
+                                echo $tgl_masuk_dt->format('d M Y') . " - ";
                                 $tgl_masuk_dt->modify("+$periode_bulan month");
-                                echo $tgl_masuk_dt->format('d/m/Y');
+                                echo $tgl_masuk_dt->format('d M Y');
                             } else {
-                                echo date('d/m/Y', strtotime($booking['tgl_pesan']));
+                                echo date('d M Y', strtotime($booking['tgl_pesan']));
                             }
                             ?>
                         </div>
@@ -108,19 +100,11 @@ if ($no_ktp) {
                     </div>
                     <div>
                         <div class="info-label">Nomor Telepon</div>
-<<<<<<< HEAD
-                        <div class="info-value"><?= htmlspecialchars($no_telp); ?></div>
-                    </div>
-                    <div>
-                        <div class="info-label">Kamar</div>
-                        <div class="info-value"><?= htmlspecialchars($booking['nama_tipe'] . ' - Room ' . $booking['nomor_kamar']); ?></div>
-=======
-                        <div class="info-value">0273127394194</div>
+                        <div class="info-value"><?= htmlspecialchars($data_customer['no_hp'] ?? '-'); ?></div>
                     </div>
                     <div>
                         <div class="info-label">Kamar</div>
                         <div class="info-value"><?= htmlspecialchars($booking['nama_tipe'] . ' - ' . $booking['nomor_kamar']); ?></div>
->>>>>>> fitur-user
                     </div>
                     <div>
                         <div class="info-label">Total Price</div>
@@ -128,52 +112,60 @@ if ($no_ktp) {
                     </div>
                 </div>
 
-                <a href="pengaduan.php?id_kamar=<?= $booking['id_kamar']; ?>" class="btn-complaint">
-                    <i class="far fa-comment-dots"></i> Tambahkan Pengaduan
+                <a href="pengaduan.php?id_kamar=<?= $booking['id_kamar']; ?>" class="btn-complaint" style="text-decoration: none; display: inline-block; text-align: center;">
+                    <i class="fas fa-exclamation-circle"></i> Tambahkan Pengaduan
                 </a>
             </div>
         <?php else : ?>
-            <div class="card-empty">
-                <p class="empty-text">Anda belum melakukan riwayat pesanan</p>
-            </div>
+            <p class="empty-text" style="margin-top: -10px; margin-bottom: 30px;">Anda belum melakukan riwayat pesanan</p>
         <?php endif; ?>
 
         <h3>Keluhan Saya</h3>
-        <?php if (!empty($no_ktp) && !empty($keluhan)) : ?>
-            <div class="card-box">
-<<<<<<< HEAD
-                <div class="card-top" style="margin-bottom: 4px;">
-                    <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek'] ?? 'Keluhan Tanpa Subjek'); ?></div>
-                    <span class="badge-proses">Sedang Diproses</span>
+        <?php if (!empty($booking)) : ?>
+            <?php if (!empty($keluhan)) : ?>
+                <div class="card-box">
+                    <div class="card-top" style="margin-bottom: 12px;">
+                        <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek'] ?? 'Keluhan Tanpa Subjek'); ?></div>
+                        <?php 
+                        $status = $keluhan['status_pengaduan'] ?? 'menunggu';
+                        if ($status == 'menunggu') {
+                            echo '<div class="badge-menunggu">Menunggu</div>';
+                        } elseif ($status == 'proses') {
+                            echo '<div class="badge-proses">Sedang Diproses</div>';
+                        } elseif ($status == 'selesai') {
+                            echo '<div class="badge-selesai">Selesai</div>';
+                        }
+                        ?>
+                    </div>
+                    
+                    <div class="keluhan-room">
+                        <i class="fas fa-door-open"></i> <?= htmlspecialchars($keluhan['nama_tipe'] . ' - Room ' . $keluhan['nomor_kamar']); ?>
+                    </div>
+                    
+                    <div class="keluhan-desc">
+                        <?= htmlspecialchars($keluhan['deskripsi'] ?? ''); ?>
+                    </div>
+                    
+                    <div class="keluhan-date">
+                        Dikirim pada <?= htmlspecialchars(date('d/m/Y', strtotime($keluhan['tgl_lapor']))); ?>
+                    </div>
                 </div>
-                
-                <div class="keluhan-room">
-                    <i class="fas fa-map-marker-alt" style="font-size: 11px;"></i> <?= htmlspecialchars($keluhan['nama_tipe'] . ' - Room ' . $keluhan['nomor_kamar']); ?>
-=======
-                <div class="card-top" style="margin-bottom: 12px;">
-                    <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek']); ?></div>
-                    <div class="badge-proses">Sedang Diproses</div>
+            <?php else : ?>
+                <div class="card-box empty-state" style="text-align: center; padding: 40px 20px; border: 1px dashed #D1D5DB; border-radius: 8px;">
+                    <i class="fas fa-comment-slash" style="font-size: 36px; color: #D1D5DB; margin-bottom: 16px; display: block;"></i>
+                    <p class="empty-text" style="margin: 0; color: #6B7280; font-size: 14px; font-weight: 500;">Belum ada keluhan yang diajukan.</p>
+                    <p style="margin: 4px 0 0 0; color: #9CA3AF; font-size: 12px;">Jika Anda mengalami kendala di kamar Anda, silakan tambahkan pengaduan menggunakan tombol di atas.</p>
                 </div>
-                
-                <div class="keluhan-room">
-                    <i class="fas fa-door-open"></i> <?= htmlspecialchars($keluhan['nama_tipe'] . ' - Room ' . $keluhan['nomor_kamar']); ?>
->>>>>>> fitur-user
-                </div>
-                
-                <div class="keluhan-desc">
-                    <?= htmlspecialchars($keluhan['deskripsi'] ?? ''); ?>
-                </div>
-                
-                <div class="keluhan-date">
-                    Dikirim pada <?= htmlspecialchars(date('d/m/Y', strtotime($keluhan['tgl_lapor']))); ?>
-                </div>
-            </div>
+            <?php endif; ?>
         <?php else : ?>
-            <div class="card-empty">
-                <p class="empty-text">Lakukan pemesanan untuk bisa memberi pengaduan pada kamar anda</p>
+            <div class="card-box empty-state" style="text-align: center; padding: 40px 20px; border: 1px dashed #D1D5DB; border-radius: 8px;">
+                <i class="fas fa-lock" style="font-size: 36px; color: #D1D5DB; margin-bottom: 16px; display: block;"></i>
+                <p class="empty-text" style="margin: 0; color: #6B7280; font-size: 14px; font-weight: 500;">Fitur Keluhan Dikunci</p>
+                <p style="margin: 4px 0 0 0; color: #9CA3AF; font-size: 12px;">Lakukan pemesanan kamar terlebih dahulu untuk bisa memberikan pengaduan.</p>
             </div>
         <?php endif; ?>
     </div>
 
 </body>
+
 </html>
