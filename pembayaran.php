@@ -298,9 +298,6 @@ if ($detail) {
             <input type="hidden" name="id_kamar" value="<?php echo $id_kamar; ?>">
             <form action="proses_konfirmasi.php" method="POST" enctype="multipart/form-data">
 
-              <<<<<<< HEAD
-
-
                 <div class="upload-box" id="drop-zone">
 
                 <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
@@ -344,8 +341,6 @@ if ($detail) {
         <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
 
         </form>
-
-        =======
         <div class="upload-box" id="drop-zone">
           <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
           <label for="file-upload" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
