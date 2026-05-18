@@ -30,22 +30,22 @@ if (!$data) {
                 <form action="proses_edit_tipe.php" method="POST">
                 <div class="input-group">
                     <label>Id Tipe</label>
-                    <input type="text" name="id_tipe" placeholder="Contoh: T01" required>
+                    <input type="text" name="id_tipe"  value="<?= $data['id_tipe']; ?>" placeholder="Contoh: T01" required>
                 </div>
 
                 <div class="input-group">
                     <label>Nama Tipe Kamar</label>
-                    <input type="text" name="nama_tipe" placeholder="Contoh: Deluxe" required>
+                    <input type="text" name="nama_tipe" value="<?= $data['nama_tipe']; ?>" placeholder="Contoh: Deluxe" required>
                 </div>
 
                 <div class="input-group">
                     <label>Harga Per Bulan</label>
-                    <input type="number" name="harga" placeholder="Contoh: 1500000" required>
+                    <input type="number" name="harga"  value="<?= $data['harga']; ?>" placeholder="Contoh: 1500000" required>
                 </div>
 
                 <div class="input-group">
                     <label>Fasilitas</label>
-                    <textarea name="fasilitas" rows="5" placeholder="Contoh: AC, WiFi, Kamar Mandi Dalam" required></textarea>
+                    <textarea name="fasilitas" rows="5" placeholder="Contoh: AC, WiFi, Kamar Mandi Dalam"  required><?= $data['fasilitas']; ?></textarea>
                 </div>
 
                 <div class="form-actions" style="display: flex; gap: 15px; margin-top: 20px;">
