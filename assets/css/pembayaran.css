@@ -205,8 +205,6 @@ body {
 
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 
-<<<<<<< HEAD
-=======
 }
 
 
@@ -217,7 +215,6 @@ body {
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
     margin-bottom: 30px;
->>>>>>> fitur-admin
 }
 
 
@@ -272,8 +269,6 @@ body {
 
 .badge-status.terlambat { background: #FFEBEE; color: #C62828; }
 
-<<<<<<< HEAD
-=======
 .badge-status.ditolak { background: #FFEBEE; color: #C62828; }
 
 /* Action Icons */
@@ -281,7 +276,6 @@ body {
 .action-icons .edit { color: #2ecc71; }
 .action-icons .delete { color: #ff5252; }
 
->>>>>>> fitur-admin
 
 
 /* Ringkasan Income */
@@ -332,8 +326,4 @@ body {
 
 
 
-<<<<<<< HEAD
 .income-card h3 { font-size: 28px; font-weight: 800; color: #333; }
-=======
-.income-card h3 { font-size: 28px; font-weight: 800; color: #333; }
->>>>>>> fitur-admin
