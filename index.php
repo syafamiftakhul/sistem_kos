@@ -215,111 +215,44 @@ if (isset($_SESSION['id_user'])) {
 
     <div class="frame-parent4" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
 
-      <?php
-      // Ambil semua data kamar ke dalam satu Array utama
-      $semua_kamar = [];
-      while ($row = mysqli_fetch_assoc($query_kamar)) {
-        $semua_kamar[] = $row;
-      }
-      ?>
+      <?php $semua_kamar = mysqli_fetch_all($query_kamar, MYSQLI_ASSOC); ?>
 
-      <?php if (isset($semua_kamar[0])):
-        $kamar1 = $semua_kamar[0];
-        $status1 = strtolower($kamar1['status_kamar']);
-        $badge_text1 = ($status1 == 'terisi') ? 'Terisi' : 'Tersedia';
-        $badge_bg1   = ($status1 == 'terisi') ? '#e74c3c' : '#8bc34a';
-      ?>
-        <section class="deluxe-content">
-          <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-            <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
-            <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg1; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
-              <h3 style="margin:0; font-size: 12px;"><?= $badge_text1; ?></h3>
-            </div>
-          </div>
-          <div class="deluxe-info" style="padding: 20px;">
-            <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= $kamar1['nama_tipe']; ?> <?= $kamar1['nomor_kamar']; ?></h2>
-            <div class="single-1">Single - 1 Orang - 20m²</div>
-            <div class="amenity-items-parent" style="margin-top: 10px;">
-              <span class="amenity-items">WiFi</span> <span class="feature-a-c">AC</span>
-            </div>
-            <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-              <div class="mulai-dari">Mulai Dari</div>
-              <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format($kamar1['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
-                <a href="detail_kamar1.php" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
+      <?php if (!empty($semua_kamar)): ?>
+        <?php foreach ($semua_kamar as $kamar):
+          $status = strtolower($kamar['status_kamar']);
+          $badge_text = ($status == 'terisi') ? 'Terisi' : 'Tersedia';
+          $badge_bg   = ($status == 'terisi') ? '#e74c3c' : '#8bc34a';
+
+          // KUNCI UTAMA: Semua tombol sekarang nembak ke SATU file detail_kamar.php yang sama!
+          $link_detail = "detail_kamar.php";
+        ?>
+          <section class="deluxe-content">
+            <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
+              <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
+              <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                <h3 style="margin:0; font-size: 12px;"><?= $badge_text; ?></h3>
               </div>
             </div>
-          </div>
-        </section>
-      <?php endif; ?>
-
-
-      <?php if (isset($semua_kamar[1])):
-        $kamar2 = $semua_kamar[1];
-        $status2 = strtolower($kamar2['status_kamar']);
-        $badge_text2 = ($status2 == 'terisi') ? 'Terisi' : 'Tersedia';
-        $badge_bg2   = ($status2 == 'terisi') ? '#e74c3c' : '#8bc34a';
-      ?>
-        <section class="deluxe-content">
-          <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-            <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
-            <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg2; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
-              <h3 style="margin:0; font-size: 12px;"><?= $badge_text2; ?></h3>
-            </div>
-          </div>
-          <div class="deluxe-info" style="padding: 20px;">
-            <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= $kamar2['nama_tipe']; ?> <?= $kamar2['nomor_kamar']; ?></h2>
-            <div class="single-1">Single - 1 Orang - 20m²</div>
-            <div class="amenity-items-parent" style="margin-top: 10px;">
-              <span class="amenity-items">WiFi</span> <span class="feature-a-c">AC</span>
-            </div>
-            <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-              <div class="mulai-dari">Mulai Dari</div>
-              <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format($kamar2['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
-                <a href="detail_kamar2.php" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
+            <div class="deluxe-info" style="padding: 20px;">
+              <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= htmlspecialchars($kamar['nama_tipe']); ?> <?= htmlspecialchars($kamar['nomor_kamar']); ?></h2>
+              <div class="single-1">Single - 1 Orang - 20m²</div>
+              <div class="amenity-items-parent" style="margin-top: 10px;">
+                <span class="amenity-items">WiFi</span> <span class="feature-a-c">AC</span>
+              </div>
+              <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                <div class="mulai-dari">Mulai Dari</div>
+                <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
+                  <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format((float)$kamar['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
+                  <a href="<?= $link_detail; ?>?id_tipe=<?= $kamar['id_tipe']; ?>" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
-      <?php endif; ?>
-
-
-      <?php if (isset($semua_kamar[2])):
-        $kamar3 = $semua_kamar[2];
-        $status3 = strtolower($kamar3['status_kamar']);
-        $badge_text3 = ($status3 == 'terisi') ? 'Terisi' : 'Tersedia';
-        $badge_bg3   = ($status3 == 'terisi') ? '#e74c3c' : '#8bc34a';
-      ?>
-        <section class="deluxe-content">
-          <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-            <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
-            <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg3; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
-              <h3 style="margin:0; font-size: 12px;"><?= $badge_text3; ?></h3>
-            </div>
-          </div>
-          <div class="deluxe-info" style="padding: 20px;">
-            <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= $kamar3['nama_tipe']; ?> <?= $kamar3['nomor_kamar']; ?></h2>
-            <div class="single-1">Single - 1 Orang - 20m²</div>
-            <div class="amenity-items-parent" style="margin-top: 10px;">
-              <span class="amenity-items">WiFi</span> <span class="feature-a-c">AC</span>
-            </div>
-            <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-              <div class="mulai-dari">Mulai Dari</div>
-              <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
-                <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format($kamar3['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
-                <a href="detail_kamar3.php" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
-              </div>
-            </div>
-          </div>
-        </section>
-      <?php endif; ?>
-
-    </div>
+          </section>
+        <?php endforeach; ?>
+        <?php endif; ?> </div> </main>
 
     </div>
     </div>
-  </main>
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-col footer-col-info">

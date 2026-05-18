@@ -7,6 +7,12 @@ $kontak_keluarga = $_POST['kontak_keluarga'] ?? '';
 
 $id_tipe = $_GET['id_tipe'] ?? $_GET['id'] ?? '';
 
+// BENAR: Mengambil seluruh unit kamar dari database beserta relasi tipenya
+$query_kamar = mysqli_query($koneksi, "SELECT kamar.*, tipe_kamar.nama_tipe, tipe_kamar.harga 
+    FROM kamar 
+    JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
+    WHERE kamar.status_kamar = 'Tersedia'");
+
 $query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar WHERE id_tipe = '$id_tipe'");
 $data_tipe = mysqli_fetch_array($query);
 
@@ -14,15 +20,12 @@ if ($data_tipe) {
     $tampil_tipe = $data_tipe['nama_tipe'];
     $tampil_harga = $data_tipe['harga'];
 } else {
-    // Hardcode fallback jika tabel kosong
+    // Perbaikan Hardcode fallback disesuaikan dengan database real lu:
     if ($id_tipe == 2) {
-        $tampil_tipe = "Deluxe Room A2";
+        $tampil_tipe = "Standard Room"; // Sesuai data A16
         $tampil_harga = 700000;
-    } elseif ($id_tipe == 3) {
-        $tampil_tipe = "Standard Room";
-        $tampil_harga = 400000;
     } elseif ($id_tipe == 1) {
-        $tampil_tipe = "Deluxe Room A1";
+        $tampil_tipe = "Deluxe Room";   // Sesuai data A12, B12, C14
         $tampil_harga = 1000000;
     } else {
         $res = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1");
@@ -30,7 +33,7 @@ if ($data_tipe) {
         $tampil_tipe = $d['nama_tipe'] ?? "Database Kosong";
         $tampil_harga = $d['harga'] ?? 0;
         if ($d) {
-            $id_tipe = $d['id_tipe']; // Update id_tipe agar tombol kembali berfungsi jika tidak ada di URL
+            $id_tipe = $d['id_tipe']; 
         }
     }
 }
