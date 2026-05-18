@@ -27,8 +27,30 @@ if ($data) {
     exit;
 }
 
+// ==========================================
+// FIX KUNCI: CEK AKUN APAKAH SUDAH PESAN KAMAR SEBELUMNYA
+// ==========================================
+$sudah_punya_kamar = false;
+
+if (isset($_SESSION['id_user'])) {
+    $id_user = $_SESSION['id_user'];
+    
+    // 1. Ambil no_ktp customer berdasarkan id_user login
+    $query_user = mysqli_query($koneksi, "SELECT no_ktp FROM customer WHERE id_user = '$id_user'");
+    $data_user = mysqli_fetch_assoc($query_user);
+    $no_ktp = $data_user['no_ktp'] ?? null;
+    
+    if ($no_ktp) {
+        // 2. Cek apakah ada pesanan aktif berstatus 'lunas' atau 'menunggu'
+        $cek_pesanan = mysqli_query($koneksi, "SELECT * FROM pesanan WHERE no_ktp = '$no_ktp' AND status_pesanan IN ('lunas', 'menunggu')");
+        if (mysqli_num_rows($cek_pesanan) > 0) {
+            $sudah_punya_kamar = true;
+        }
+    }
+}
+// ==========================================
+
 // 4. ATUR DESKRIPSI & FASILITAS SECARA DINAMIS BERDASARKAN ID TIPE AGAR GAK KETUKER
-// Tipe 1 = Deluxe (1 Juta), Tipe 2 = Standard (700 Ribu)
 if ($id_tipe == 1) {
     $txt_deskripsi = "Modern and comfortable deluxe room perfect for students and young professionals. Fully furnished with high quality amenities, private bathroom, and cooler AC.";
     $list_fasilitas = [
@@ -38,7 +60,6 @@ if ($id_tipe == 1) {
         'Kamar Mandi Dalam' => 'M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z'
     ];
 } else {
-    // Settingan otomatis untuk Kamar Standard Rp 700.000 (ID Tipe 2) atau tipe baru lainnya
     $txt_deskripsi = "Kamar tipe Standard dengan harga ekonomis namun tetap menawarkan kenyamanan maksimal. Sangat cocok untuk menghemat budget bulanan Anda dengan fasilitas lengkap.";
     $list_fasilitas = [
         'WiFi' => 'M5 12.55a11 11 0 0 1 14.08 0 M1.42 9a16 16 0 0 1 21.16 0 M8.53 16.11a6 6 0 0 1 6.95 0', 
@@ -210,11 +231,19 @@ if ($id_tipe == 1) {
                         </div>
 
                         <?php if (isset($_SESSION['id_user'])) : ?>
-                            <button class="btn-pesan"
-                                onclick="window.location.href='booking.php?id_tipe=<?php echo $id_tipe; ?>'"
-                                style="cursor: pointer;">
-                                Pesan Sekarang
-                            </button>
+                            <?php if ($sudah_punya_kamar) : ?>
+                                <button class="btn-pesan" 
+                                    style="background: #ef4444; color: white; cursor: not-allowed;" 
+                                    onclick="alert('Anda tidak bisa memesan lagi! Akun Anda terdeteksi memiliki pesanan kos yang masih aktif.')" disabled>
+                                    Sudah Memiliki Kamar
+                                </button>
+                            <?php else : ?>
+                                <button class="btn-pesan"
+                                    onclick="window.location.href='booking.php?id_tipe=<?php echo $id_tipe; ?>'"
+                                    style="cursor: pointer;">
+                                    Pesan Sekarang
+                                </button>
+                            <?php endif; ?>
                         <?php else : ?>
                             <button class="btn-pesan"
                                 onclick="alert('Silakan login terlebih dahulu untuk melakukan pemesanan!'); window.location.href='login.php';"
