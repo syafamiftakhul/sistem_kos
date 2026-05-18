@@ -1,9 +1,11 @@
 <?php
 session_start();
 include "../koneksi.php";
+$search = $_GET['search'] ?? '';
 /** @var mysqli $koneksi */
 
-$query_tipe = mysqli_query($koneksi, "SELECT * FROM tipe_kamar");
+$query_tipe = mysqli_query($koneksi, "
+SELECT * FROM tipe_kamar WHERE id_tipe LIKE '%$search%'OR nama_tipe LIKE '%$search%'OR fasilitas LIKE '%$search%'");
 
 ?>
 <!DOCTYPE html>
@@ -74,10 +76,14 @@ $query_tipe = mysqli_query($koneksi, "SELECT * FROM tipe_kamar");
             </header>
 
             <div class="action-bar">
-                <div class="search-box">
+                <form method="GET" class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="cari nama, email atau role...">
-                </div>
+                    <input type="text"
+                        name="search"
+                        placeholder="Cari tipe kamar..."
+                        value="<?= $_GET['search'] ?? ''; ?>"
+                        onkeyup="this.form.submit()">
+                </form>
                 <a href="tambah_tipe_kamar.php" class="btn-tambah" id="btn-tambah-tipe">
                     <i class="fas fa-plus"></i> Tambah Tipe Kamar
                 </a>
