@@ -76,13 +76,9 @@ SELECT * FROM tipe_kamar WHERE id_tipe LIKE '%$search%'OR nama_tipe LIKE '%$sear
             </header>
 
             <div class="action-bar">
-                <form method="GET" class="search-box">
+                <form method="GET" class="search-box" id="searchForm">
                     <i class="fas fa-search"></i>
-                    <input type="text"
-                        name="search"
-                        placeholder="Cari tipe kamar..."
-                        value="<?= $_GET['search'] ?? ''; ?>"
-                        onkeyup="this.form.submit()">
+                    <input type="text" name="search" id="searchInput" placeholder="Cari tipe kamar..." value="<?= $_GET['search'] ?? ''; ?>">
                 </form>
                 <a href="tambah_tipe_kamar.php" class="btn-tambah" id="btn-tambah-tipe">
                     <i class="fas fa-plus"></i> Tambah Tipe Kamar
@@ -177,6 +173,20 @@ SELECT * FROM tipe_kamar WHERE id_tipe LIKE '%$search%'OR nama_tipe LIKE '%$sear
         btnMenu.onclick = function() {
             sidebar.classList.toggle('expand');
         }
+    </script>
+
+    <script>
+        let timeout = null;
+
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+
+            clearTimeout(timeout);
+
+            timeout = setTimeout(() => {
+                document.getElementById('searchForm').submit();
+            }, 500);
+
+        });
     </script>
 </body>
 
