@@ -2,10 +2,8 @@
 session_start();
 include "koneksi.php";
 
-if (!isset($_SESSION['id_user'])) {
-    echo "<script>alert('Login dulu bre!'); window.location='login.php';</script>";
-    exit;
-}
+$jenis_kelamin   = $_POST['jenis_kelamin'] ?? '';
+$kontak_keluarga = $_POST['kontak_keluarga'] ?? '';
 
 $id_tipe = $_GET['id_tipe'] ?? $_GET['id'] ?? '';
 
@@ -16,11 +14,43 @@ if ($data_tipe) {
     $tampil_tipe = $data_tipe['nama_tipe'];
     $tampil_harga = $data_tipe['harga'];
 } else {
-    // Kalau masih 0, kita coba tarik data pertama yang ada di tabel biar gak kosong banget
-    $res = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1");
-    $d = mysqli_fetch_array($res);
-    $tampil_tipe = $d['nama_tipe'] ?? "Database Kosong";
-    $tampil_harga = $d['harga'] ?? 0;
+    // Hardcode fallback jika tabel kosong
+    if ($id_tipe == 2) {
+        $tampil_tipe = "Deluxe Room A2";
+        $tampil_harga = 700000;
+    } elseif ($id_tipe == 3) {
+        $tampil_tipe = "Standard Room";
+        $tampil_harga = 400000;
+    } elseif ($id_tipe == 1) {
+        $tampil_tipe = "Deluxe Room A1";
+        $tampil_harga = 1000000;
+    } else {
+        $res = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1");
+        $d = mysqli_fetch_array($res);
+        $tampil_tipe = $d['nama_tipe'] ?? "Database Kosong";
+        $tampil_harga = $d['harga'] ?? 0;
+        if ($d) {
+            $id_tipe = $d['id_tipe']; // Update id_tipe agar tombol kembali berfungsi jika tidak ada di URL
+        }
+    }
+}
+
+$back_link = "index.php";
+
+// Ambil ID kamar pertama dari database untuk detail_kamar1 (tanpa ORDER BY, persis seperti di detail_kamar1.php)
+$q1 = mysqli_query($koneksi, "SELECT id_tipe FROM tipe_kamar LIMIT 1");
+$row1 = mysqli_fetch_assoc($q1);
+$id_kamar1 = $row1 ? $row1['id_tipe'] : 1;
+
+// Ambil ID kamar kedua dari database untuk detail_kamar2
+$q2 = mysqli_query($koneksi, "SELECT id_tipe FROM tipe_kamar LIMIT 1 OFFSET 1");
+$row2 = mysqli_fetch_assoc($q2);
+$id_kamar2 = $row2 ? $row2['id_tipe'] : 2;
+
+if ($id_tipe == $id_kamar1) {
+    $back_link = "detail_kamar1.php";
+} elseif ($id_tipe == $id_kamar2 || $id_tipe == 2) {
+    $back_link = "detail_kamar2.php";
 }
 $query_kamar = mysqli_query($koneksi, "
 SELECT * FROM kamar WHERE id_tipe = '$id_tipe' AND status_kamar = 'tersedia'LIMIT 1");
@@ -54,7 +84,7 @@ $id_kamar = $data_kamar['id_kamar'] ?? '';
     </header>
 
     <main class="booking-container">
-      <a href="detail.php" class="back-link">
+      <a href="<?php echo $back_link; ?>" class="back-link">
         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
@@ -97,7 +127,7 @@ $id_kamar = $data_kamar['id_kamar'] ?? '';
             </div>
             <div class="input-group">
               <label>NIK (no_ktp) *</label>
-              <input type="text" name="no_ktp" pattern="\d{16}" title="NIK harus 16 digit angka" required>
+              <input type="text" name="no_ktp" required>
             </div>
             <div class="input-group">
               <label>Nomor Telepon (no_hp) *</label>
@@ -134,7 +164,7 @@ $id_kamar = $data_kamar['id_kamar'] ?? '';
           <div class="form-grid">
             <div class="input-group">
               <label>Tanggal Masuk *</label>
-              <input type="date" name="tgl_masuk" min="<?= date('Y-m-d'); ?>" required>
+              <input type="date" name="tgl_masuk" required>
             </div>
             <div class="input-group">
               <label>Durasi (Bulan) *</label>

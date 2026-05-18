@@ -13,6 +13,17 @@ $harga_satuan   = (int)($_POST['harga_satuan'] ?? 0);
 $id_kamar       = $_POST['id_kamar'] ?? '';
 echo $id_kamar;
 
+$nama            = $_POST['nama'] ?? 'Guest';
+$no_ktp          = $_POST['no_ktp'] ?? '';
+$no_hp           = $_POST['no_hp'] ?? '';
+$alamat          = $_POST['alamat'] ?? '';
+$jenis_kelamin   = $_POST['jenis_kelamin'] ?? '';   // BARU
+$kontak_keluarga = $_POST['kontak_keluarga'] ?? ''; // BARU
+$tgl_masuk       = $_POST['tgl_masuk'] ?? date('Y-m-d');
+$periode         = (int)($_POST['periode'] ?? 1);
+$harga_satuan    = (int)($_POST['harga_satuan'] ?? 0);
+$id_tipe         = $_POST['id_tipe'] ?? '';
+
 // Hitung total
 $total_bayar    = $harga_satuan * $periode;
 
@@ -21,19 +32,30 @@ $date           = new DateTime($tgl_masuk);
 $date->modify("+$periode month");
 $tgl_keluar     = $date->format('d-m-Y');
 
-// Ambil detail kamar buat ditampilin di ringkasan
-$query_detail = mysqli_query($koneksi, "SELECT kamar.nomor_kamar, tipe_kamar.nama_tipe 
+// Ambil detail kamar acak yang tipenya sesuai dengan pilihan user
+$query_detail = mysqli_query($koneksi, "SELECT kamar.id_kamar, kamar.nomor_kamar, tipe_kamar.nama_tipe 
                                         FROM kamar 
                                         JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
-                                        WHERE kamar.id_kamar = '$id_kamar'");
+                                        WHERE kamar.id_tipe = '$id_tipe' 
+                                        LIMIT 1");
 $detail = mysqli_fetch_assoc($query_detail);
 
 // Gabungin nama tipe dan nomor kamarnya
 if ($detail) {
+  $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
+} else {
+  $nama_kamar_lengkap = "Kamar tidak ditemukan";
+}
+
+// Validasi biar gak error "offset on null" kalau data kamar di DB beneran kosong
+if ($detail) {
+    $id_kamar = $detail['id_kamar'];
     $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
 } else {
-    $nama_kamar_lengkap = "Kamar tidak ditemukan";
+    $id_kamar = '';
+    $nama_kamar_lengkap = "Kamar Belum Tersedia";
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -139,34 +161,38 @@ if ($detail) {
             <input type="hidden" name="no_ktp" value="<?php echo $no_ktp; ?>">
             <input type="hidden" name="no_hp" value="<?php echo $no_hp; ?>">
             <input type="hidden" name="alamat" value="<?php echo $alamat; ?>">
+
+            <input type="hidden" name="jenis_kelamin" value="<?php echo $jenis_kelamin; ?>">
+            <input type="hidden" name="kontak_keluarga" value="<?php echo $kontak_keluarga; ?>">
+
             <input type="hidden" name="tgl_masuk" value="<?php echo $tgl_masuk; ?>">
             <input type="hidden" name="periode" value="<?php echo $periode; ?>">
             <input type="hidden" name="total_bayar" value="<?php echo $total_bayar; ?>">
             <input type="hidden" name="id_kamar" value="<?php echo $id_kamar; ?>">
             <form action="proses_konfirmasi.php" method="POST" enctype="multipart/form-data">
 
-            <div class="upload-box" id="drop-zone">
-              <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
-              <label for="file-upload" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <div class="upload-box" id="drop-zone">
+                <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
+                <label for="file-upload" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
 
-                <div id="pre-upload">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #6c757d; margin-bottom: 10px;">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                  </svg>
-                  <p style="color: #495057; font-weight: 500;">Pilih file bukti transfer</p>
-                </div>
+                  <div id="pre-upload">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #6c757d; margin-bottom: 10px;">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p style="color: #495057; font-weight: 500;">Pilih file bukti transfer</p>
+                  </div>
 
-                <div id="post-upload" style="display: none; width: 100%; height: 200px; overflow: hidden; border-radius: 8px;">
-                  <img id="image-preview" src="#" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-              </label>
-            </div>
+                  <div id="post-upload" style="display: none; width: 100%; height: 200px; overflow: hidden; border-radius: 8px;">
+                    <img id="image-preview" src="#" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
+                  </div>
+                </label>
+              </div>
 
-            <input type="hidden" name="konfirmasi" value="1">
-            <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
-          </form>
+              <input type="hidden" name="konfirmasi" value="1">
+              <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
+            </form>
         </div>
 
         <div class="summary-card">
