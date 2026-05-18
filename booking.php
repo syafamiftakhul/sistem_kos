@@ -52,6 +52,12 @@ if ($id_tipe == $id_kamar1) {
 } elseif ($id_tipe == $id_kamar2 || $id_tipe == 2) {
     $back_link = "detail_kamar2.php";
 }
+$query_kamar = mysqli_query($koneksi, "
+SELECT * FROM kamar WHERE id_tipe = '$id_tipe' AND status_kamar = 'tersedia'LIMIT 1");
+
+$data_kamar = mysqli_fetch_assoc($query_kamar);
+
+$id_kamar = $data_kamar['id_kamar'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -103,6 +109,7 @@ if ($id_tipe == $id_kamar1) {
 
         <form action="pembayaran.php" method="POST">
           <input type="hidden" name="id_tipe" value="<?php echo $id_tipe; ?>">
+          <input type="hidden" name="id_kamar" value="<?php echo $id_kamar; ?>">
           <input type="hidden" name="harga_satuan" value="<?php echo $tampil_harga; ?>">
 
           <div class="section-heading">
