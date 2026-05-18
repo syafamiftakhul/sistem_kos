@@ -29,14 +29,13 @@ if ($no_ktp) {
         WHERE pesanan.no_ktp = '$no_ktp' AND pesanan.status_pesanan = 'lunas' LIMIT 1");
     $booking = mysqli_fetch_assoc($query_booking);
 
-    // Mengambil data keluhan terakhir
+    // Mengambil data semua keluhan milik customer yang login
     $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe 
         FROM pengaduan 
         JOIN kamar ON pengaduan.id_kamar = kamar.id_kamar 
         JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
         WHERE pengaduan.no_ktp = '$no_ktp' 
-        ORDER BY tgl_lapor DESC LIMIT 1");
-    $keluhan = mysqli_fetch_assoc($query_keluhan);
+        ORDER BY tgl_lapor DESC");
 }
 ?>
 
@@ -122,34 +121,36 @@ if ($no_ktp) {
 
         <h3>Keluhan Saya</h3>
         <?php if (!empty($booking)) : ?>
-            <?php if (!empty($keluhan)) : ?>
-                <div class="card-box">
-                    <div class="card-top" style="margin-bottom: 12px;">
-                        <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek'] ?? 'Keluhan Tanpa Subjek'); ?></div>
-                        <?php 
-                        $status = $keluhan['status_pengaduan'] ?? 'menunggu';
-                        if ($status == 'menunggu') {
-                            echo '<div class="badge-menunggu">Menunggu</div>';
-                        } elseif ($status == 'proses') {
-                            echo '<div class="badge-proses">Sedang Diproses</div>';
-                        } elseif ($status == 'selesai') {
-                            echo '<div class="badge-selesai">Selesai</div>';
-                        }
-                        ?>
+            <?php if ($query_keluhan && mysqli_num_rows($query_keluhan) > 0) : ?>
+                <?php while ($row_keluhan = mysqli_fetch_assoc($query_keluhan)) : ?>
+                    <div class="card-box" style="margin-bottom: 16px;">
+                        <div class="card-top" style="margin-bottom: 12px;">
+                            <div class="keluhan-title"><?= htmlspecialchars($row_keluhan['subjek'] ?? 'Keluhan Tanpa Subjek'); ?></div>
+                            <?php 
+                            $status = strtolower($row_keluhan['status_pengaduan'] ?? 'menunggu');
+                            if ($status == 'menunggu') {
+                                echo '<div class="badge-menunggu">Menunggu</div>';
+                            } elseif ($status == 'proses') {
+                                echo '<div class="badge-proses">Sedang Diproses</div>';
+                            } elseif ($status == 'selesai') {
+                                echo '<div class="badge-selesai">Selesai</div>';
+                            }
+                            ?>
+                        </div>
+                        
+                        <div class="keluhan-room">
+                            <i class="fas fa-door-open"></i> <?= htmlspecialchars($row_keluhan['nama_tipe'] . ' - Room ' . $row_keluhan['nomor_kamar']); ?>
+                        </div>
+                        
+                        <div class="keluhan-desc">
+                            <?= htmlspecialchars($row_keluhan['deskripsi'] ?? ''); ?>
+                        </div>
+                        
+                        <div class="keluhan-date">
+                            Dikirim pada <?= htmlspecialchars(date('d/m/Y', strtotime($row_keluhan['tgl_lapor']))); ?>
+                        </div>
                     </div>
-                    
-                    <div class="keluhan-room">
-                        <i class="fas fa-door-open"></i> <?= htmlspecialchars($keluhan['nama_tipe'] . ' - Room ' . $keluhan['nomor_kamar']); ?>
-                    </div>
-                    
-                    <div class="keluhan-desc">
-                        <?= htmlspecialchars($keluhan['deskripsi'] ?? ''); ?>
-                    </div>
-                    
-                    <div class="keluhan-date">
-                        Dikirim pada <?= htmlspecialchars(date('d/m/Y', strtotime($keluhan['tgl_lapor']))); ?>
-                    </div>
-                </div>
+                <?php endwhile; ?>
             <?php else : ?>
                 <div class="card-box empty-state" style="text-align: center; padding: 40px 20px; border: 1px dashed #D1D5DB; border-radius: 8px;">
                     <i class="fas fa-comment-slash" style="font-size: 36px; color: #D1D5DB; margin-bottom: 16px; display: block;"></i>
