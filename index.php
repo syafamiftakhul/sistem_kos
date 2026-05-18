@@ -2,6 +2,12 @@
 session_start();
 include 'koneksi.php';
 
+$query_kamar = mysqli_query($koneksi, "
+    SELECT k.*, tk.nama_tipe, tk.harga, tk.fasilitas
+    FROM kamar k
+    JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe
+");
+
 $nama = "User";
 if (isset($_SESSION['id_user'])) {
   $id_user = $_SESSION['id_user'];
@@ -131,9 +137,9 @@ if (isset($_SESSION['id_user'])) {
           <div class="fasilitas1-child"></div>
           <div class="directions-car-wrapper">
             <img
-            class="parkir-icon"
-            alt="parkir"
-            src="assets/img/parkir.png" />
+              class="parkir-icon"
+              alt="parkir"
+              src="assets/img/parkir.png" />
           </div>
           <div class="parkir-motor">Parkir Motor & Mobil</div>
         </div>
@@ -190,76 +196,103 @@ if (isset($_SESSION['id_user'])) {
 
     <div class="frame-parent4" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
 
-      <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-        <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-          <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room 1" style="width: 100%; height: 100%; object-fit: cover;" />
-          <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: #8bc34a; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
-            <h3 class="tersedia" style="margin:0;">Tersedia</h3>
-          </div>
-        </div>
-        <div class="deluxe-info" style="padding: 20px;">
-          <h2 class="deluxe-room-a1">Deluxe Room A1</h2>
-          <div class="single-1">Single - 1 Orang - 20m²</div>
-          <div class="amenity-items-parent" style="margin-top: 10px;">
-            <span class="amenity-items">WiFi</span>
-            <span class="feature-a-c">AC</span>
-          </div>
-          <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-            <div class="mulai-dari">Mulai Dari</div>
-            <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
-              <h2 class="rp-1000000" style="margin:0;">Rp 1.000.000 <small>/bln</small></h2>
-              <a href="detail_kamar1.php" class="button-daftar2" style="text-decoration:none;">Detail</a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <?php while ($kamar = mysqli_fetch_assoc($query_kamar)):
+        // Ambil status dari database dan paksa ke huruf kecil biar aman dikondisikan
+        $status = strtolower($kamar['status_kamar']);
+        $is_terisi = ($status == 'terisi');
 
-      <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-        <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-          <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room 2" style="width: 100%; height: 100%; object-fit: cover;" />
-          <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: #8bc34a; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
-            <h3 class="tersedia" style="margin:0;">Tersedia</h3>
-          </div>
-        </div>
-        <div class="deluxe-info" style="padding: 20px;">
-          <h2 class="deluxe-room-a1">Deluxe Room A2</h2>
-          <div class="single-1">Single - 1 Orang - 20m²</div>
-          <div class="amenity-items-parent" style="margin-top: 10px;">
-            <span class="amenity-items">WiFi</span>
-            <span class="feature-a-c">AC</span>
-          </div>
-          <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-            <div class="mulai-dari">Mulai Dari</div>
-            <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
-              <h2 class="rp-1000000" style="margin:0;">Rp 700.000 <small>/bln</small></h2>
-              <a href="detail_kamar2.php" class="button-daftar2" style="text-decoration:none;">Detail</a>
-            </div>
-          </div>
-        </div>
-      </section>
+        // Tentukan warna & tulisan badge status di atas gambar
+        $badge_text = $is_terisi ? 'Terisi' : 'Tersedia';
+        $badge_bg   = $is_terisi ? '#e74c3c' : '#8bc34a'; // Merah kalau terisi, Hijau kalau tersedia
+      ?>
+        <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px;">
 
-      <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-        <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-          <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room 3" style="width: 100%; height: 100%; object-fit: cover;" />
-          <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: #8bc34a; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
-            <h3 class="tersedia" style="margin:0;">Tersedia</h3>
-          </div>
-        </div>
-        <div class="deluxe-info" style="padding: 20px;">
-          <h2 class="deluxe-room-a1">Standard Room</h2>
-          <div class="single-1">Single - 1 Orang - 15m²</div>
-          <div class="amenity-items-parent" style="margin-top: 10px;">
-            <span class="amenity-items">WiFi</span>
-          </div>
-          <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-            <div class="mulai-dari">Mulai Dari</div>
-            <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
-              <h2 class="rp-1000000" style="margin:0;">Rp 400.000 <small>/bln</small></h2>
-              <a href="detail_kamar3.php" class="button-daftar2" style="text-decoration:none;">Detail</a>
+          <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
+            <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
+
+            <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; transition: background 0.3s ease;">
+              <h3 style="margin:0; font-size: 12px;"><?= $badge_text; ?></h3>
             </div>
           </div>
-        </div>
-      </section>
+
+          <div class="deluxe-info" style="padding: 20px;">
+            <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= $kamar['nama_tipe']; ?> <?= $kamar['nomor_kamar']; ?></h2>
+            <div class="single-1">Single - 1 Orang - 20m²</div>
+
+            <div class="amenity-items-parent" style="margin-top: 10px;">
+              <span class="amenity-items">WiFi</span>
+              <span class="feature-a-c">AC</span>
+            </div>
+
+            <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+              <div class="mulai-dari">Mulai Dari</div>
+              <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format($kamar['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
+
+                <a href="detail_kamar1.php?id=<?= $kamar['id_kamar']; ?>" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+        <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px;">
+          <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
+            <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
+
+            <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
+              <h3 style="margin:0; font-size: 12px;"><?= $badge_text; ?></h3>
+            </div>
+          </div>
+
+          <div class="deluxe-info" style="padding: 20px;">
+            <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= $kamar['nama_tipe']; ?> <?= $kamar['nomor_kamar']; ?></h2>
+            <div class="single-1">Single - 1 Orang - 20m²</div>
+
+            <div class="amenity-items-parent" style="margin-top: 10px;">
+              <span class="amenity-items">WiFi</span>
+              <span class="feature-a-c">AC</span>
+            </div>
+
+            <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+              <div class="mulai-dari">Mulai Dari</div>
+              <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format($kamar['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
+
+                <a href="detail_kamar.php?id=<?= $kamar['id_kamar']; ?>" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px;">
+          <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
+            <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
+
+            <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
+              <h3 style="margin:0; font-size: 12px;"><?= $badge_text; ?></h3>
+            </div>
+          </div>
+
+          <div class="deluxe-info" style="padding: 20px;">
+            <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= $kamar['nama_tipe']; ?> <?= $kamar['nomor_kamar']; ?></h2>
+            <div class="single-1">Single - 1 Orang - 20m²</div>
+
+            <div class="amenity-items-parent" style="margin-top: 10px;">
+              <span class="amenity-items">WiFi</span>
+              <span class="feature-a-c">AC</span>
+            </div>
+
+            <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+              <div class="mulai-dari">Mulai Dari</div>
+              <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format($kamar['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
+
+                <a href="detail_kamar.php?id=<?= $kamar['id_kamar']; ?>" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      <?php endwhile; ?>
 
     </div>
     </div>

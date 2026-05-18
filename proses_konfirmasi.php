@@ -12,6 +12,8 @@ if (isset($_POST['konfirmasi'])) {
     $tgl_masuk = $_POST['tgl_masuk'];
     $total     = $_POST['total_bayar'];
     $periode   = $_POST['periode'] ?? 1;
+    $id_kamar = $_POST['id_kamar'];
+    $periode   = $_POST['periode'] ?? 1;
 
     // 2. Urusan File Foto
     $nama_file = $_FILES['bukti_transfer']['name'];
