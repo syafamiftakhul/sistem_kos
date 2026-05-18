@@ -5,31 +5,26 @@ include '../koneksi.php';
 // Ambil filter status dari URL (default 'Semua')
 $filter = isset($_GET['status']) ? $_GET['status'] : 'Semua';
 
-// =========================================================================
-// FIX QUERY: Ganti ke LEFT JOIN customer biar data transaksi gak ilang 
-// jika no_ktp belum terdaftar atau tidak match sempurna di tabel customer
-// =========================================================================
+// Query dasar JOIN antara Transaksi dan Customer sesuai ERD
 $query = "SELECT t.*, c.nama, p.id_kamar 
           FROM transaksi t 
-          LEFT JOIN customer c ON t.no_ktp = c.no_ktp
+          JOIN customer c ON t.no_ktp = c.no_ktp
           LEFT JOIN pesanan p ON t.id_pesanan = p.id_pesanan";
 
 if ($filter != 'Semua') {
-    // Memakai LOWER agar pencarian status aman dari case-sensitive (huruf besar/kecil)
-    $query .= " WHERE LOWER(t.status_transaksi) = '" . strtolower($filter) . "'";
+    $query .= " WHERE t.status_transaksi = '$filter'";
 }
 
 $result = mysqli_query($koneksi, $query);
 
-// Hitung Ringkasan Income (Memakai LOWER() biar aman)
-$total_lunas = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE LOWER(status_transaksi) = 'lunas'"))['total'] ?? 0;
-$total_pending = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE LOWER(status_transaksi) = 'pending'"))['total'] ?? 0;
-$total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE LOWER(status_transaksi) = 'terlambat'"))['total'] ?? 0;
+// Hitung Ringkasan Income (Berdasarkan status di DB lu)
+$total_lunas = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Lunas'"))['total'] ?? 0;
+$total_pending = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Pending'"))['total'] ?? 0;
+$total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Terlambat'"))['total'] ?? 0;
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <title>Manajemen Pembayaran - Aqsya Kos</title>
@@ -85,7 +80,7 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
                 </a>
             </nav>
         </aside>
-
+        
         <div class="main-content" style="flex: 1; min-height: 100vh; padding: 40px; box-sizing: border-box;">
             <header>
                 <div class="header-title">
@@ -181,15 +176,15 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
                 <div class="income-summary">
                     <div class="income-card lunas">
                         <span class="label">Total Lunas</span>
-                        <h3>Rp <?= number_format($total_lunas, 0, ',', '.') ?></h3>
+                        <h3>Rp <?= number_format($total_lunas / 1000000, 1) ?> jt</h3>
                     </div>
                     <div class="income-card pending">
                         <span class="label">Total Pending</span>
-                        <h3>Rp <?= number_format($total_pending, 0, ',', '.') ?></h3>
+                        <h3>Rp <?= number_format($total_pending / 1000000, 1) ?> jt</h3>
                     </div>
                     <div class="income-card terlambat">
                         <span class="label">Total Terlambat</span>
-                        <h3>Rp <?= number_format($total_terlambat, 0, ',', '.') ?></h3>
+                        <h3>Rp <?= number_format($total_terlambat / 1000000, 1) ?> jt</h3>
                     </div>
                 </div>
             </section>
