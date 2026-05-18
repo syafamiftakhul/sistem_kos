@@ -8,7 +8,26 @@ if (!isset($_SESSION['id_user'])) {
     exit;
 }
 
-$id_user = $_SESSION['id_user'];
+if (isset($_SESSION['id_user'])) {
+  $id_user = $_SESSION['id_user'];
+  $akses = $_SESSION['akses'];
+
+  // Langsung tembak cari nama panjang berdasarkan hak akses, jangan lewat email dulu
+  if ($akses == 2 || $akses == 'customer') {
+    $query = mysqli_query($koneksi, "SELECT nama FROM customer WHERE id_user='$id_user'");
+    if ($query && mysqli_num_rows($query) > 0) {
+      $data = mysqli_fetch_assoc($query);
+      $nama = $data['nama'];
+    }
+  } else if ($akses == 1 || $akses == 'admin') {
+    $query = mysqli_query($koneksi, "SELECT nama FROM user WHERE id_user='$id_user'");
+    if ($query && mysqli_num_rows($query) > 0) {
+      $data = mysqli_fetch_assoc($query);
+      $nama = $data['nama'];
+    }
+  }
+}
+
 
 $query_cek_customer = mysqli_query($koneksi, "SELECT nama, no_ktp, no_hp FROM customer WHERE id_user = '$id_user'");
 $data_customer = mysqli_fetch_assoc($query_cek_customer);

@@ -228,7 +228,7 @@ if (isset($_SESSION['id_user'])) {
         ?>
           <section class="deluxe-content">
             <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-              <img class="tempimagedb346c-1-icon" src="assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
+              <img class="tempimagedb346c-1-icon" src="../assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
               <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
                 <h3 style="margin:0; font-size: 12px;"><?= $badge_text; ?></h3>
               </div>
@@ -236,14 +236,26 @@ if (isset($_SESSION['id_user'])) {
             <div class="deluxe-info" style="padding: 20px;">
               <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= htmlspecialchars($kamar['nama_tipe']); ?> <?= htmlspecialchars($kamar['nomor_kamar']); ?></h2>
               <div class="single-1">Single - 1 Orang - 20m²</div>
-              <div class="amenity-items-parent" style="margin-top: 10px;">
-                <span class="amenity-items">WiFi</span> <span class="feature-a-c">AC</span>
+              
+              <div class="amenity-items-parent" style="margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap;">
+                <?php 
+                if (!empty($kamar['fasilitas'])) {
+                  // Memecah string fasilitas berdasarkan koma (,) menjadi array
+                  $list_fasilitas = explode(',', $kamar['fasilitas']); 
+                  foreach ($list_fasilitas as $fasilitas_item) {
+                    echo '<span class="amenity-items" style="background: #f0f0f0; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-right: 5px;">' . htmlspecialchars(trim($fasilitas_item)) . '</span>';
+                  }
+                } else {
+                  echo '<span class="amenity-items">-</span>';
+                }
+                ?>
               </div>
+
               <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
                 <div class="mulai-dari">Mulai Dari</div>
                 <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
                   <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format((float)$kamar['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
-                  <a href="<?= $link_detail; ?>?id_tipe=<?= $kamar['id_tipe']; ?>" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
+                  <a href="detail_kamar.php?id_tipe=<?= $kamar['id_tipe']; ?>" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
                 </div>
               </div>
             </div>
