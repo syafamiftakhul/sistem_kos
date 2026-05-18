@@ -229,11 +229,11 @@ if ($detail) {
 
       if (input.files && input.files[0]) {
         const file = input.files[0];
-        const fileSize = file.size / 1024 / 1024;
+        const fileSize = file.size / 1024 / 1024; // Hitung ke MB
 
         if (fileSize > 2) {
           alert("Waduh bre, filenya kegedean! Maksimal 2MB ya.");
-          input.value = "";
+          input.value = ""; // Reset input
           return;
         }
 
