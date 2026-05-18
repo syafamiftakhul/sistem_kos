@@ -139,7 +139,6 @@ if ($detail) {
             Upload Bukti Pembayaran
           </div>
 
-          <!-- FORM UTAMA YANG SUDAH DIPERBAIKI -->
           <form action="proses_konfirmasi.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id_kamar" value="<?php echo $id_kamar; ?>">
             <input type="hidden" name="nama" value="<?php echo htmlspecialchars($nama); ?>">
@@ -230,16 +229,14 @@ if ($detail) {
 
       if (input.files && input.files[0]) {
         const file = input.files[0];
-        const fileSize = file.size / 1024 / 1024; // Hitung ke MB
+        const fileSize = file.size / 1024 / 1024;
 
-        // 1. Validasi Maksimal 2MB
         if (fileSize > 2) {
           alert("Waduh bre, filenya kegedean! Maksimal 2MB ya.");
-          input.value = ""; // Reset input
+          input.value = "";
           return;
         }
 
-        // 2. Tampilkan preview
         const reader = new FileReader();
         reader.onload = function(e) {
           imagePreview.src = e.target.result;
