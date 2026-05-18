@@ -3,6 +3,12 @@ session_start();
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
+$query_kamar = mysqli_query($koneksi, "
+    SELECT k.*, tk.nama_tipe, tk.harga, tk.fasilitas
+    FROM kamar k
+    JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe
+");
+
 if (!isset($_SESSION['id_user'])) {
     header("Location: ../login.php");
     exit;
@@ -21,7 +27,7 @@ if ($query && mysqli_num_rows($query) > 0) {
         $data_user = mysqli_fetch_assoc($query_user);
         $nama = $data_user['email'];
     } else {
-        $nama = "User"; 
+        $nama = "User";
     }
 }
 ?>
@@ -75,8 +81,8 @@ if ($query && mysqli_num_rows($query) > 0) {
                     <div style="display: flex; align-items: center; gap: 15px;">
                         <div style="display: flex; align-items: center; gap: 8px; border: 1px solid #81A6C6; padding: 8px 16px; border-radius: 8px; color: #81A6C6; font-weight: 500; background: white;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
                             </svg>
                             <span style="font-size: 0.95rem;"><?php echo htmlspecialchars($nama); ?></span>
                         </div>
@@ -208,110 +214,160 @@ if ($query && mysqli_num_rows($query) > 0) {
     <main class="select-fields-parent">
         <h2 class="kamar-tersedia">Kamar Tersedia</h2>
 
-            <div class="frame-parent4" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <style>
+            .deluxe-content {
+                display: flex;
+                flex-direction: column;
+                background: var(--white);
+                border-radius: 12px;
+                overflow: hidden;
+                margin-bottom: 25px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+                transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+                cursor: pointer;
+            }
 
-                <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            .deluxe-content:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+            }
+        </style>
+
+        <div class="frame-parent4" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+
+            <?php
+            // Ambil semua data kamar ke dalam satu Array utama
+            $semua_kamar = [];
+            while ($row = mysqli_fetch_assoc($query_kamar)) {
+                $semua_kamar[] = $row;
+            }
+            ?>
+
+            <?php if (isset($semua_kamar[0])):
+                $kamar1 = $semua_kamar[0];
+                $status1 = strtolower($kamar1['status_kamar']);
+                $badge_text1 = ($status1 == 'terisi') ? 'Terisi' : 'Tersedia';
+                $badge_bg1   = ($status1 == 'terisi') ? '#e74c3c' : '#8bc34a';
+            ?>
+                <section class="deluxe-content">
                     <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-                        <img class="tempimagedb346c-1-icon" src="../assets/img/bedroom1.jpg" alt="Room 1" style="width: 100%; height: 100%; object-fit: cover;" />
-                        <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: #8bc34a; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
-                            <h3 class="tersedia" style="margin:0;">Tersedia</h3>
+                        <img class="tempimagedb346c-1-icon" src="../assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
+                        <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg1; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                            <h3 style="margin:0; font-size: 12px;"><?= $badge_text1; ?></h3>
                         </div>
                     </div>
                     <div class="deluxe-info" style="padding: 20px;">
-                        <h2 class="deluxe-room-a1">Deluxe Room A1</h2>
+                        <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= $kamar1['nama_tipe']; ?> <?= $kamar1['nomor_kamar']; ?></h2>
                         <div class="single-1">Single - 1 Orang - 20m²</div>
                         <div class="amenity-items-parent" style="margin-top: 10px;">
-                            <span class="amenity-items">WiFi</span>
-                            <span class="feature-a-c">AC</span>
+                            <span class="amenity-items">WiFi</span> <span class="feature-a-c">AC</span>
                         </div>
                         <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
                             <div class="mulai-dari">Mulai Dari</div>
                             <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
-                                <h2 class="rp-1000000" style="margin:0;">Rp 1.000.000 <small>/bln</small></h2>
-                                <a href="../detail_kamar1.php" class="button-daftar2" style="text-decoration:none;">Detail</a>
+                                <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format($kamar1['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
+                                <a href="../detail_kamar1.php" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
                             </div>
                         </div>
                     </div>
                 </section>
+            <?php endif; ?>
 
-                <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+
+            <?php if (isset($semua_kamar[1])):
+                $kamar2 = $semua_kamar[1];
+                $status2 = strtolower($kamar2['status_kamar']);
+                $badge_text2 = ($status2 == 'terisi') ? 'Terisi' : 'Tersedia';
+                $badge_bg2   = ($status2 == 'terisi') ? '#e74c3c' : '#8bc34a';
+            ?>
+                <section class="deluxe-content">
                     <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-                        <img class="tempimagedb346c-1-icon" src="../assets/img/bedroom1.jpg" alt="Room 2" style="width: 100%; height: 100%; object-fit: cover;" />
-                        <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: #8bc34a; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
-                            <h3 class="tersedia" style="margin:0;">Tersedia</h3>
+                        <img class="tempimagedb346c-1-icon" src="../assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
+                        <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg2; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                            <h3 style="margin:0; font-size: 12px;"><?= $badge_text2; ?></h3>
                         </div>
                     </div>
                     <div class="deluxe-info" style="padding: 20px;">
-                        <h2 class="deluxe-room-a1">Deluxe Room A2</h2>
+                        <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= $kamar2['nama_tipe']; ?> <?= $kamar2['nomor_kamar']; ?></h2>
                         <div class="single-1">Single - 1 Orang - 20m²</div>
                         <div class="amenity-items-parent" style="margin-top: 10px;">
-                            <span class="amenity-items">WiFi</span>
-                            <span class="feature-a-c">AC</span>
+                            <span class="amenity-items">WiFi</span> <span class="feature-a-c">AC</span>
                         </div>
                         <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
                             <div class="mulai-dari">Mulai Dari</div>
                             <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
-                                <h2 class="rp-1000000" style="margin:0;">Rp 700.000 <small>/bln</small></h2>
-                                <a href="detail_kamar2.php" class="button-daftar2" style="text-decoration:none;">Detail</a>
+                                <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format($kamar2['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
+                                <a href="../detail_kamar2.php" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
                             </div>
                         </div>
                     </div>
                 </section>
+            <?php endif; ?>
 
-                <section class="deluxe-content" style="display: flex; flex-direction: column; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+
+            <?php if (isset($semua_kamar[2])):
+                $kamar3 = $semua_kamar[2];
+                $status3 = strtolower($kamar3['status_kamar']);
+                $badge_text3 = ($status3 == 'terisi') ? 'Terisi' : 'Tersedia';
+                $badge_bg3   = ($status3 == 'terisi') ? '#e74c3c' : '#8bc34a';
+            ?>
+                <section class="deluxe-content">
                     <div class="tempimagedb346c-1-parent" style="position: relative; height: 200px;">
-                        <img class="tempimagedb346c-1-icon" src="../assets/img/bedroom1.jpg" alt="Room 3" style="width: 100%; height: 100%; object-fit: cover;" />
-                        <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: #8bc34a; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
-                            <h3 class="tersedia" style="margin:0;">Tersedia</h3>
+                        <img class="tempimagedb346c-1-icon" src="../assets/img/bedroom1.jpg" alt="Room" style="width: 100%; height: 100%; object-fit: cover;" />
+                        <div class="status-containers-inner" style="position: absolute; top: 10px; right: 10px; background: <?= $badge_bg3; ?>; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                            <h3 style="margin:0; font-size: 12px;"><?= $badge_text3; ?></h3>
                         </div>
                     </div>
                     <div class="deluxe-info" style="padding: 20px;">
-                        <h2 class="deluxe-room-a1">Standard Room</h2>
-                        <div class="single-1">Single - 1 Orang - 15m²</div>
+                        <h2 class="deluxe-room-a1" style="margin: 0 0 5px 0; font-size: 1.5rem;"><?= $kamar3['nama_tipe']; ?> <?= $kamar3['nomor_kamar']; ?></h2>
+                        <div class="single-1">Single - 1 Orang - 20m²</div>
                         <div class="amenity-items-parent" style="margin-top: 10px;">
-                            <span class="amenity-items">WiFi</span>
+                            <span class="amenity-items">WiFi</span> <span class="feature-a-c">AC</span>
                         </div>
                         <div class="price-container" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
                             <div class="mulai-dari">Mulai Dari</div>
                             <div class="price-range" style="display: flex; justify-content: space-between; align-items: center;">
-                                <h2 class="rp-1000000" style="margin:0;">Rp 400.000 <small>/bln</small></h2>
-                                <a href="detail_kamar3.php" class="button-daftar2" style="text-decoration:none;">Detail</a>
+                                <h2 class="rp-1000000" style="margin:0;">Rp <?= number_format($kamar3['harga'], 0, ',', '.'); ?> <small>/bln</small></h2>
+                                <a href="../detail_kamar3.php" class="button-daftar2" style="text-decoration:none; background-color: #81A6C6; color: white; padding: 6px 18px; border-radius: 4px; font-size: 14px;">Detail</a>
                             </div>
                         </div>
                     </div>
                 </section>
+            <?php endif; ?>
 
-            </div>
-            </div>
-        </main>
-        <footer class="footer">
-            <div class="footer-container">
-                <div class="footer-col footer-col-info">
-                    <h2 class="footer-title">Kos Aqsya Residence</h2>
-                    <p class="footer-desc">
-                        Kos modern dan nyaman dengan fasilitas lengkap di lokasi
-                        strategis Kaliwungu. Dekat dengan pusat bisnis, kampus, dan
-                        transportasi umum. Lingkungan aman dan nyaman.
-                    </p>
-                </div>
-                <div class="footer-col footer-col-contact">
-                    <h2 class="footer-title">Kontak</h2>
-                    <p class="footer-text">
-                        Ibu Rum<br />081234456567<br />kosbudherum@gmail.com
-                    </p>
-                </div>
-                <div class="footer-col footer-col-address">
-                    <h2 class="footer-title">Alamat</h2>
-                    <p class="footer-text">
-                        Jl. Mangu Indah No.88, Kaliwungu, Kab. Kendal<br />Jawa Tengah, 51372
-                    </p>
-                </div>
-            </div>
-            <div class="footer-copyright">
-                <p>© 2026 Kos Aqsya Residence. All rights reserved.</p>
-            </div>
-        </footer>
         </div>
+
+        </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col footer-col-info">
+                <h2 class="footer-title">Kos Aqsya Residence</h2>
+                <p class="footer-desc">
+                    Kos modern dan nyaman dengan fasilitas lengkap di lokasi
+                    strategis Kaliwungu. Dekat dengan pusat bisnis, kampus, dan
+                    transportasi umum. Lingkungan aman dan nyaman.
+                </p>
+            </div>
+            <div class="footer-col footer-col-contact">
+                <h2 class="footer-title">Kontak</h2>
+                <p class="footer-text">
+                    Ibu Rum<br />081234456567<br />kosbudherum@gmail.com
+                </p>
+            </div>
+            <div class="footer-col footer-col-address">
+                <h2 class="footer-title">Alamat</h2>
+                <p class="footer-text">
+                    Jl. Mangu Indah No.88, Kaliwungu, Kab. Kendal<br />Jawa Tengah, 51372
+                </p>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <p>© 2026 Kos Aqsya Residence. All rights reserved.</p>
+        </div>
+    </footer>
+    </div>
 </body>
 
 </html>
