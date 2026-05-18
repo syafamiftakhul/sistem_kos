@@ -1,8 +1,11 @@
 <?php
+// 1. WAJIB NYALAKAN SESSION DI BARIS PALING ATAS!
+session_start(); 
+
 include "koneksi.php";
 
 // Ambil data untuk tipe kamar 2 (Deluxe Room A2)
-$query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar WHERE id_tipe = 2");
+$query = mysqli_query($koneksi, "SELECT * FROM tipe_kamar LIMIT 1");
 
 // Jika query gagal atau tidak ada data, kita coba ambil data ke-2 dengan limit & offset
 if (!$query || mysqli_num_rows($query) == 0) {
