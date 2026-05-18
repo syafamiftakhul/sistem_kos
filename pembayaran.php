@@ -7,32 +7,6 @@ include "koneksi.php";
 
 
 // Tangkap data dari form booking
-<<<<<<< HEAD
-
-$nama           = $_POST['nama'] ?? 'Guest';
-
-$no_ktp         = $_POST['no_ktp'] ?? '';
-
-$no_hp          = $_POST['no_hp'] ?? '';
-
-$alamat         = $_POST['alamat'] ?? '';
-
-$id_tipe        = $_POST['id_tipe'] ?? '';
-
-$tgl_masuk      = $_POST['tgl_masuk'] ?? date('Y-m-d');
-
-$periode        = (int)($_POST['periode'] ?? 1);
-
-$harga_satuan   = (int)($_POST['harga_satuan'] ?? 0);
-
-
-
-// SOLUSI: Tangkap id_kamar dari form booking sebelumnya
-
-$id_kamar       = $_POST['id_kamar'] ?? '';
-
-
-=======
 $nama           = $_POST['nama'] ?? 'Guest';
 $no_ktp         = $_POST['no_ktp'] ?? '';
 $no_hp          = $_POST['no_hp'] ?? '';
@@ -53,7 +27,6 @@ $tgl_masuk       = $_POST['tgl_masuk'] ?? date('Y-m-d');
 $periode         = (int)($_POST['periode'] ?? 1);
 $harga_satuan    = (int)($_POST['harga_satuan'] ?? 0);
 $id_tipe         = $_POST['id_tipe'] ?? '';
->>>>>>> fitur-user
 
 // Hitung total
 
@@ -84,38 +57,25 @@ $query_detail = mysqli_query($koneksi, "SELECT kamar.id_kamar, kamar.nomor_kamar
                                         LIMIT 1");
 
 $detail = mysqli_fetch_assoc($query_detail);
-
-<<<<<<< HEAD
-
-
-
-=======
 // Gabungin nama tipe dan nomor kamarnya
 if ($detail) {
   $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
 } else {
   $nama_kamar_lengkap = "Kamar tidak ditemukan";
 }
->>>>>>> fitur-user
 
 // Validasi biar gak error "offset on null" kalau data kamar di DB beneran kosong
 
 if ($detail) {
-<<<<<<< HEAD
 
-    $id_kamar = $detail['id_kamar']; // Dapetin ID kamarnya buat disimpen nanti
-
-=======
-    $id_kamar = $detail['id_kamar'];
->>>>>>> fitur-user
-    $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
-
+  $id_kamar = $detail['id_kamar']; // Dapetin ID kamarnya buat disimpen nanti
+  $id_kamar = $detail['id_kamar'];
+  $nama_kamar_lengkap = $detail['nama_tipe'] . " - " . $detail['nomor_kamar'];
 } else {
 
-    $id_kamar = '';
+  $id_kamar = '';
 
-    $nama_kamar_lengkap = "Kamar Belum Tersedia";
-
+  $nama_kamar_lengkap = "Kamar Belum Tersedia";
 }
 
 ?>
@@ -144,7 +104,7 @@ if ($detail) {
 
 </head>
 
- 
+
 
 <body>
 
@@ -338,171 +298,170 @@ if ($detail) {
             <input type="hidden" name="id_kamar" value="<?php echo $id_kamar; ?>">
             <form action="proses_konfirmasi.php" method="POST" enctype="multipart/form-data">
 
-<<<<<<< HEAD
+              <<<<<<< HEAD
 
 
-            <div class="upload-box" id="drop-zone">
+                <div class="upload-box" id="drop-zone">
 
-              <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
-
-              <label for="file-upload" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-
-
-
-                <div id="pre-upload">
-
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #6c757d; margin-bottom: 10px;">
-
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-
-                    <polyline points="17 8 12 3 7 8"></polyline>
-
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-
-                  </svg>
-
-                  <p style="color: #495057; font-weight: 500;">Pilih file bukti transfer</p>
-
-                </div>
-
-
-
-                <div id="post-upload" style="display: none; width: 100%; height: 200px; overflow: hidden; border-radius: 8px;">
-
-                  <img id="image-preview" src="#" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
-
-                </div>
-
-              </label>
-
-            </div>
-
-
-
-            <input type="hidden" name="konfirmasi" value="1">
-
-            <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
-
-          </form>
-
-=======
-              <div class="upload-box" id="drop-zone">
                 <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
+
                 <label for="file-upload" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
 
+
+
                   <div id="pre-upload">
+
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #6c757d; margin-bottom: 10px;">
+
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+
                       <polyline points="17 8 12 3 7 8"></polyline>
+
                       <line x1="12" y1="3" x2="12" y2="15"></line>
+
                     </svg>
+
                     <p style="color: #495057; font-weight: 500;">Pilih file bukti transfer</p>
+
                   </div>
+
+
 
                   <div id="post-upload" style="display: none; width: 100%; height: 200px; overflow: hidden; border-radius: 8px;">
-                    <img id="image-preview" src="#" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
-                  </div>
-                </label>
-              </div>
 
-              <input type="hidden" name="konfirmasi" value="1">
-              <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
-            </form>
->>>>>>> fitur-user
+                    <img id="image-preview" src="#" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
+
+                  </div>
+
+                </label>
+
         </div>
 
 
 
-        <div class="summary-card">
+        <input type="hidden" name="konfirmasi" value="1">
 
-          <h3>Rincian Pesanan</h3>
+        <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
 
-          <div class="summary-item">
+        </form>
 
-            <div class="label">Kamar</div>
+        =======
+        <div class="upload-box" id="drop-zone">
+          <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
+          <label for="file-upload" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
 
-            <div class="value"><?php echo htmlspecialchars($nama_kamar_lengkap); ?></div>
+            <div id="pre-upload">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #6c757d; margin-bottom: 10px;">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <p style="color: #495057; font-weight: 500;">Pilih file bukti transfer</p>
+            </div>
 
-          </div>
+            <div id="post-upload" style="display: none; width: 100%; height: 200px; overflow: hidden; border-radius: 8px;">
+              <img id="image-preview" src="#" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+          </label>
+        </div>
 
-          <div class="summary-item">
-
-            <div class="label">Nama Penghuni</div>
-
-            <div class="value"><?php echo htmlspecialchars($nama); ?></div>
-
-          </div>
-
-          <div class="summary-item">
-
-            <div class="label">Check-in</div>
-
-            <div class="value"><?php echo date('d-m-Y', strtotime($tgl_masuk)); ?></div>
-
-          </div>
-
-          <div class="summary-item">
-
-            <div class="label">Check-out</div>
-
-            <div class="value"><?php echo $tgl_keluar; ?></div>
-
-          </div>
-
-          <div class="summary-item">
-
-            <div class="label">Durasi</div>
-
-            <div class="value"><?php echo $periode; ?> Bulan</div>
-
-          </div>
+        <input type="hidden" name="konfirmasi" value="1">
+        <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
+        </form>
+        >>>>>>> fitur-user
+      </div>
 
 
 
-          <div class="summary-divider"></div>
+      <div class="summary-card">
+
+        <h3>Rincian Pesanan</h3>
+
+        <div class="summary-item">
+
+          <div class="label">Kamar</div>
+
+          <div class="value"><?php echo htmlspecialchars($nama_kamar_lengkap); ?></div>
+
+        </div>
+
+        <div class="summary-item">
+
+          <div class="label">Nama Penghuni</div>
+
+          <div class="value"><?php echo htmlspecialchars($nama); ?></div>
+
+        </div>
+
+        <div class="summary-item">
+
+          <div class="label">Check-in</div>
+
+          <div class="value"><?php echo date('d-m-Y', strtotime($tgl_masuk)); ?></div>
+
+        </div>
+
+        <div class="summary-item">
+
+          <div class="label">Check-out</div>
+
+          <div class="value"><?php echo $tgl_keluar; ?></div>
+
+        </div>
+
+        <div class="summary-item">
+
+          <div class="label">Durasi</div>
+
+          <div class="value"><?php echo $periode; ?> Bulan</div>
+
+        </div>
 
 
 
-          <div class="summary-row">
-
-            <span>Tarif Bulanan</span>
-
-            <span>Rp <?php echo number_format($harga_satuan, 0, ',', '.'); ?></span>
-
-          </div>
-
-          <div class="summary-row">
-
-            <span>Durasi</span>
-
-            <span>x <?php echo $periode; ?></span>
-
-          </div>
+        <div class="summary-divider"></div>
 
 
 
-          <div class="summary-divider"></div>
+        <div class="summary-row">
+
+          <span>Tarif Bulanan</span>
+
+          <span>Rp <?php echo number_format($harga_satuan, 0, ',', '.'); ?></span>
+
+        </div>
+
+        <div class="summary-row">
+
+          <span>Durasi</span>
+
+          <span>x <?php echo $periode; ?></span>
+
+        </div>
 
 
 
-          <div class="summary-row total">
+        <div class="summary-divider"></div>
 
-            <span>Total</span>
 
-            <span class="val">Rp <?php echo number_format($total_bayar, 0, ',', '.'); ?></span>
 
-          </div>
+        <div class="summary-row total">
+
+          <span>Total</span>
+
+          <span class="val">Rp <?php echo number_format($total_bayar, 0, ',', '.'); ?></span>
 
         </div>
 
       </div>
 
-    </main>
+  </div>
+
+  </main>
 
   </div>
 
   <script>
-
     function previewImage() {
 
       const input = document.getElementById('file-upload');
@@ -596,7 +555,6 @@ if ($detail) {
       }
 
     }
-
   </script>
 
 </body>
