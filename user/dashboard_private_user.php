@@ -14,19 +14,22 @@ $query_cek_customer = mysqli_query($koneksi, "SELECT nama, no_ktp, no_hp FROM cu
 $data_customer = mysqli_fetch_assoc($query_cek_customer);
 
 $no_ktp = $data_customer['no_ktp'] ?? null;
-$no_telp = $data_customer['no_telp'] ?? '-'; // Ambil nomor telepon dinamis dari database
+$no_telp = $data_customer['no_hp'] ?? '-'; // Perbaikan variabel biar gak typo no_telp/no_hp
 
 $booking = null;
 $keluhan = null;
 
 if ($no_ktp) {
-    // Query booking disatukan dengan tabel transaksi menggunakan LEFT JOIN agar tgl_masuk & periode terbaca
+    // KODE ASLI LU YANG DI-FIX: 
+    // Kita buat status_pesanan-nya fleksibel. Jadi mau 'lunas' ataupun 'pending' (pas baru selesai bayar), dia TETEP MAU MUNCUL dan gak kosong!
     $query_booking = mysqli_query($koneksi, "SELECT pesanan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe, tipe_kamar.harga, transaksi.tgl_masuk, transaksi.periode 
         FROM pesanan 
         JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
         JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
         LEFT JOIN transaksi ON pesanan.id_pesanan = transaksi.id_pesanan
-        WHERE pesanan.no_ktp = '$no_ktp' AND pesanan.status_pesanan = 'lunas' LIMIT 1");
+        WHERE pesanan.no_ktp = '$no_ktp' 
+          AND (pesanan.status_pesanan = 'lunas' OR pesanan.status_pesanan = 'pending' OR pesanan.status_pesanan = 'proses') 
+        ORDER BY pesanan.id_pesanan DESC LIMIT 1");
     $booking = mysqli_fetch_assoc($query_booking);
 
     // Mengambil data semua keluhan milik customer yang login
