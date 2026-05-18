@@ -10,7 +10,7 @@ if (!isset($_SESSION['id_user'])) {
 
 $id_user = $_SESSION['id_user'];
 
-$query_cek_customer = mysqli_query($koneksi, "SELECT nama, no_ktp, no_hp FROM customer WHERE id_user = '$id_user'");
+$query_cek_customer = mysqli_query($koneksi, "SELECT no_ktp FROM customer WHERE id_user = '$id_user'");
 $data_customer = mysqli_fetch_assoc($query_cek_customer);
 
 $no_ktp = $data_customer['no_ktp'] ?? null;
@@ -100,7 +100,7 @@ if ($no_ktp) {
                     </div>
                     <div>
                         <div class="info-label">Nomor Telepon</div>
-                        <div class="info-value"><?= htmlspecialchars($data_customer['no_hp'] ?? '-'); ?></div>
+                        <div class="info-value">0273127394194</div>
                     </div>
                     <div>
                         <div class="info-label">Kamar</div>
@@ -124,17 +124,8 @@ if ($no_ktp) {
         <?php if (!empty($no_ktp) && !empty($keluhan)) : ?>
             <div class="card-box">
                 <div class="card-top" style="margin-bottom: 12px;">
-                    <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek'] ?? 'Keluhan Tanpa Subjek'); ?></div>
-                    <?php 
-                    $status = $keluhan['status_pengaduan'] ?? 'menunggu';
-                    if ($status == 'menunggu') {
-                        echo '<div class="badge-menunggu">Menunggu</div>';
-                    } elseif ($status == 'proses') {
-                        echo '<div class="badge-proses">Sedang Diproses</div>';
-                    } elseif ($status == 'selesai') {
-                        echo '<div class="badge-selesai">Selesai</div>';
-                    }
-                    ?>
+                    <div class="keluhan-title"><?= htmlspecialchars($keluhan['subjek']); ?></div>
+                    <div class="badge-proses">Sedang Diproses</div>
                 </div>
                 
                 <div class="keluhan-room">
