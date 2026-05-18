@@ -2,15 +2,10 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-$filter = $_GET['status'] ?? 'Semua';
+$filter = isset($_GET['status']) ? $_GET['status'] : 'Semua';
 $search = $_GET['search'] ?? '';
 
-$query = "SELECT p.*, c.nama AS nama_penghuni, 
-                 k.id_kamar, k.nomor_kamar
-          FROM pesanan p
-          JOIN customer c ON p.no_ktp = c.no_ktp
-          JOIN kamar k ON p.id_kamar = k.id_kamar
-          WHERE 1=1";
+$query .= " WHERE 1=1";
 
 if ($filter != 'Semua') {
     $query .= " AND p.status_pesanan = '$filter'";
@@ -24,14 +19,8 @@ if (!empty($search)) {
         p.no_ktp LIKE '%$search%'
     )";
 }
-
 $query .= " ORDER BY p.tgl_pesan DESC";
 
-$result_pesanan = mysqli_query($koneksi, $query);
-
-if (!$result_pesanan) {
-    die("Query Error: " . mysqli_error($koneksi));
-}
 $result_pesanan = mysqli_query($koneksi, $query);
 
 if (!$result_pesanan) {
@@ -90,7 +79,7 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                     <span class="menu-text">Pengaduan</span>
                 </a>
                 <a href="laporan.php" class="nav-link">
-                    <img src="../assets/img/star.png" alt="Reports">
+                    <img src="../assets/img/report-icon.png" alt="Reports">
                     <span class="menu-text">Laporan</span>
                 </a>
                 <a href="tipe_kamar.php" class='nav-link'>
