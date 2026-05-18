@@ -2,19 +2,14 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-$query = "SELECT 
-            c.no_ktp, 
-            c.nama, 
-            c.no_hp, 
-            c.kontak_keluarga,
-            k.nomor_kamar, 
-            t.tgl_transaksi, 
-            p.status_pesanan
+$query = "SELECT c.nama, k.nomor_kamar, p.id_kamar, c.no_hp, 
+                 IFNULL(t.periode, '1') as periode,
+                 IFNULL(t.tgl_transaksi, p.tgl_pesan) AS tgl_masuk
           FROM pesanan p
           JOIN customer c ON p.no_ktp = c.no_ktp
           JOIN kamar k ON p.id_kamar = k.id_kamar
-          JOIN transaksi t ON p.id_pesanan = t.id_pesanan
-          WHERE p.status_pesanan = 'lunas'"; 
+          LEFT JOIN transaksi t ON p.id_pesanan = t.id_pesanan
+          WHERE p.status_pesanan = 'lunas'";
 
 $result = mysqli_query($koneksi, $query);
 ?>
@@ -31,7 +26,7 @@ $result = mysqli_query($koneksi, $query);
 </head>
 <body>
     <div class="dashboard-wrapper">
-        <aside class="sidebar-admin" id="sidebar">
+        <aside class="sidebar-admin expand " id="sidebar">
             <div class="sidebar-logo">
                 <img src="../assets/img/logo-menu.png" alt="Menu" id="btn-menu" style="cursor: pointer;">
                 <span class="logo-text" style="font-weight: bold; margin-left: 10px;">Aqsya Kos</span>
@@ -117,18 +112,18 @@ $result = mysqli_query($koneksi, $query);
                                                 <span class="user-name"><?= htmlspecialchars($row['nama']); ?></span>
                                             </div>
                                         </td>
-                                        <td><span class="badge-kamar">Kamar <?= $row['nomor_kamar']; ?></span></td>
+                                        <td><span class="badge-kamar">Kamar <?= htmlspecialchars($row['nomor_kamar']); ?></span></td>
                                         <td>
                                             <div class="contact-info">
                                                 <div><i class="fas fa-phone-alt" style="margin-right: 8px; color: #81A6C6;"></i> <?= $row['no_hp']; ?></div>
                                             </div>
                                         </td>
-                                        <td><?= date('d M Y', strtotime($row['tgl_transaksi'])); ?></td>
+                                        <td><?= (!empty($row['tgl_masuk']) && $row['tgl_masuk'] != '0000-00-00') ? date('d M Y', strtotime($row['tgl_masuk'])) : '-'; ?></td>
                                         <td><span class="status-active">Aktif</span></td>
                                         <td>
                                             <div class="action-btns">
-                                                <a href="edit_penghuni.php?id=<?= $row['nomor_kamar']; ?>" class="btn-edit"><i class="fas fa-edit"></i></a>
-                                                <a href="hapus_penghuni.php?id=<?= $row['nomor_kamar']; ?>" class="btn-delete" onclick="return confirm('Yakin ingin menghapus data penghuni?')"><i class="fas fa-trash"></i></a>
+                                                <a href="edit_penghuni.php?id=<?= $row['id_kamar']; ?>" class="btn-edit"><i class="fas fa-edit"></i></a>
+                                                <a href="hapus_penghuni.php?id=<?= $row['id_kamar']; ?>" class="btn-delete" onclick="return confirm('Yakin ingin menghapus data penghuni?')"><i class="fas fa-trash"></i></a>
                                             </div>
                                         </td>
                                     </tr>
