@@ -109,113 +109,103 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                 </div>
             </header>
             <!-- Search & Action Bar -->
-            <div class="action-bar">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari nomor kamar atau penghuni..">
+            <section class="data-section">
+                <div class="action-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Cari nomor kamar atau penghuni..">
+                    </div>
                 </div>
-            </div>
 
-            <div class="category-filter">
-                <a href="?status=Semua" class="cat-item <?= $filter == 'Semua' ? 'active' : '' ?>">Semua</a>
-                <a href="?status=Baru" class="cat-item <?= $filter == 'Baru' ? 'active' : '' ?>">Baru</a>
-                <a href="?status=Proses" class="cat-item <?= $filter == 'Proses' ? 'active' : '' ?>">Proses</a>
-                <a href="?status=Selesai" class="cat-item <?= $filter == 'Selesai' ? 'active' : '' ?>">Selesai</a>
-            </div>
+                <div class="category-filter">
+                    <a href="?status=Semua" class="cat-item <?= $filter == 'semua' ? 'active' : '' ?>">Semua</a>
+                    <a href="?status=Baru" class="cat-item <?= $filter == 'Baru' ? 'active' : '' ?>">Baru</a>
+                    <a href="?status=Proses" class="cat-item <?= $filter == 'Proses' ? 'active' : '' ?>">Proses</a>
+                    <a href="?status=Selesai" class="cat-item <?= $filter == 'Selesai' ? 'active' : '' ?>">Selesai</a>
+                </div>
 
-            <!-- Table Container -->
-            <div class="table-container">
-                <table class="kamar-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nama Penghuni</th>
-                            <th>Tanggal</th>
-                            <th>Isi Laporan</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (mysqli_num_rows($result) > 0) : ?>
-                            <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                <tr>
-                                    <td><?= date('d M Y', strtotime($row['tgl_pengaduan'])); ?></td>
-                                    <td><?= $row['nama_penghuni']; ?></td>
-                                    <td><?= $row['id_kamar']; ?></td>
-                                    <td>Layanan</td>
-                                    <td style="max-width: 250px;">
-                                        <strong><?= $row['subjek_laporan']; ?></strong><br>
-                                        <small style="color: #888;"><?= $row['isi_pengaduan']; ?></small>
-                                    </td>
-                                    <td>
-                                        <div class="status-wrapper">
-                                            <?php
-                                            $status = $row['status_pengaduan'];
-                                            $icon = ($status == 'Selesai' || $status == 'Proses') ? 'fa-clock' : 'fa-exclamation-triangle';
-                                            ?>
-                                            <i class="fas <?= $icon; ?>"></i>
-                                            <span class="badge-status <?= strtolower($status); ?>">
-                                                <?= ucfirst($status); ?>
+                <!-- Table Container -->
+                <div class="table-container">
+                    <table class="kamar-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama Penghuni</th>
+                                <th>Tanggal</th>
+                                <th>Isi Laporan</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($result && mysqli_num_rows($result) > 0) : ?>
+                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                                    <tr>
+                                        <td><strong><?= htmlspecialchars((string)$row['nama']) ?></strong></td>
+                                        <td><span class="badge-kamar">Kamar <?= htmlspecialchars((string)($row['id_kamar'] ?? '-')) ?></span></td>
+                                        <td><?= htmlspecialchars((string)($row['periode'] ?? '1')) ?> Bulan</td>
+                                        <td>Rp <?= number_format((float)($row['jml_bayar'] ?? 0), 0, ',', '.') ?></td>
+                                        <td><?= (!empty($row['tgl_transaksi']) && $row['tgl_transaksi'] != '0000-00-00') ? date('d M Y', strtotime($row['tgl_transaksi'])) : '-' ?></td>
+                                        <td>
+                                            <span class="badge-status <?= strtolower((string)($row['status_final'] ?? 'pending')) ?>">
+                                                <?= ucfirst((string)($row['status_final'] ?? 'pending')) ?>
                                             </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <form action="update_status_pengaduan.php" method="POST">
-                                            <input type="hidden" name="id_pengaduan" value="<?= $row['id_pengaduan']; ?>">
-                                            <select name="status_baru" class="combo-status" onchange="this.form.submit()">
-                                                <option value="Baru" <?= $status == 'Baru' ? 'selected' : ''; ?>>Baru</option>
-                                                <option value="Proses" <?= $status == 'Proses' ? 'selected' : ''; ?>>Proses</option>
-                                                <option value="Selesai" <?= $status == 'Selesai' ? 'selected' : ''; ?>>Selesai</option>
-                                            </select>
-                                        </form>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 50px; color: #999;">
+                                        <i class="fas fa-receipt" style="font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.3;"></i>
+                                        Belum ada data pembayaran untuk kategori <strong><?= ucfirst($filter) ?></strong>.
                                     </td>
                                 </tr>
-                            <?php endwhile; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="summary-container">
-                <div class="summary-card">
-                    <div class="card-info">
-                        <span class="card-label">Total Pengaduan</span>
-                        <h3 class="card-value"><?= $total_laporan ?></h3>
-                    </div>
-                    <div class="card-icon blue">
-                        <i class="far fa-comment-alt"></i>
-                    </div>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="summary-card">
-                    <div class="card-info">
-                        <span class="card-label">Dalam Proses</span>
-                        <h3 class="card-value"><?= $total_proses ?></h3>
+                <div class="summary-container">
+                    <div class="summary-card">
+                        <div class="card-info">
+                            <span class="card-label">Total Pengaduan</span>
+                            <h3 class="card-value"><?= $total_laporan ?></h3>
+                        </div>
+                        <div class="card-icon blue">
+                            <i class="far fa-comment-alt"></i>
+                        </div>
                     </div>
-                    <div class="card-icon light-blue">
-                        <i class="far fa-clock"></i>
+
+                    <div class="summary-card">
+                        <div class="card-info">
+                            <span class="card-label">Dalam Proses</span>
+                            <h3 class="card-value"><?= $total_proses ?></h3>
+                        </div>
+                        <div class="card-icon light-blue">
+                            <i class="far fa-clock"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-info">
+                            <span class="card-label">Selesai Bulan Ini</span>
+                            <h3 class="card-value"><?= $total_selesai ?></h3>
+                        </div>
+                        <div class="card-icon orange-light">
+                            <i class="far fa-check-circle"></i>
+                        </div>
                     </div>
                 </div>
+            </section>
+        </div>
+                <script>
+                    const btnMenu = document.getElementById('btn-menu');
+                    const sidebar = document.getElementById('sidebar');
 
-                <div class="summary-card">
-                    <div class="card-info">
-                        <span class="card-label">Selesai Bulan Ini</span>
-                        <h3 class="card-value"><?= $total_selesai ?></h3>
-                    </div>
-                    <div class="card-icon orange-light">
-                        <i class="far fa-check-circle"></i>
-                    </div>
-                </div>
-            </div>
-            <script>
-                const btnMenu = document.getElementById('btn-menu');
-                const sidebar = document.getElementById('sidebar');
-
-                btnMenu.onclick = function() {
-                    sidebar.classList.toggle('expand');
-                }
-            </script>
+                    btnMenu.onclick = function() {
+                        sidebar.classList.toggle('expand');
+                    }
+                </script>
 </body>
 
 </html>
