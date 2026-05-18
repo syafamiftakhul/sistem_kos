@@ -6,7 +6,7 @@ if (!isset($_GET['id'])) {
     die("ID Transaksi tidak ditemukan.");
 }
 
-$id_transaksi = $_GET['id'];
+$id_transaksi = mysqli_real_escape_string($koneksi, $_GET['id']);
 
 // Fetch transaction details
 $query = mysqli_query($koneksi, "SELECT t.*, c.nama, c.no_hp, p.id_kamar, k.nomor_kamar, tk.nama_tipe, tk.harga
@@ -92,6 +92,25 @@ $data = mysqli_fetch_assoc($query);
             color: #333;
             margin-top: 20px;
         }
+        .struk-container {
+            margin-top: 30px;
+            border-top: 1px dashed #ccc;
+            padding-top: 20px;
+        }
+        .struk-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .struk-img {
+            max-width: 100%;
+            max-height: 450px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+            display: block;
+        }
         .footer-note {
             text-align: center;
             font-size: 12px;
@@ -124,6 +143,9 @@ $data = mysqli_fetch_assoc($query);
                 box-shadow: none;
                 padding: 0;
             }
+            .struk-container {
+                page-break-inside: avoid; /* Mencegah gambar terpotong kertas print */
+            }
         }
     </style>
 </head>
@@ -153,7 +175,7 @@ $data = mysqli_fetch_assoc($query);
             <div style="text-align: right;">
                 <strong>Detail Transaksi:</strong><br>
                 Tanggal Bayar: <?= date('d M Y', strtotime($data['tgl_transaksi'])) ?><br>
-                Status: <span style="color: #2E7D32; font-weight: bold;">LUNAS</span>
+                Status: <span style="color: #2E7D32; font-weight: bold;"><?= strtoupper($data['status_transaksi'] ?? 'LUNAS') ?></span>
             </div>
         </div>
 
@@ -168,7 +190,7 @@ $data = mysqli_fetch_assoc($query);
             </thead>
             <tbody>
                 <tr>
-                    <td>Sewa Kamar Kos Aqsya Residence (Tipe <?= htmlspecialchars($data['nama_tipe']) ?>)</td>
+                    <td>Sewa Kamar Kos Aqsya Residence (Tipe <?= htmlspecialchars($data['nama_tipe'] ?? 'Standar') ?>)</td>
                     <td>Kamar <?= htmlspecialchars($data['nomor_kamar'] ?? $data['id_kamar']) ?></td>
                     <td><?= !empty($data['periode']) ? htmlspecialchars($data['periode']) : '1' ?> Bulan</td>
                     <td style="text-align: right;">Rp <?= number_format($data['jml_bayar'], 0, ',', '.') ?></td>
@@ -180,6 +202,14 @@ $data = mysqli_fetch_assoc($query);
             Total Pembayaran: Rp <?= number_format($data['jml_bayar'], 0, ',', '.') ?>
         </div>
 
+        <div class="struk-container">
+            <div class="struk-title">Lampiran Bukti Transfer Pembeli:</div>
+            <?php if (!empty($data['bukti_transaksi']) && file_exists("../assets/uploads/" . $data['bukti_transaksi'])): ?>
+                <img src="../assets/uploads/<?= htmlspecialchars($data['bukti_transaksi']) ?>" class="struk-img" alt="Struk Pembayaran">
+            <?php else: ?>
+                <p style="color: #c0392b; font-style: italic; font-size: 13px;">File bukti transfer tidak ditemukan di folder atau pembeli belum mengunggah struk.</p>
+            <?php endif; ?>
+        </div>
         <div class="footer-note">
             <p>Terima kasih atas pembayaran Anda. Ini adalah kuitansi pembayaran resmi yang sah dan diterbitkan secara elektronik oleh sistem Kos Aqsya Residence.</p>
         </div>

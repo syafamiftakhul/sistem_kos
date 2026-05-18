@@ -11,17 +11,16 @@ if (!isset($_SESSION['akses']) || $_SESSION['akses'] != 'admin') {
 $bulan_ini = date('m');
 $tahun_ini = date('Y');
 
-$query_kamar = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kamar");
-$total_kamar = mysqli_fetch_assoc($query_kamar)['total'] ?? 0;
+$query_all = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kamar");
+$total_kamar = mysqli_fetch_assoc($query_all)['total'] ?? 0;
 
-$query_stat_kamar = mysqli_query($koneksi, "
-    SELECT 
-        SUM(CASE WHEN status_kamar = 'terisi' THEN 1 ELSE 0 END) as terisi,
-        SUM(CASE WHEN status_kamar = 'tersedia' THEN 1 ELSE 0 END) as kosong 
-    FROM kamar");
-$stat_kamar   = mysqli_fetch_assoc($query_stat_kamar);
-$total_terisi = $stat_kamar['terisi'] ?? 0;
-$total_kosong = $stat_kamar['kosong'] ?? 0;
+// 2. Hitung jumlah kamar yang statusnya memang sudah terisi/booked
+// Note: Sesuaikan kata 'Terisi' dengan string status yang lu pakai di database (misal 'Penuh' atau 'Terisi')
+$query_terisi = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM kamar WHERE status_kamar = 'Terisi'");
+$total_terisi = mysqli_fetch_assoc($query_terisi)['total'] ?? 0;
+
+// 3. LOGIKA OTOMATIS: Kamar kosong adalah sisa dari total kamar dikurangi yang terisi
+$total_kosong = $total_kamar - $total_terisi;
 
 $query_user = mysqli_query($koneksi, "SELECT COUNT(DISTINCT no_ktp) as total FROM kamar WHERE no_ktp IS NOT NULL AND no_ktp != ''");
 $total_user = mysqli_fetch_assoc($query_user)['total'] ?? 0;

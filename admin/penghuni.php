@@ -1,15 +1,15 @@
 <?php
 include '../koneksi.php';
+$search = $_GET['search'] ?? '';
 /** @var mysqli $koneksi */
 
-$query = "SELECT c.nama, k.nomor_kamar, p.id_kamar, c.no_hp, 
-                 IFNULL(t.periode, '1') as periode,
-                 IFNULL(t.tgl_transaksi, p.tgl_pesan) AS tgl_masuk
+$query = "SELECT c.nama, k.nomor_kamar, p.id_kamar, c.no_hp, IFNULL(t.periode, '1') as periode, IFNULL(t.tgl_transaksi, p.tgl_pesan) AS tgl_masuk
           FROM pesanan p
           JOIN customer c ON p.no_ktp = c.no_ktp
           JOIN kamar k ON p.id_kamar = k.id_kamar
           LEFT JOIN transaksi t ON p.id_pesanan = t.id_pesanan
-          WHERE p.status_pesanan = 'lunas'";
+          WHERE p.status_pesanan = 'lunas'
+          AND (  c.nama LIKE '%$search%' OR k.nomor_kamar LIKE '%$search%' OR c.no_hp LIKE '%$search%')";
 
 $result = mysqli_query($koneksi, $query);
 ?>
@@ -24,6 +24,7 @@ $result = mysqli_query($koneksi, $query);
     <link rel="stylesheet" href="../assets/css/penghuni.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <div class="dashboard-wrapper">
         <aside class="sidebar-admin expand " id="sidebar">
@@ -82,12 +83,10 @@ $result = mysqli_query($koneksi, $query);
             </header>
 
             <section class="data-section">
-                <div class="action-bar">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Masukkan nama, kamar, atau telepon..">
-                    </div>
-                </div>
+                <form method="GET" class="search-box" id="searchForm">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="search" id="searchInput" placeholder="Masukkan nama, kamar, atau telepon..." value="<?= $_GET['search'] ?? ''; ?>">
+                </form>
 
                 <div class="table-container">
                     <table class="kamar-table">
@@ -150,6 +149,20 @@ $result = mysqli_query($koneksi, $query);
         btnMenu.onclick = function() {
             sidebar.classList.toggle('expand');
         }
+    </script>
+
+    <script>
+        let timeout = null;
+
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+
+            clearTimeout(timeout);
+
+            timeout = setTimeout(() => {
+                document.getElementById('searchForm').submit();
+            }, 500);
+
+        });
     </script>
 </body>
 

@@ -3,17 +3,22 @@ include '../koneksi.php';
 /** @var mysqli $koneksi */
 
 $filter = isset($_GET['status']) ? $_GET['status'] : 'Semua';
+$search = $_GET['search'] ?? '';
 
-$query = "SELECT p.*, c.nama AS nama_penghuni, k.id_kamar, k.nomor_kamar 
-          FROM pesanan p
-          JOIN customer c ON p.no_ktp = c.no_ktp
-          JOIN kamar k ON p.id_kamar = k.id_kamar";
+$query .= " WHERE 1=1";
 
 if ($filter != 'Semua') {
-
-    $query .= " WHERE p.status_pesanan = '$filter'";
+    $query .= " AND p.status_pesanan = '$filter'";
 }
 
+if (!empty($search)) {
+    $query .= " AND (
+        p.id_pesanan LIKE '%$search%' OR
+        c.nama LIKE '%$search%' OR
+        k.nomor_kamar LIKE '%$search%' OR
+        p.no_ktp LIKE '%$search%'
+    )";
+}
 $query .= " ORDER BY p.tgl_pesan DESC";
 
 $result_pesanan = mysqli_query($koneksi, $query);
@@ -101,7 +106,7 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
             <div class="action-bar">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari nomor kamar atau penghuni..">
+                    <input type="text" placeholder="Cari nomor kamar atau penghuni.." value="<?= htmlspecialchars($search); ?>" onkeyup="cariData(this.value)">
                 </div>
             </div>
 
@@ -157,46 +162,60 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                     </tbody>
                 </table>
             </div>
-           
-        <div class="order-summary">
-            <div class="summary-card total">
-                <div class="card-content">
-                    <span class="label">Total Pesanan</span>
-                    <h3><?= $total_pesanan ?></h3>
+
+            <div class="order-summary">
+                <div class="summary-card total">
+                    <div class="card-content">
+                        <span class="label">Total Pesanan</span>
+                        <h3><?= $total_pesanan ?></h3>
+                    </div>
+                    <div class="card-icon blue">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
                 </div>
-                <div class="card-icon blue">
-                    <i class="fas fa-shopping-cart"></i>
+
+                <div class="summary-card disetujui">
+                    <div class="card-content">
+                        <span class="label">Disetujui</span>
+                        <h3><?= $total_disetujui ?></h3>
+                    </div>
+                    <div class="card-icon green">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                </div>
+
+                <div class="summary-card waiting">
+                    <div class="card-content">
+                        <span class="label">Menunggu Persetujuan</span>
+                        <h3><?= $total_pending ?></h3>
+                    </div>
+                    <div class="card-icon orange">
+                        <i class="fas fa-clock"></i>
+                    </div>
                 </div>
             </div>
+            <script>
+                const btnMenu = document.getElementById('btn-menu');
+                const sidebar = document.getElementById('sidebar');
 
-            <div class="summary-card disetujui">
-                <div class="card-content">
-                    <span class="label">Disetujui</span>
-                    <h3><?= $total_disetujui ?></h3>
-                </div>
-                <div class="card-icon green">
-                    <i class="fas fa-check-double"></i>
-                </div>
-            </div>
+                btnMenu.onclick = function() {
+                    sidebar.classList.toggle('expand');
+                }
+            </script>
 
-            <div class="summary-card waiting">
-                <div class="card-content">
-                    <span class="label">Menunggu Persetujuan</span>
-                    <h3><?= $total_pending ?></h3>
-                </div>
-                <div class="card-icon orange">
-                    <i class="fas fa-clock"></i>
-                </div>
-            </div>
-    </div>
-    <script>
-        const btnMenu = document.getElementById('btn-menu');
-        const sidebar = document.getElementById('sidebar');
+            <script>
+                function cariData(keyword) {
+                    const url = new URL(window.location.href);
 
-        btnMenu.onclick = function() {
-            sidebar.classList.toggle('expand');
-        }
-    </script>
+                    if (keyword.trim() !== '') {
+                        url.searchParams.set('search', keyword);
+                    } else {
+                        url.searchParams.delete('search');
+                    }
+
+                    window.location.href = url.toString();
+                }
+            </script>
 </body>
 
 </html>
