@@ -33,6 +33,17 @@
     text-decoration: none;
     color: #333;
 }
+.nav-link i {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+    color: #888;
+    transition: 0.3s;
+    margin-right: 5px;
+}
+.nav-link.active i, .nav-link:hover i {
+    color: var(--accent-blue);
+}
 
 .menu-text, .logo-text { display: none; margin-left: 15px; }
 .sidebar-admin.expand .menu-text, .sidebar-admin.expand .logo-text { display: inline-block; }
