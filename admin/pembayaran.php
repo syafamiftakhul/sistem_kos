@@ -29,7 +29,6 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
 
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <title>Manajemen Pembayaran - Aqsya Kos</title>
@@ -85,7 +84,7 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
                 </a>
             </nav>
         </aside>
-
+        
         <div class="main-content" style="flex: 1; min-height: 100vh; padding: 40px; box-sizing: border-box;">
             <header>
                 <div class="header-title">
@@ -181,15 +180,15 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
                 <div class="income-summary">
                     <div class="income-card lunas">
                         <span class="label">Total Lunas</span>
-                        <h3>Rp <?= number_format($total_lunas, 0, ',', '.') ?></h3>
+                        <h3>Rp <?= number_format($total_lunas / 1000000, 1) ?> jt</h3>
                     </div>
                     <div class="income-card pending">
                         <span class="label">Total Pending</span>
-                        <h3>Rp <?= number_format($total_pending, 0, ',', '.') ?></h3>
+                        <h3>Rp <?= number_format($total_pending / 1000000, 1) ?> jt</h3>
                     </div>
                     <div class="income-card terlambat">
                         <span class="label">Total Terlambat</span>
-                        <h3>Rp <?= number_format($total_terlambat, 0, ',', '.') ?></h3>
+                        <h3>Rp <?= number_format($total_terlambat / 1000000, 1) ?> jt</h3>
                     </div>
                 </div>
             </section>
