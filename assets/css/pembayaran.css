@@ -79,8 +79,6 @@
 
 
 
-
-
 .menu-text, .logo-text { display: none; margin-left: 15px; }
 
 .sidebar-admin.expand .menu-text, .sidebar-admin.expand .logo-text { display: inline-block; }
@@ -216,8 +214,6 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
     margin-bottom: 30px;
 }
-
-
 
 /* Table Khusus Pembayaran */
 
