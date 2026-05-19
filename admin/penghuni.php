@@ -3,17 +3,33 @@ include '../koneksi.php';
 $search = $_GET['search'] ?? '';
 /** @var mysqli $koneksi */
 
-$query = "SELECT c.nama, k.nomor_kamar, p.id_kamar, c.no_hp, IFNULL(t.periode, '1') as periode, IFNULL(t.tgl_transaksi, p.tgl_pesan) AS tgl_masuk
-          FROM pesanan p
-          JOIN customer c ON p.no_ktp = c.no_ktp
-          JOIN kamar k ON p.id_kamar = k.id_kamar
+// FIX ANTI ONLY_FULL_GROUP_BY: Kita gunakan fungsi MAX() atau MIN() pada kolom penunjang 
+// agar MySQL mengizinkan data ditarik meskipun menggunakan GROUP BY c.no_ktp
+$query = "SELECT c.no_ktp, c.nama, c.no_hp,
+                 CASE 
+                    WHEN MAX(k.status_kamar) = 'kosong' OR MAX(k.status_kamar) IS NULL OR MAX(k.no_ktp) = '' THEN '-'
+                    ELSE MAX(k.nomor_kamar)
+                 END AS nomor_kamar,
+                 MAX(k.id_kamar) AS id_kamar,
+                 IFNULL(MAX(t.tgl_transaksi), MAX(p.tgl_pesan)) AS tgl_masuk
+          FROM customer c
+          LEFT JOIN kamar k ON c.no_ktp = k.no_ktp
+          LEFT JOIN pesanan p ON c.no_ktp = p.no_ktp AND p.status_pesanan = 'lunas'
           LEFT JOIN transaksi t ON p.id_pesanan = t.id_pesanan
-          WHERE p.status_pesanan = 'lunas'
-          AND (  c.nama LIKE '%$search%' OR k.nomor_kamar LIKE '%$search%' OR c.no_hp LIKE '%$search%')";
+          WHERE 1=1";
+
+if (!empty($search)) {
+    $query .= " AND (c.nama LIKE '%$search%' OR k.nomor_kamar LIKE '%$search%' OR c.no_hp LIKE '%$search%')";
+}
+
+$query .= " GROUP BY c.no_ktp ORDER BY tgl_masuk DESC";
 
 $result = mysqli_query($koneksi, $query);
-?>
 
+if (!$result) {
+    die("Query Error: " . mysqli_error($koneksi));
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 
@@ -120,7 +136,7 @@ $result = mysqli_query($koneksi, $query);
                                                 <span class="user-name"><?= htmlspecialchars($row['nama']); ?></span>
                                             </div>
                                         </td>
-                                        <td><span class="badge-kamar">Kamar <?= htmlspecialchars($row['nomor_kamar']); ?></span></td>
+                                        <td><?php echo (!empty($row['nomor_kamar']) && $row['nomor_kamar'] != '') ? $row['nomor_kamar'] : '-'; ?></td>
                                         <td>
                                             <div class="contact-info">
                                                 <div><i class="fas fa-phone-alt" style="margin-right: 8px; color: #81A6C6;"></i> <?= htmlspecialchars($row['no_hp']); ?></div>

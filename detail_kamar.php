@@ -28,7 +28,7 @@ if ($data) {
 }
 
 // ==========================================
-// FIX KUNCI: CEK AKUN APAKAH SUDAH PESAN KAMAR SEBELUMNYA
+// FIX KUNCI: CEK AKUN APAKAH BENAR-BENAR SEDANG NEMPATIN KAMAR AKTIF
 // ==========================================
 $sudah_punya_kamar = false;
 
@@ -41,13 +41,20 @@ if (isset($_SESSION['id_user'])) {
     $no_ktp = $data_user['no_ktp'] ?? null;
     
     if ($no_ktp) {
-        // 2. Cek apakah ada pesanan aktif berstatus 'lunas' atau 'menunggu'
-        $cek_pesanan = mysqli_query($koneksi, "SELECT * FROM pesanan WHERE no_ktp = '$no_ktp' AND status_pesanan IN ('lunas', 'menunggu')");
-        if (mysqli_num_rows($cek_pesanan) > 0) {
+        // PERBAIKAN UTAMA LU REKK: 
+        // Kita cek langsung ke tabel kamar. Jika KTP dia masih terdaftar di kamar yang statusnya 'terisi'/'booking', baru kita kunci.
+        // Tapi kalau di tabel kamar KTP dia udah di-set kosong ('') oleh admin, dia BEBAS buat pesan lagi!
+        $cek_kamar_aktif = mysqli_query($koneksi, "SELECT * FROM kamar WHERE no_ktp = '$no_ktp' AND status_kamar != 'kosong'");
+        
+        // Jaga-jaga juga kalau dia punya pesanan baru yang statusnya masih 'menunggu' persetujuan admin
+        $cek_pesanan_baru = mysqli_query($koneksi, "SELECT * FROM pesanan WHERE no_ktp = '$no_ktp' AND status_pesanan = 'menunggu'");
+
+        if (mysqli_num_rows($cek_kamar_aktif) > 0 || mysqli_num_rows($cek_pesanan_baru) > 0) {
             $sudah_punya_kamar = true;
         }
     }
 }
+// ==========================================
 // ==========================================
 
 // 4. ATUR DESKRIPSI & FASILITAS SECARA DINAMIS BERDASARKAN ID TIPE AGAR GAK KETUKER

@@ -1,6 +1,16 @@
 <?php
 session_start();
 include "koneksi.php";
+/**** @var mysqli $koneksi ****/
+
+$data_customer = []; 
+if (isset($_SESSION['id_user'])) {
+    $id_user = $_SESSION['id_user'];
+    $query_cust = mysqli_query($koneksi, "SELECT * FROM customer WHERE id_user = '$id_user'");
+    if ($query_cust && mysqli_num_rows($query_cust) > 0) {
+        $data_customer = mysqli_fetch_assoc($query_cust);
+    }
+}
 
 $jenis_kelamin   = $_POST['jenis_kelamin'] ?? '';
 $kontak_keluarga = $_POST['kontak_keluarga'] ?? '';
@@ -126,30 +136,31 @@ $id_kamar = $data_kamar['id_kamar'] ?? '';
           <div class="form-grid">
             <div class="input-group">
               <label>Nama Lengkap *</label>
-              <input type="text" name="nama" required>
+              <input type="text" name="nama" value="<?= htmlspecialchars($data_customer['nama'] ?? ''); ?>" required>
             </div>
             <div class="input-group">
               <label>NIK (no_ktp) *</label>
-              <input type="text" name="no_ktp" required>
+              <input type="text" name="no_ktp" value="<?= htmlspecialchars($data_customer['no_ktp'] ?? ''); ?>" required>
             </div>
             <div class="input-group">
               <label>Nomor Telepon (no_hp) *</label>
-              <input type="text" name="no_hp" required>
+              <input type="text" name="no_hp" value="<?= htmlspecialchars($data_customer['no_hp'] ?? ''); ?>" required>
             </div>
             <div class="input-group">
               <label>Alamat *</label>
-              <input type="text" name="alamat" required>
+              <input type="text" name="alamat" value="<?= htmlspecialchars($data_customer['alamat'] ?? ''); ?>" required>
             </div>
             <div class="input-group">
               <label>Nomor Telepon Keluarga *</label>
-              <input type="text" name="kontak_keluarga" required>
+              <input type="text" name="kontak_keluarga" value="<?= htmlspecialchars($data_customer['kontak_keluarga'] ?? ''); ?>" required>
             </div>
             <div class="input-group">
               <label>Jenis Kelamin *</label>
               <select name="jenis_kelamin" required>
+                <?php $jk = $data_customer['jenis_kelamin'] ?? ''; ?>
                 <option value="">Pilih...</option>
-                <option value="Laki-laki">Laki-laki</option>
-                <option value="Perempuan">Perempuan</option>
+                <option value="Laki-laki" <?= $jk == 'Laki-laki' ? 'selected' : ''; ?>>Laki-laki</option>
+                <option value="Perempuan" <?= $jk == 'Perempuan' ? 'selected' : ''; ?>>Perempuan</option>
               </select>
             </div>
           </div>

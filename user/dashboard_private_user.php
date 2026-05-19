@@ -8,61 +8,55 @@ if (!isset($_SESSION['id_user'])) {
     exit;
 }
 
-$id_user = $_SESSION['id_user'];
-$akses = $_SESSION['akses'] ?? '';
+if (isset($_SESSION['id_user'])) {
+  $id_user = $_SESSION['id_user'];
+  $akses = $_SESSION['akses'];
 
-// 1. Ambil nama user berdasarkan hak akses login
-if ($akses == 2 || $akses == 'customer') {
+  // Langsung tembak cari nama panjang berdasarkan hak akses, jangan lewat email dulu
+  if ($akses == 2 || $akses == 'customer') {
     $query = mysqli_query($koneksi, "SELECT nama FROM customer WHERE id_user='$id_user'");
     if ($query && mysqli_num_rows($query) > 0) {
-        $data = mysqli_fetch_assoc($query);
-        $nama = $data['nama'];
+      $data = mysqli_fetch_assoc($query);
+      $nama = $data['nama'];
     }
-} else if ($akses == 1 || $akses == 'admin') {
+  } else if ($akses == 1 || $akses == 'admin') {
     $query = mysqli_query($koneksi, "SELECT nama FROM user WHERE id_user='$id_user'");
     if ($query && mysqli_num_rows($query) > 0) {
-        $data = mysqli_fetch_assoc($query);
-        $nama = $data['nama'];
+      $data = mysqli_fetch_assoc($query);
+      $nama = $data['nama'];
     }
+  }
 }
 
-// 2. Ambil data customer secara utuh
+
 $query_cek_customer = mysqli_query($koneksi, "SELECT nama, no_ktp, no_hp FROM customer WHERE id_user = '$id_user'");
 $data_customer = mysqli_fetch_assoc($query_cek_customer);
 
 $no_ktp = $data_customer['no_ktp'] ?? null;
-$no_telp = $data_customer['no_hp'] ?? '-'; 
+$no_telp = $data_customer['no_hp'] ?? '-'; // Perbaikan variabel biar gak typo no_telp/no_hp
 
 $booking = null;
 $keluhan = null;
 
 if ($no_ktp) {
-    // FIX KUNCI: Gunakan LOWER() pada status_pesanan agar tidak sensitif huruf besar/kecil,
-    // dan pastikan LEFT JOIN transaksi tidak mengunci data utama pesanan jika ada kolom kosong.
-    $query_booking = mysqli_query($koneksi, "SELECT 
-            pesanan.*, 
-            kamar.nomor_kamar, 
-            tipe_kamar.nama_tipe, 
-            tipe_kamar.harga, 
-            transaksi.tgl_masuk, 
-            transaksi.periode 
+    // FIX KUNCI: Tambahkan syarat 'kamar.no_ktp = pesanan.no_ktp' 
+    // Biar kalau KTP di tabel kamar sudah dihapus admin, kartu booking di user langsung AUTO-HILANG!
+    $query_booking = mysqli_query($koneksi, "SELECT pesanan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe, tipe_kamar.harga, transaksi.tgl_masuk, transaksi.periode 
         FROM pesanan 
-        INNER JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
-        INNER JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
+        JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
+        JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
         LEFT JOIN transaksi ON pesanan.id_pesanan = transaksi.id_pesanan
         WHERE pesanan.no_ktp = '$no_ktp' 
-          AND (LOWER(pesanan.status_pesanan) = 'lunas' 
-               OR LOWER(pesanan.status_pesanan) = 'pending' 
-               OR LOWER(pesanan.status_pesanan) = 'proses') 
+          AND kamar.no_ktp = '$no_ktp' 
+          AND (pesanan.status_pesanan = 'lunas' OR pesanan.status_pesanan = 'pending' OR pesanan.status_pesanan = 'proses') 
         ORDER BY pesanan.id_pesanan DESC LIMIT 1");
-        
     $booking = mysqli_fetch_assoc($query_booking);
 
-    // Ambil data keluhan milik customer
+    // Mengambil data semua keluhan milik customer yang login
     $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe 
         FROM pengaduan 
-        INNER JOIN kamar ON pengaduan.id_kamar = kamar.id_kamar 
-        INNER JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
+        JOIN kamar ON pengaduan.id_kamar = kamar.id_kamar 
+        JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
         WHERE pengaduan.no_ktp = '$no_ktp' 
         ORDER BY tgl_lapor DESC");
 }
