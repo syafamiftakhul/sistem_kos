@@ -5,22 +5,23 @@ include '../koneksi.php';
 $filter = $_GET['status'] ?? 'Semua';
 $search = $_GET['search'] ?? '';
 
-// Query utama penarikan data pesanan
+// FIX KUNCI 1: Gunakan LEFT JOIN agar data pesanan TETEP MUNCUL di admin maupun user 
+// meskipun kamar terkait di-set kosong atau no_ktp-nya di tabel kamar dilepas!
 $query = "SELECT p.*, c.nama AS nama_penghuni, 
                  k.id_kamar, k.nomor_kamar
           FROM pesanan p
-          JOIN customer c ON p.no_ktp = c.no_ktp
-          JOIN kamar k ON p.id_kamar = k.id_kamar
+          LEFT JOIN customer c ON p.no_ktp = c.no_ktp
+          LEFT JOIN kamar k ON p.id_kamar = k.id_kamar
           WHERE 1=1";
 
-// Menyesuaikan filter kategori menu atas ke isi data ENUM database lu
+// Menyesuaikan filter kategori menu atas ke isi data ENUM database lu (huruf kecil)
 if ($filter != 'Semua') {
     if ($filter == 'Disetujui') {
-        $query .= " AND p.status_pesanan = 'lunas'";
+        $query .= " AND LOWER(p.status_pesanan) = 'lunas'";
     } elseif ($filter == 'Dibatalkan') {
-        $query .= " AND p.status_pesanan = 'batal'";
+        $query .= " AND LOWER(p.status_pesanan) = 'batal'";
     } else {
-        $query .= " AND p.status_pesanan = '$filter'";
+        $query .= " AND LOWER(p.status_pesanan) = '" . strtolower($filter) . "'";
     }
 }
 
@@ -41,11 +42,10 @@ if (!$result_pesanan) {
     die("Query Error: " . mysqli_error($koneksi));
 }
 
-// Hitung data ringkasan box bawah sesuai ENUM database asli lu
+// FIX KUNCI 2: Hitung data ringkasan box bawah pakai LOWER() biar sinkron dengan isi ENUM database asli lu
 $total_pesanan   = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan"))['jml'];
-$total_disetujui = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'lunas'"))['jml'];
-$total_pending   = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'Pending'"))['jml'];
-$total_selesai   = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'Selesai'"))['jml'];
+$total_disetujui = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE LOWER(status_pesanan) = 'lunas'"))['jml'];
+$total_pending   = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE LOWER(status_pesanan) = 'pending'"))['jml'];
 ?>
 <!DOCTYPE html>
 <html lang="id">
