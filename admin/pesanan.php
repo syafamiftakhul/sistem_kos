@@ -5,6 +5,7 @@ include '../koneksi.php';
 $filter = $_GET['status'] ?? 'Semua';
 $search = $_GET['search'] ?? '';
 
+// Query utama penarikan data pesanan
 $query = "SELECT p.*, c.nama AS nama_penghuni, 
                  k.id_kamar, k.nomor_kamar
           FROM pesanan p
@@ -12,8 +13,15 @@ $query = "SELECT p.*, c.nama AS nama_penghuni,
           JOIN kamar k ON p.id_kamar = k.id_kamar
           WHERE 1=1";
 
+// Menyesuaikan filter kategori menu atas ke isi data ENUM database lu
 if ($filter != 'Semua') {
-    $query .= " AND p.status_pesanan = '$filter'";
+    if ($filter == 'Disetujui') {
+        $query .= " AND p.status_pesanan = 'lunas'";
+    } elseif ($filter == 'Dibatalkan') {
+        $query .= " AND p.status_pesanan = 'batal'";
+    } else {
+        $query .= " AND p.status_pesanan = '$filter'";
+    }
 }
 
 if (!empty($search)) {
@@ -32,16 +40,12 @@ $result_pesanan = mysqli_query($koneksi, $query);
 if (!$result_pesanan) {
     die("Query Error: " . mysqli_error($koneksi));
 }
-$result_pesanan = mysqli_query($koneksi, $query);
 
-if (!$result_pesanan) {
-    die("Query Error: " . mysqli_error($koneksi));
-}
-
-$total_pesanan = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan"))['jml'];
+// Hitung data ringkasan box bawah sesuai ENUM database asli lu
+$total_pesanan   = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan"))['jml'];
 $total_disetujui = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'lunas'"))['jml'];
-$total_pending = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'Pending'"))['jml'];
-$total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'Selesai'"))['jml'];
+$total_pending   = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'Pending'"))['jml'];
+$total_selesai   = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as jml FROM pesanan WHERE status_pesanan = 'Selesai'"))['jml'];
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -52,7 +56,6 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
     <title>Pesanan - Aqsya Kos</title>
     <link rel="stylesheet" href="../assets/css/dashboard_admin.css">
     <link rel="stylesheet" href="../assets/css/pesanan.css">
-    <!-- Font Awesome untuk icon edit & hapus -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -65,50 +68,15 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
             </div>
 
             <nav class="nav-icons">
-                <a href="dashboard_admin.php" class="nav-link">
-                    <i class="fas fa-chart-line"></i>
-                    <span class="menu-text">Dashboard</span>
-                </a>
-
-                <a href="kamar.php" class="nav-link">
-                    <i class="fas fa-key"></i>
-                    <span class="menu-text">Kamar</span>
-                </a>
-
-                <a href="penghuni.php" class="nav-link">
-                    <i class="fas fa-users"></i>
-                    <span class="menu-text">Penghuni</span>
-                </a>
-
-                <a href="pembayaran.php" class="nav-link">
-                    <i class="fas fa-credit-card"></i>
-                    <span class="menu-text">Pembayaran</span>
-                </a>
-
-                <a href="pesanan.php" class="nav-link">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="menu-text">Pesanan</span>
-                </a>
-
-                <a href="pengaduan.php" class="nav-link">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span class="menu-text">Pengaduan</span>
-                </a>
-
-                <a href="laporan.php" class="nav-link">
-                    <i class="fas fa-file-alt"></i>
-                    <span class="menu-text">Laporan</span>
-                </a>
-
-                <a href="tipe_kamar.php" class="nav-link">
-                    <i class="fas fa-tags"></i>
-                    <span class="menu-text">Tipe Kamar</span>
-                </a>
-
-                <a href="logout.php" class="nav-link">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span class="menu-text">Logout</span>
-                </a>
+                <a href="dashboard_admin.php" class="nav-link"><i class="fas fa-chart-line"></i><span class="menu-text">Dashboard</span></a>
+                <a href="kamar.php" class="nav-link"><i class="fas fa-key"></i><span class="menu-text">Kamar</span></a>
+                <a href="penghuni.php" class="nav-link"><i class="fas fa-users"></i><span class="menu-text">Penghuni</span></a>
+                <a href="pembayaran.php" class="nav-link"><i class="fas fa-credit-card"></i><span class="menu-text">Pembayaran</span></a>
+                <a href="pesanan.php" class="nav-link"><i class="fas fa-shopping-cart"></i><span class="menu-text">Pesanan</span></a>
+                <a href="pengaduan.php" class="nav-link"><i class="fas fa-exclamation-circle"></i><span class="menu-text">Pengaduan</span></a>
+                <a href="laporan.php" class="nav-link"><i class="fas fa-file-alt"></i><span class="menu-text">Laporan</span></a>
+                <a href="tipe_kamar.php" class="nav-link"><i class="fas fa-tags"></i><span class="menu-text">Tipe Kamar</span></a>
+                <a href="logout.php" class="nav-link"><i class="fas fa-sign-out-alt"></i><span class="menu-text">Logout</span></a>
             </nav>
         </aside>
 
@@ -120,11 +88,10 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                 </div>
             </header>
 
-            <!-- Search & Action Bar -->
             <div class="action-bar">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari nomor kamar atau penghuni.." value="<?= htmlspecialchars($search); ?>" onkeyup="cariData(this.value)">
+                    <input type="text" placeholder="Cari nomor kamar atau penghuni.." value="<?= htmlspecialchars($search); ?>" onchange="cariData(this.value)" onkeydown="if(event.key === 'Enter') cariData(this.value)">
                 </div>
             </div>
 
@@ -135,7 +102,6 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                 <a href="?status=Dibatalkan" class="cat-item <?= $filter == 'Dibatalkan' ? 'active' : '' ?>">Dibatalkan</a>
             </div>
 
-            <!-- Table Container -->
             <div class="table-container">
                 <table class="kamar-table">
                     <thead>
@@ -153,26 +119,37 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                         <?php if (mysqli_num_rows($result_pesanan) > 0) : ?>
                             <?php while ($row = mysqli_fetch_assoc($result_pesanan)) : ?>
                                 <tr>
-                                    <td><strong><?php echo $row['id_pesanan']; ?></strong></td>
-                                    <td><?php echo $row['no_ktp']; ?></td>
-                                    <td><?php echo $row['nama_penghuni']; ?></td>
-                                    <td><?php echo $row['nomor_kamar']; ?></td>
+                                    <td><strong><?php echo htmlspecialchars((string)$row['id_pesanan']); ?></strong></td>
+                                    <td><?php echo htmlspecialchars((string)$row['no_ktp']); ?></td>
+                                    <td><?php echo htmlspecialchars((string)$row['nama_penghuni']); ?></td>
+                                    <td><span class="badge-kamar" style="background:#e5e7eb; padding:3px 8px; border-radius:4px; font-weight:600;">Kamar <?php echo htmlspecialchars((string)$row['nomor_kamar']); ?></span></td>
                                     <td><?= date('d M Y', strtotime($row['tgl_pesan'])); ?></td>
                                     <td>
-                                        <span class="badge-status <?php echo strtolower($row['status_pesanan']); ?>">
-                                            <?php echo ucfirst($row['status_pesanan']); ?>
+                                        <span class="badge-status <?php echo strtolower((string)$row['status_pesanan']); ?>">
+                                            <?php echo ucfirst((string)$row['status_pesanan']); ?>
                                         </span>
                                     </td>
+                                    
                                     <td class="action-icons">
-                                        <a href="proses_pesanan.php?id=<?php echo $row['id_pesanan']; ?>&aksi=setujui" class="edit" title="Setujui"><i class="fas fa-check-circle"></i></a>
-                                        <a href="hapus_pesanan.php?id=<?php echo $row['id_pesanan']; ?>" class="delete" onclick="return confirm('Yakin ingin membatalkan pesanan ini?')" title="Batalkan"><i class="fas fa-times-circle"></i></a>
+                                        <?php if (strtolower((string)$row['status_pesanan']) == 'pending') : ?>
+                                            <a href="proses_pesanan.php?id=<?php echo $row['id_pesanan']; ?>&aksi=setujui" class="edit" title="Setujui" style="color: #10B981; font-size: 18px; margin-right: 10px;"><i class="fas fa-check-circle"></i></a>
+                                            <a href="proses_pesanan.php?id=<?php echo $row['id_pesanan']; ?>&aksi=tolak" class="delete" onclick="return confirm('Yakin ingin membatalkan pesanan ini?')" title="Batalkan" style="color: #EF4444; font-size: 18px;"><i class="fas fa-times-circle"></i></a>
+                                        <?php elseif (strtolower((string)$row['status_pesanan']) == 'lunas') : ?>
+                                            <span style="color: #10B981; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fas fa-check"></i> Selesai
+                                            </span>
+                                        <?php else : ?>
+                                            <span style="color: #EF4444; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fas fa-ban"></i> Ditolak
+                                            </span>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
                         <?php else : ?>
                             <tr>
-                                <td colspan="7" style="text-align: center; padding: 40px;">
-                                    <img src="../assets/img/empty-icon.png" style="width: 50px; opacity: 0.3; display: block; margin: 0 auto 10px;">
+                                <td colspan="7" style="text-align: center; padding: 50px; color: #999;">
+                                    <i class="fas fa-shopping-cart" style="font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.3;"></i>
                                     Belum ada data pesanan masuk.
                                 </td>
                             </tr>
@@ -181,15 +158,13 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                 </table>
             </div>
 
-            <div class="order-summary">
+            <div class="order-summary" style="margin-top: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
                 <div class="summary-card total">
                     <div class="card-content">
                         <span class="label">Total Pesanan</span>
                         <h3><?= $total_pesanan ?></h3>
                     </div>
-                    <div class="card-icon blue">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
+                    <div class="card-icon blue"><i class="fas fa-shopping-cart"></i></div>
                 </div>
 
                 <div class="summary-card disetujui">
@@ -197,9 +172,7 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                         <span class="label">Disetujui</span>
                         <h3><?= $total_disetujui ?></h3>
                     </div>
-                    <div class="card-icon green">
-                        <i class="fas fa-check-double"></i>
-                    </div>
+                    <div class="card-icon green"><i class="fas fa-check-double"></i></div>
                 </div>
 
                 <div class="summary-card waiting">
@@ -207,33 +180,30 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                         <span class="label">Menunggu Persetujuan</span>
                         <h3><?= $total_pending ?></h3>
                     </div>
-                    <div class="card-icon orange">
-                        <i class="fas fa-clock"></i>
-                    </div>
+                    <div class="card-icon orange"><i class="fas fa-clock"></i></div>
                 </div>
             </div>
-            <script>
-                const btnMenu = document.getElementById('btn-menu');
-                const sidebar = document.getElementById('sidebar');
+        </div>
+    </div>
 
-                btnMenu.onclick = function() {
-                    sidebar.classList.toggle('expand');
-                }
-            </script>
+    <script>
+        const btnMenu = document.getElementById('btn-menu');
+        const sidebar = document.getElementById('sidebar');
 
-            <script>
-                function cariData(keyword) {
-                    const url = new URL(window.location.href);
+        btnMenu.onclick = function() {
+            sidebar.classList.toggle('expand');
+        }
 
-                    if (keyword.trim() !== '') {
-                        url.searchParams.set('search', keyword);
-                    } else {
-                        url.searchParams.delete('search');
-                    }
-
-                    window.location.href = url.toString();
-                }
-            </script>
+        function cariData(keyword) {
+            const url = new URL(window.location.href);
+            if (keyword.trim() !== '') {
+                url.searchParams.set('search', keyword);
+            } else {
+                url.searchParams.delete('search');
+            }
+            window.location.href = url.toString();
+        }
+    </script>
 </body>
 
 </html>
