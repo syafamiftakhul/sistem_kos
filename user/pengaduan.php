@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                          VALUES ('$id_kamar', '$no_ktp', '$deskripsi_lengkap', '$tgl_lapor')";
         
         if (mysqli_query($koneksi, $query_insert)) {
-            echo "<script>alert('Keluhan berhasil dikirim ke database!'); window.location.href='dashboard_private_user.php';</script>";
+            echo "<script>alert('Keluhan berhasil dikirim, tunggu admin untuk mengonfirmasi!'); window.location.href='dashboard_private_user.php';</script>";
             exit;
         } else {
             echo "<script>alert('Gagal mengirim keluhan: " . mysqli_error($koneksi) . "');</script>";
