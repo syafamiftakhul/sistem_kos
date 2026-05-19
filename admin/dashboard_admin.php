@@ -78,9 +78,11 @@ $query_kontrak = "SELECT customer.nama, tipe_kamar.nama_tipe, pesanan.tgl_pesan,
                   DATEDIFF(DATE_ADD(pesanan.tgl_pesan, INTERVAL 30 DAY), CURDATE()) as sisa_hari
                   FROM pesanan
                   JOIN customer ON pesanan.no_ktp = customer.no_ktp
-                  JOIN kamar ON pesanan.id_kamar = kamar.id_kamar
+                  JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
                   JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe
-                  WHERE DATEDIFF(DATE_ADD(pesanan.tgl_pesan, INTERVAL 30 DAY), CURDATE()) BETWEEN 0 AND 30
+                  WHERE pesanan.status_pesanan = 'lunas'
+                  AND kamar.status_kamar = 'Terisi'  -- INI KUNCINYA REKK!
+                  AND DATEDIFF(DATE_ADD(pesanan.tgl_pesan, INTERVAL 30 DAY), CURDATE()) BETWEEN 0 AND 30
                   ORDER BY sisa_hari ASC LIMIT 5";
 
 $result_kontrak = mysqli_query($koneksi, $query_kontrak);
@@ -280,7 +282,15 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
                                     <span><?php echo $tgl_berakhir; ?></span>
                                     <!-- Warna badge berubah sesuai sisa hari -->
                                     <span class="badge <?php echo $badge_color; ?>">
-                                        <?php echo ($sisa <= 0) ? 'Habis Hari Ini' : $sisa . ' Hari Lagi'; ?>
+                                        <?php
+                                        if ($sisa < 0) {
+                                            echo 'Sudah Lewat'; // Kontrak harusnya tidak muncul di sini kalau pakai query baru di atas
+                                        } elseif ($sisa == 0) {
+                                            echo 'Berakhir Hari Ini';
+                                        } else {
+                                            echo $sisa . ' Hari Lagi';
+                                        }
+                                        ?>
                                     </span>
                                 </div>
                             </div>

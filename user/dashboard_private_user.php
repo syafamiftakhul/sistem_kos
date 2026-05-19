@@ -9,23 +9,23 @@ if (!isset($_SESSION['id_user'])) {
 }
 
 if (isset($_SESSION['id_user'])) {
-  $id_user = $_SESSION['id_user'];
-  $akses = $_SESSION['akses'];
+    $id_user = $_SESSION['id_user'];
+    $akses = $_SESSION['akses'];
 
-  // Langsung tembak cari nama panjang berdasarkan hak akses, jangan lewat email dulu
-  if ($akses == 2 || $akses == 'customer') {
-    $query = mysqli_query($koneksi, "SELECT nama FROM customer WHERE id_user='$id_user'");
-    if ($query && mysqli_num_rows($query) > 0) {
-      $data = mysqli_fetch_assoc($query);
-      $nama = $data['nama'];
+    // Langsung tembak cari nama panjang berdasarkan hak akses, jangan lewat email dulu
+    if ($akses == 2 || $akses == 'customer') {
+        $query = mysqli_query($koneksi, "SELECT nama FROM customer WHERE id_user='$id_user'");
+        if ($query && mysqli_num_rows($query) > 0) {
+            $data = mysqli_fetch_assoc($query);
+            $nama = $data['nama'];
+        }
+    } else if ($akses == 1 || $akses == 'admin') {
+        $query = mysqli_query($koneksi, "SELECT nama FROM user WHERE id_user='$id_user'");
+        if ($query && mysqli_num_rows($query) > 0) {
+            $data = mysqli_fetch_assoc($query);
+            $nama = $data['nama'];
+        }
     }
-  } else if ($akses == 1 || $akses == 'admin') {
-    $query = mysqli_query($koneksi, "SELECT nama FROM user WHERE id_user='$id_user'");
-    if ($query && mysqli_num_rows($query) > 0) {
-      $data = mysqli_fetch_assoc($query);
-      $nama = $data['nama'];
-    }
-  }
 }
 
 
@@ -38,28 +38,25 @@ $no_telp = $data_customer['no_hp'] ?? '-'; // Perbaikan variabel biar gak typo n
 $booking = null;
 $keluhan = null;
 
-if ($no_ktp) {
-    // FIX KUNCI: Tambahkan syarat 'kamar.no_ktp = pesanan.no_ktp' 
-    // Biar kalau KTP di tabel kamar sudah dihapus admin, kartu booking di user langsung AUTO-HILANG!
-    $query_booking = mysqli_query($koneksi, "SELECT pesanan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe, tipe_kamar.harga, transaksi.tgl_masuk, transaksi.periode 
-        FROM pesanan 
-        JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
-        JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
-        LEFT JOIN transaksi ON pesanan.id_pesanan = transaksi.id_pesanan
-        WHERE pesanan.no_ktp = '$no_ktp' 
-          AND kamar.no_ktp = '$no_ktp' 
-          AND (pesanan.status_pesanan = 'lunas' OR pesanan.status_pesanan = 'pending' OR pesanan.status_pesanan = 'proses') 
-        ORDER BY pesanan.id_pesanan DESC LIMIT 1");
-    $booking = mysqli_fetch_assoc($query_booking);
+// Ganti query_booking jadi begini:
+$query_booking = mysqli_query($koneksi, "SELECT pesanan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe, tipe_kamar.harga, transaksi.tgl_masuk, transaksi.periode 
+    FROM pesanan 
+    JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
+    JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
+    LEFT JOIN transaksi ON pesanan.id_pesanan = transaksi.id_pesanan
+    WHERE pesanan.no_ktp = '$no_ktp' 
+      AND pesanan.status_pesanan IN ('lunas', 'pending', 'proses', 'selesai') 
+    ORDER BY pesanan.id_pesanan DESC LIMIT 1");
+$booking = mysqli_fetch_assoc($query_booking);
 
-    // Mengambil data semua keluhan milik customer yang login
-    $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe 
+// Mengambil data semua keluhan milik customer yang login
+$query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe 
         FROM pengaduan 
         JOIN kamar ON pengaduan.id_kamar = kamar.id_kamar 
         JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
         WHERE pengaduan.no_ktp = '$no_ktp' 
         ORDER BY tgl_lapor DESC");
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -98,8 +95,8 @@ if ($no_ktp) {
                     <div>
                         <div class="booking-id">Booking #<?= $booking['id_pesanan']; ?></div>
                         <div class="booking-date">
-                            <i class="far fa-calendar"></i> 
-                            <?php 
+                            <i class="far fa-calendar"></i>
+                            <?php
                             if (!empty($booking['tgl_masuk'])) {
                                 $tgl_masuk_dt = new DateTime($booking['tgl_masuk']);
                                 $periode_bulan = (int)($booking['periode'] ?? 1);
@@ -112,7 +109,20 @@ if ($no_ktp) {
                             ?>
                         </div>
                     </div>
-                    <span class="badge-confirm">Terkonfirmasi</span>
+                    <?php
+                    $status = $booking['status_pesanan'];
+
+                    // Logika badge dinamis
+                    if ($status == 'lunas') {
+                        echo '<span class="badge-confirm" style="background:#10B981;">Terkonfirmasi</span>';
+                    } elseif ($status == 'pending') {
+                        echo '<span class="badge-confirm" style="background:#F59E0B;">Menunggu Verifikasi</span>';
+                    } elseif ($status == 'selesai') {
+                        echo '<span class="badge-confirm" style="background:#6B7280;">Kadaluwarsa</span>';
+                    } else {
+                        echo '<span class="badge-confirm" style="background:#6B7280;">Proses</span>';
+                    }
+                    ?>
                 </div>
 
                 <div class="grid-info">
@@ -134,9 +144,15 @@ if ($no_ktp) {
                     </div>
                 </div>
 
-                <a href="pengaduan.php?id_kamar=<?= $booking['id_kamar']; ?>" class="btn-complaint" style="text-decoration: none; display: inline-block; text-align: center;">
-                    <i class="fas fa-exclamation-circle"></i> Tambahkan Pengaduan
-                </a>
+                <?php if ($booking['status_pesanan'] == 'lunas') : ?>
+                    <a href="pengaduan.php?id_kamar=<?= $booking['id_kamar']; ?>" class="btn-complaint" style="text-decoration: none; display: inline-block; text-align: center;">
+                        <i class="fas fa-exclamation-circle"></i> Tambahkan Pengaduan
+                    </a>
+                <?php else : ?>
+                    <div style="background: #FFFBEB; padding: 12px; border-radius: 8px; font-size: 13px; color: #92400E; border: 1px solid #FDE68A; margin-top: 10px;">
+                        <i class="fas fa-info-circle"></i> Tombol pengaduan akan aktif setelah pembayaran diverifikasi oleh admin.
+                    </div>
+                <?php endif; ?>
             </div>
         <?php else : ?>
             <p class="empty-text" style="margin-top: -10px; margin-bottom: 30px;">Anda belum melakukan riwayat pesanan</p>
@@ -149,7 +165,7 @@ if ($no_ktp) {
                     <div class="card-box" style="margin-bottom: 16px;">
                         <div class="card-top" style="margin-bottom: 12px;">
                             <div class="keluhan-title"><?= htmlspecialchars($row_keluhan['subjek'] ?? 'Keluhan Tanpa Subjek'); ?></div>
-                            <?php 
+                            <?php
                             $status = strtolower($row_keluhan['status_pengaduan'] ?? 'menunggu');
                             if ($status == 'menunggu') {
                                 echo '<div class="badge-menunggu">Menunggu</div>';
@@ -160,15 +176,15 @@ if ($no_ktp) {
                             }
                             ?>
                         </div>
-                        
+
                         <div class="keluhan-room">
                             <i class="fas fa-door-open"></i> <?= htmlspecialchars($row_keluhan['nama_tipe'] . ' - Room ' . $row_keluhan['nomor_kamar']); ?>
                         </div>
-                        
+
                         <div class="keluhan-desc">
                             <?= htmlspecialchars($row_keluhan['deskripsi'] ?? ''); ?>
                         </div>
-                        
+
                         <div class="keluhan-date">
                             Dikirim pada <?= htmlspecialchars(date('d/m/Y', strtotime($row_keluhan['tgl_lapor']))); ?>
                         </div>
