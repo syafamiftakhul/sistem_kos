@@ -25,6 +25,7 @@ $query_tipe = mysqli_query($koneksi, "SELECT * FROM tipe_kamar");
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Kamar - Aqsya Kos</title>
     <link rel="stylesheet" href="../assets/css/tambah_kamar.css">
 </head>
@@ -32,16 +33,16 @@ $query_tipe = mysqli_query($koneksi, "SELECT * FROM tipe_kamar");
     <div class="main-wrapper"> 
         <div class="form-container">
             <div class="form-header">
-                <h2>Edit Kamar Unit: <?php echo $data['nomor_kamar']; ?></h2>
+                <h2>Edit Kamar Unit: <?php echo htmlspecialchars((string)$data['nomor_kamar']); ?></h2>
                 <p>Ubah tipe atau nomor unit kamar di bawah ini.</p>
             </div>
 
             <form action="proses_edit_kamar.php" method="POST">
-                <input type="hidden" name="id_kamar" value="<?php echo $data['id_kamar']; ?>">
+                <input type="hidden" name="id_kamar" value="<?php echo htmlspecialchars((string)$data['id_kamar']); ?>">
 
                 <div class="input-group">
                     <label>Nomor Unit Kamar</label>
-                    <input type="text" name="nomor_kamar" value="<?php echo $data['nomor_kamar']; ?>" required>
+                    <input type="text" name="nomor_kamar" value="<?php echo htmlspecialchars((string)$data['nomor_kamar']); ?>" required>
                 </div>
 
                 <div class="input-group">
@@ -49,7 +50,7 @@ $query_tipe = mysqli_query($koneksi, "SELECT * FROM tipe_kamar");
                     <select name="id_tipe" id="select-tipe" required onchange="fetchFasilitas()">
                         <?php while($t = mysqli_fetch_assoc($query_tipe)) : ?>
                             <option value="<?= $t['id_tipe']; ?>" <?= ($t['id_tipe'] == $data['id_tipe']) ? 'selected' : ''; ?>>
-                                <?= $t['nama_tipe']; ?>
+                                <?= htmlspecialchars($t['nama_tipe']); ?>
                             </option>
                         <?php endwhile; ?>
                     </select>
@@ -57,15 +58,15 @@ $query_tipe = mysqli_query($koneksi, "SELECT * FROM tipe_kamar");
 
                 <div class="input-group">
                     <label>Fasilitas Saat Ini (Berdasarkan Tipe)</label>
-                    <textarea id="display-fasilitas" readonly rows="4"><?php echo $data['fasilitas']; ?></textarea>
+                    <textarea id="display-fasilitas" readonly rows="4"><?php echo htmlspecialchars((string)$data['fasilitas']); ?></textarea>
                     <small>*Fasilitas diedit melalui menu Tipe Kamar</small>
                 </div>
 
                 <div class="input-group">
                     <label>Status Kamar</label>
                     <select name="status_kamar">
-                        <option value="tersedia" <?= ($data['status_kamar'] == 'tersedia') ? 'selected' : ''; ?>>Tersedia</option>
-                        <option value="terisi" <?= ($data['status_kamar'] == 'terisi') ? 'selected' : ''; ?>>Terisi</option>
+                        <option value="kosong" <?= (strtolower((string)$data['status_kamar']) == 'kosong') ? 'selected' : ''; ?>>Kosong / Tersedia</option>
+                        <option value="terisi" <?= (strtolower((string)$data['status_kamar']) == 'terisi') ? 'selected' : ''; ?>>Terisi</option>
                     </select>
                 </div>
 

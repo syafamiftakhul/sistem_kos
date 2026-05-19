@@ -34,7 +34,7 @@ $stats = mysqli_fetch_assoc($query_stats);
                 <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Aqsya Kos</span>
             </div>
 
-                <nav class="nav-icons">
+            <nav class="nav-icons">
                 <a href="dashboard_admin.php" class="nav-link">
                     <i class="fas fa-chart-line"></i>
                     <span class="menu-text">Dashboard</span>
@@ -136,7 +136,15 @@ $stats = mysqli_fetch_assoc($query_stats);
                                             <?php echo ($row['status_kamar'] == 'terisi') ? 'Terisi' : 'Tersedia'; ?>
                                         </span>
                                     </td>
-                                    <td><?php echo $row['nama_penghuni'] ?? '-'; ?></td>
+                                    <td>
+                                        <?php
+                                        if ($row['status_kamar'] == 'kosong' || empty($row['no_ktp'])) {
+                                            echo '-';
+                                        } else {
+                                            echo htmlspecialchars($row['nama_penghuni'] ?? '-');
+                                        }
+                                        ?>
+                                    </td>
                                     <td class="action-icons">
                                         <a href="edit_kamar.php?id=<?php echo $row['id_kamar']; ?>" class="edit"><i class="far fa-edit"></i></a>
                                         <a href="hapus_kamar.php?id=<?php echo $row['id_kamar']; ?>" class="delete" onclick="return confirm('Yakin ingin menghapus kamar nomor <?php echo $row['nomor_kamar']; ?>?')"><i class="far fa-trash-alt"></i></a>
