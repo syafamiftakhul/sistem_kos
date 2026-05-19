@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "koneksi.php";
+/** @var mysqli $koneksi */
 
 // Tangkap data dari form booking
 $nama            = $_POST['nama'] ?? 'Guest';
@@ -73,6 +74,7 @@ if ($detail) {
       </a>
 
       <div class="payment-grid">
+        
         <div class="booking-card" style="margin-top:0;">
           <h2 class="booking-card-title">Pembayaran</h2>
           <p class="booking-card-subtitle">Selesaikan pembayaran Anda untuk mengkonfirmasi pemesanan</p>
@@ -86,7 +88,7 @@ if ($detail) {
           </div>
 
           <div class="payment-method active" onclick="showPayment('bank')">
-            <input type="radio" name="payment" id="radio-bank" checked>
+            <input type="radio" name="payment_type" id="radio-bank" checked>
             <div class="payment-method-info">
               <h4>Bank Transfer</h4>
               <p>BCA, Mandiri, BNI, BRI</p>
@@ -94,7 +96,7 @@ if ($detail) {
           </div>
 
           <div class="payment-method" onclick="showPayment('wallet')">
-            <input type="radio" name="payment" id="radio-wallet">
+            <input type="radio" name="payment_type" id="radio-wallet">
             <div class="payment-method-info">
               <h4>E-Wallet</h4>
               <p>GoPay, Dana, OVO, ShopeePay</p>
@@ -138,7 +140,6 @@ if ($detail) {
             Upload Bukti Pembayaran
           </div>
 
-          <!-- FORM UTAMA YANG SUDAH DIPERBAIKI -->
           <form action="proses_konfirmasi.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id_kamar" value="<?php echo $id_kamar; ?>">
             <input type="hidden" name="nama" value="<?php echo htmlspecialchars($nama); ?>">
@@ -147,7 +148,6 @@ if ($detail) {
             <input type="hidden" name="alamat" value="<?php echo htmlspecialchars($alamat); ?>">
             <input type="hidden" name="jenis_kelamin" value="<?php echo htmlspecialchars($jenis_kelamin); ?>">
             <input type="hidden" name="kontak_keluarga" value="<?php echo htmlspecialchars($kontak_keluarga); ?>">
->>>>>>> 5e1ebc86f7baf7e484a5d8a25bd568e0015449b4
             <input type="hidden" name="tgl_masuk" value="<?php echo $tgl_masuk; ?>">
             <input type="hidden" name="periode" value="<?php echo $periode; ?>">
             <input type="hidden" name="total_bayar" value="<?php echo $total_bayar; ?>">
@@ -155,73 +155,28 @@ if ($detail) {
 
             <div class="upload-box" id="drop-zone">
               <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
-              <label for="file-upload" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <label for="file-upload" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px;">
                 <div id="pre-upload">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #6c757d; margin-bottom: 10px;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #6c757d; margin-bottom: 10px; display:block; margin: 0 auto 10px auto;">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="17 8 12 3 7 8"></polyline>
                     <line x1="12" y1="3" x2="12" y2="15"></line>
                   </svg>
-                  <p style="color: #495057; font-weight: 500;">Pilih file bukti transfer</p>
+                  <p style="color: #495057; font-weight: 500; text-align: center; margin: 0;">Pilih file bukti transfer</p>
                 </div>
-                <div id="post-upload" style="display: none; width: 100%; height: 200px; overflow: hidden; border-radius: 8px;">
-                  <img id="image-preview" src="#" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
+                <div id="post-upload" style="display: none; width: 100%; max-height: 250px; overflow: hidden; border-radius: 8px;">
+                  <img id="image-preview" src="#" alt="Preview" style="width: 100%; height: auto; max-height: 250px; object-fit: contain;">
                 </div>
               </label>
             </div>
 
-            <button type="submit" class="btn-primary" style="margin-top: 20px;">Konfirmasi Pembayaran</button>
+            <button type="submit" class="btn-primary" style="margin-top: 24px; width: 100%;">Konfirmasi Pembayaran</button>
           </form>
         </div>
 
         <div class="summary-card">
           <h3>Rincian Pesanan</h3>
-          <div class="summary-item">
-            <div class="label">Kamar</div>
-            <div class="value"><?php echo htmlspecialchars($nama_kamar_lengkap); ?></div>
-          </div>
-          <div class="summary-item">
-            <div class="label">Nama Penghuni</div>
-            <div class="value"><?php echo htmlspecialchars($nama); ?></div>
-          </div>
-          <div class="summary-item">
-            <div class="label">Check-in</div>
-            <div class="value"><?php echo date('d-m-Y', strtotime($tgl_masuk)); ?></div>
-          </div>
-          <div class="summary-item">
-            <div class="label">Check-out</div>
-            <div class="value"><?php echo $tgl_keluar; ?></div>
-          </div>
-          <div class="summary-item">
-            <div class="label">Durasi</div>
-            <div class="value"><?php echo $periode; ?> Bulan</div>
-          </div>
-
-
-        <input type="hidden" name="konfirmasi" value="1">
-
-        <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
-
-        </form>
-        <div class="upload-box" id="drop-zone">
-          <input type="file" name="bukti_transfer" id="file-upload" accept="image/*" style="display:none;" onchange="previewImage()" required>
-          <label for="file-upload" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-
-            <div id="pre-upload">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #6c757d; margin-bottom: 10px;">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="17 8 12 3 7 8"></polyline>
-                <line x1="12" y1="3" x2="12" y2="15"></line>
-              </svg>
-              <p style="color: #495057; font-weight: 500;">Pilih file bukti transfer</p>
-            </div>
-
-            <button type="submit" class="btn-primary">Konfirmasi Pembayaran</button>
-          </form>
-        </div>
-
-        <div class="summary-card">
-          <h3>Rincian Pesanan</h3>
+          
           <div class="summary-item">
             <div class="label">Kamar</div>
             <div class="value"><?php echo htmlspecialchars($nama_kamar_lengkap); ?></div>
@@ -261,92 +216,9 @@ if ($detail) {
             <span class="val">Rp <?php echo number_format($total_bayar, 0, ',', '.'); ?></span>
           </div>
         </div>
-      </div>
-
-
-
-      <div class="summary-card">
-
-        <h3>Rincian Pesanan</h3>
-
-        <div class="summary-item">
-
-          <div class="label">Kamar</div>
-
-          <div class="value"><?php echo htmlspecialchars($nama_kamar_lengkap); ?></div>
-
-        </div>
-
-        <div class="summary-item">
-
-          <div class="label">Nama Penghuni</div>
-
-          <div class="value"><?php echo htmlspecialchars($nama); ?></div>
-
-        </div>
-
-        <div class="summary-item">
-
-          <div class="label">Check-in</div>
-
-          <div class="value"><?php echo date('d-m-Y', strtotime($tgl_masuk)); ?></div>
-
-        </div>
-
-        <div class="summary-item">
-
-          <div class="label">Check-out</div>
-
-          <div class="value"><?php echo $tgl_keluar; ?></div>
-
-        </div>
-
-        <div class="summary-item">
-
-          <div class="label">Durasi</div>
-
-          <div class="value"><?php echo $periode; ?> Bulan</div>
-
-        </div>
-
-
-
-        <div class="summary-divider"></div>
-
-
-
-        <div class="summary-row">
-
-          <span>Tarif Bulanan</span>
-
-          <span>Rp <?php echo number_format($harga_satuan, 0, ',', '.'); ?></span>
-
-        </div>
-
-        <div class="summary-row">
-
-          <span>Durasi</span>
-
-          <span>x <?php echo $periode; ?></span>
-
-        </div>
-
-
-
-        <div class="summary-divider"></div>
-
-
-
-        <div class="summary-row total">
-
-          <span>Total</span>
-
-          <span class="val">Rp <?php echo number_format($total_bayar, 0, ',', '.'); ?></span>
-
-        </div>
 
       </div>
-
+    </main>
   </div>
 
   <script>
@@ -358,16 +230,18 @@ if ($detail) {
 
       if (input.files && input.files[0]) {
         const file = input.files[0];
-        const fileSize = file.size / 1024 / 1024; // Hitung ke MB
+        const fileSize = file.size / 1024 / 1024; // Convert ke MB
 
         // 1. Validasi Maksimal 2MB
         if (fileSize > 2) {
           alert("Waduh bre, filenya kegedean! Maksimal 2MB ya.");
-          input.value = ""; // Reset input
+          input.value = ""; // Reset file input
+          preUpload.style.display = 'block';
+          postUpload.style.display = 'none';
           return;
         }
 
-        // 2. Tampilkan preview
+        // 2. Render Preview Gambar
         const reader = new FileReader();
         reader.onload = function(e) {
           imagePreview.src = e.target.result;
