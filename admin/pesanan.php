@@ -2,10 +2,15 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-$filter = isset($_GET['status']) ? $_GET['status'] : 'Semua';
+$filter = $_GET['status'] ?? 'Semua';
 $search = $_GET['search'] ?? '';
 
-$query .= " WHERE 1=1";
+$query = "SELECT p.*, c.nama AS nama_penghuni, 
+                 k.id_kamar, k.nomor_kamar
+          FROM pesanan p
+          JOIN customer c ON p.no_ktp = c.no_ktp
+          JOIN kamar k ON p.id_kamar = k.id_kamar
+          WHERE 1=1";
 
 if ($filter != 'Semua') {
     $query .= " AND p.status_pesanan = '$filter'";
@@ -19,8 +24,14 @@ if (!empty($search)) {
         p.no_ktp LIKE '%$search%'
     )";
 }
+
 $query .= " ORDER BY p.tgl_pesan DESC";
 
+$result_pesanan = mysqli_query($koneksi, $query);
+
+if (!$result_pesanan) {
+    die("Query Error: " . mysqli_error($koneksi));
+}
 $result_pesanan = mysqli_query($koneksi, $query);
 
 if (!$result_pesanan) {
