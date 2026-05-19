@@ -28,12 +28,12 @@ $result = mysqli_query($koneksi, $query);
 <body>
     <div class="dashboard-wrapper">
         <aside class="sidebar-admin expand " id="sidebar">
-           <div class="sidebar-logo" style="display: flex; align-items: center; padding: 20px 25px;">
-            <i class="fas fa-bars" id="btn-menu" style="cursor: pointer; font-size: 24px; color: #81A6C6; transition: 0.3s;"></i>
-            <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Aqsya Kos</span>
+            <div class="sidebar-logo" style="display: flex; align-items: center; padding: 20px 25px;">
+                <i class="fas fa-bars" id="btn-menu" style="cursor: pointer; font-size: 24px; color: #81A6C6; transition: 0.3s;"></i>
+                <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Aqsya Kos</span>
             </div>
 
-                        <nav class="nav-icons">
+            <nav class="nav-icons">
                 <a href="dashboard_admin.php" class="nav-link">
                     <i class="fas fa-chart-line"></i>
                     <span class="menu-text">Dashboard</span>
@@ -90,10 +90,12 @@ $result = mysqli_query($koneksi, $query);
             </header>
 
             <section class="data-section">
-                <form method="GET" class="search-box" id="searchForm">
-                    <i class="fas fa-search"></i>
-                    <input type="text" name="search" id="searchInput" placeholder="Masukkan nama, kamar, atau telepon..." value="<?= $_GET['search'] ?? ''; ?>">
-                </form>
+                <div class="action-bar">
+                    <form method="GET" class="search-box" id="searchForm">
+                        <i class="fas fa-search"></i>
+                        <input type="text" name="search" id="searchInput" placeholder="Masukkan nama, kamar, atau telepon..." value="<?= htmlspecialchars($_GET['search'] ?? ''); ?>">
+                    </form>
+                </div>
 
                 <div class="table-container">
                     <table class="kamar-table">
@@ -121,7 +123,7 @@ $result = mysqli_query($koneksi, $query);
                                         <td><span class="badge-kamar">Kamar <?= htmlspecialchars($row['nomor_kamar']); ?></span></td>
                                         <td>
                                             <div class="contact-info">
-                                                <div><i class="fas fa-phone-alt" style="margin-right: 8px; color: #81A6C6;"></i> <?= $row['no_hp']; ?></div>
+                                                <div><i class="fas fa-phone-alt" style="margin-right: 8px; color: #81A6C6;"></i> <?= htmlspecialchars($row['no_hp']); ?></div>
                                             </div>
                                         </td>
                                         <td><?= (!empty($row['tgl_masuk']) && $row['tgl_masuk'] != '0000-00-00') ? date('d M Y', strtotime($row['tgl_masuk'])) : '-'; ?></td>
