@@ -21,16 +21,20 @@ $id_kamar = $_GET['id_kamar'] ?? $_POST['id_kamar'] ?? '';
 
 // 4. Proses pas form-nya di-submit (POST)
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Kita tetep ambil inputan 'subjek' dari HTML form di bawah
     $subjek     = mysqli_real_escape_string($koneksi, $_POST['subjek']);
     $deskripsi  = mysqli_real_escape_string($koneksi, $_POST['deskripsi']);
     $tgl_lapor  = date('Y-m-d'); // Tanggal otomatis hari ini sesuai database
 
-    // Validasi dasar biar data gak kosong
+    // Validasi dasar biar data gak kosong (Variabel $subjek sekarang aman dicek)
     if (!empty($no_ktp) && !empty($id_kamar) && !empty($subjek) && !empty($deskripsi)) {
         
-        // SINKRONISASI ERD: Langsung hajar INSERT ke tabel pengaduan
-        $query_insert = "INSERT INTO pengaduan (id_kamar, no_ktp, subjek, deskripsi, tgl_lapor) 
-                         VALUES ('$id_kamar', '$no_ktp', '$subjek', '$deskripsi', '$tgl_lapor')";
+        // Trik pintar: Gabungkan subjek dan deskripsi menjadi satu teks panjang
+        $deskripsi_lengkap = "[" . $subjek . "] " . $deskripsi;
+        
+        // FIX KUNCI: Query bersih tanpa kolom 'subjek' & tanda kutip SQL-nya sudah balance
+        $query_insert = "INSERT INTO pengaduan (id_kamar, no_ktp, deskripsi, tgl_lapor) 
+                         VALUES ('$id_kamar', '$no_ktp', '$deskripsi_lengkap', '$tgl_lapor')";
         
         if (mysqli_query($koneksi, $query_insert)) {
             echo "<script>alert('Keluhan berhasil dikirim ke database!'); window.location.href='dashboard_private_user.php';</script>";
