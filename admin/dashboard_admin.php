@@ -183,7 +183,7 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
                         <small><?php echo $total_terisi; ?> Terisi, <?php echo $total_kosong; ?> Kosong</small>
                     </div>
                     <div class="stat-icon-box blue">
-                        <img src="../assets/img/key-small.png" alt="" style="width: 25px;">
+                        <img src="../assets/img/key.png" alt="" style="width: 25px;">
                     </div>
                 </div>
 
@@ -195,8 +195,8 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
                         <!-- Menampilkan jumlah user baru berdasarkan tgl_pesan bulan ini -->
                         <small><?php echo $user_baru; ?> baru bulan ini</small>
                     </div>
-                    <div class="stat-icon-box light-blue">
-                        <img src="../assets/img/user-small.png" alt="" style="width: 25px;">
+                    <div class="stat-icon-box blue">
+                        <img src="../assets/img/tamu.png" alt="" style="width: 25px;">
                     </div>
                 </div>
 
