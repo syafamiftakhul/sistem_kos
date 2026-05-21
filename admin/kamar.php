@@ -35,7 +35,7 @@ $stats = mysqli_fetch_assoc($query_stats);
             </div>
 
             <nav class="nav-icons">
-                <a href="dashboard_admin.php" class="nav-link">
+                <a href="dashboard_admin.php" class="nav-link active">
                     <i class="fas fa-chart-line"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
@@ -165,6 +165,8 @@ $stats = mysqli_fetch_assoc($query_stats);
                 <p>Total: <?php echo $total_kamar; ?> Kamar - Terisi: <?php echo $stats['terisi'] ?? 0; ?> Kamar - Tersedia: <?php echo $stats['tersedia'] ?? 0; ?> Kamar</p>
             </div>
         </div>
+    </div>
+
         <script>
             const btnMenu = document.getElementById('btn-menu');
             const sidebar = document.getElementById('sidebar');
@@ -188,5 +190,4 @@ $stats = mysqli_fetch_assoc($query_stats);
             });
         </script>
 </body>
-
 </html>
