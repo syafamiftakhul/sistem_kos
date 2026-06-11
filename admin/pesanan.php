@@ -2,20 +2,36 @@
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
-$filter = isset($_GET['status']) ? $_GET['status'] : 'Semua';
+$filter = $_GET['status'] ?? 'Semua';
+$search = $_GET['search'] ?? '';
 
-$query = "SELECT p.*, c.nama AS nama_penghuni, k.id_kamar, k.nomor_kamar 
+$query = "SELECT p.*, c.nama AS nama_penghuni, 
+                 k.id_kamar, k.nomor_kamar
           FROM pesanan p
           JOIN customer c ON p.no_ktp = c.no_ktp
-          JOIN kamar k ON p.id_kamar = k.id_kamar";
+          JOIN kamar k ON p.id_kamar = k.id_kamar
+          WHERE 1=1";
 
 if ($filter != 'Semua') {
+    $query .= " AND p.status_pesanan = '$filter'";
+}
 
-    $query .= " WHERE p.status_pesanan = '$filter'";
+if (!empty($search)) {
+    $query .= " AND (
+        p.id_pesanan LIKE '%$search%' OR
+        c.nama LIKE '%$search%' OR
+        k.nomor_kamar LIKE '%$search%' OR
+        p.no_ktp LIKE '%$search%'
+    )";
 }
 
 $query .= " ORDER BY p.tgl_pesan DESC";
 
+$result_pesanan = mysqli_query($koneksi, $query);
+
+if (!$result_pesanan) {
+    die("Query Error: " . mysqli_error($koneksi));
+}
 $result_pesanan = mysqli_query($koneksi, $query);
 
 if (!$result_pesanan) {
@@ -43,49 +59,56 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
 <body>
     <div class="dashboard-wrapper">
         <aside class="sidebar-admin" id="sidebar">
-            <div class="sidebar-logo">
-                <img src="../assets/img/logo-menu.png" alt="Menu" id="btn-menu" style="cursor: pointer;">
-                <span class="logo-text" style="font-weight: bold; margin-left: 10px;">Aqsya Kos</span>
+            <div class="sidebar-logo" style="display: flex; align-items: center; padding: 20px 25px;">
+                <i class="fas fa-bars" id="btn-menu" style="cursor: pointer; font-size: 24px; color: #81A6C6; transition: 0.3s;"></i>
+                <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Aqsya Kos</span>
             </div>
 
             <nav class="nav-icons">
-                <a href="dashboard_admin.php" class="nav-link active">
-                    <img src="../assets/img/home-icon.png" alt="Home">
+                <a href="dashboard_admin.php" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
+
                 <a href="kamar.php" class="nav-link">
-                    <img src="../assets/img/key-icon.png" alt="Rooms">
+                    <i class="fas fa-key"></i>
                     <span class="menu-text">Kamar</span>
                 </a>
+
                 <a href="penghuni.php" class="nav-link">
-                    <img src="../assets/img/user-icon.png" alt="Tenants">
+                    <i class="fas fa-users"></i>
                     <span class="menu-text">Penghuni</span>
                 </a>
+
                 <a href="pembayaran.php" class="nav-link">
-                    <img src="../assets/img/payment-icon.png" alt="Payments">
+                    <i class="fas fa-credit-card"></i>
                     <span class="menu-text">Pembayaran</span>
                 </a>
+
                 <a href="pesanan.php" class="nav-link">
-                    <img src="../assets/img/order-icon.png" alt="Orders">
+                    <i class="fas fa-shopping-cart"></i>
                     <span class="menu-text">Pesanan</span>
                 </a>
+
                 <a href="pengaduan.php" class="nav-link">
-                    <img src="../assets/img/complaint-icon.png" alt="Complaints">
+                    <i class="fas fa-exclamation-circle"></i>
                     <span class="menu-text">Pengaduan</span>
                 </a>
+
                 <a href="laporan.php" class="nav-link">
-                    <img src="../assets/img/report-icon.png" alt="Reports">
+                    <i class="fas fa-file-alt"></i>
                     <span class="menu-text">Laporan</span>
                 </a>
-                <a href="tipe_kamar.php" class='nav-link'>
-                    <img src='../assets/img/type-icon.png' alt='Type'>
-                    <span class='menu-text'>Tipe Kamar</span>
+
+                <a href="tipe_kamar.php" class="nav-link">
+                    <i class="fas fa-tags"></i>
+                    <span class="menu-text">Tipe Kamar</span>
                 </a>
+
                 <a href="logout.php" class="nav-link">
-                    <img src="../assets/img/logout-icon.png" alt="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
                     <span class="menu-text">Logout</span>
                 </a>
-                <!-- ... icon menu lainnya ... -->
             </nav>
         </aside>
 
@@ -101,7 +124,7 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
             <div class="action-bar">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari nomor kamar atau penghuni..">
+                    <input type="text" placeholder="Cari nomor kamar atau penghuni.." value="<?= htmlspecialchars($search); ?>" onkeyup="cariData(this.value)">
                 </div>
             </div>
 
@@ -157,46 +180,60 @@ $total_selesai = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as j
                     </tbody>
                 </table>
             </div>
-           
-        <div class="order-summary">
-            <div class="summary-card total">
-                <div class="card-content">
-                    <span class="label">Total Pesanan</span>
-                    <h3><?= $total_pesanan ?></h3>
+
+            <div class="order-summary">
+                <div class="summary-card total">
+                    <div class="card-content">
+                        <span class="label">Total Pesanan</span>
+                        <h3><?= $total_pesanan ?></h3>
+                    </div>
+                    <div class="card-icon blue">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
                 </div>
-                <div class="card-icon blue">
-                    <i class="fas fa-shopping-cart"></i>
+
+                <div class="summary-card disetujui">
+                    <div class="card-content">
+                        <span class="label">Disetujui</span>
+                        <h3><?= $total_disetujui ?></h3>
+                    </div>
+                    <div class="card-icon green">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                </div>
+
+                <div class="summary-card waiting">
+                    <div class="card-content">
+                        <span class="label">Menunggu Persetujuan</span>
+                        <h3><?= $total_pending ?></h3>
+                    </div>
+                    <div class="card-icon orange">
+                        <i class="fas fa-clock"></i>
+                    </div>
                 </div>
             </div>
+            <script>
+                const btnMenu = document.getElementById('btn-menu');
+                const sidebar = document.getElementById('sidebar');
 
-            <div class="summary-card disetujui">
-                <div class="card-content">
-                    <span class="label">Disetujui</span>
-                    <h3><?= $total_disetujui ?></h3>
-                </div>
-                <div class="card-icon green">
-                    <i class="fas fa-check-double"></i>
-                </div>
-            </div>
+                btnMenu.onclick = function() {
+                    sidebar.classList.toggle('expand');
+                }
+            </script>
 
-            <div class="summary-card waiting">
-                <div class="card-content">
-                    <span class="label">Menunggu Persetujuan</span>
-                    <h3><?= $total_pending ?></h3>
-                </div>
-                <div class="card-icon orange">
-                    <i class="fas fa-clock"></i>
-                </div>
-            </div>
-    </div>
-    <script>
-        const btnMenu = document.getElementById('btn-menu');
-        const sidebar = document.getElementById('sidebar');
+            <script>
+                function cariData(keyword) {
+                    const url = new URL(window.location.href);
 
-        btnMenu.onclick = function() {
-            sidebar.classList.toggle('expand');
-        }
-    </script>
+                    if (keyword.trim() !== '') {
+                        url.searchParams.set('search', keyword);
+                    } else {
+                        url.searchParams.delete('search');
+                    }
+
+                    window.location.href = url.toString();
+                }
+            </script>
 </body>
 
 </html>

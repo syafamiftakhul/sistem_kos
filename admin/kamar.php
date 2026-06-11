@@ -1,17 +1,13 @@
 <?php
 include '../koneksi.php';
+$search = $_GET['search'] ?? '';
 /** @var mysqli $koneksi */
 
-// Query buat nampilin data tabel
 $query_kamar = "SELECT kamar.*, tipe_kamar.nama_tipe, tipe_kamar.harga, customer.nama as nama_penghuni 
-                FROM kamar 
-                LEFT JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
-                LEFT JOIN customer ON kamar.no_ktp = customer.no_ktp";
+                FROM kamar LEFT JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe LEFT JOIN customer ON kamar.no_ktp = customer.no_ktp WHERE kamar.nomor_kamar LIKE '%$search%' OR tipe_kamar.nama_tipe LIKE '%$search%' OR customer.nama LIKE '%$search%' OR kamar.status_kamar LIKE '%$search%'";
 
 $result_kamar = mysqli_query($koneksi, $query_kamar);
 $total_kamar = mysqli_num_rows($result_kamar);
-
-// Query Statistik: Pakai 'kosong' bukan 'tersedia'
 $query_stats = mysqli_query($koneksi, "SELECT 
     SUM(CASE WHEN status_kamar = 'terisi' THEN 1 ELSE 0 END) as terisi,
     SUM(CASE WHEN status_kamar = 'kosong' THEN 1 ELSE 0 END) as tersedia 
@@ -27,56 +23,62 @@ $stats = mysqli_fetch_assoc($query_stats);
     <title>Manajemen Kamar - Aqsya Kos</title>
     <link rel="stylesheet" href="../assets/css/dashboard_admin.css">
     <link rel="stylesheet" href="../assets/css/kamar_admin.css">
-    <!-- Font Awesome untuk icon edit & hapus -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
     <div class="dashboard-wrapper">
         <aside class="sidebar-admin" id="sidebar">
-            <div class="sidebar-logo">
-                <img src="../assets/img/logo-menu.png" alt="Menu" id="btn-menu" style="cursor: pointer;">
-                <span class="logo-text" style="font-weight: bold; margin-left: 10px;">Aqsya Kos</span>
+            <div class="sidebar-logo" style="display: flex; align-items: center; padding: 20px 25px;">
+                <i class="fas fa-bars" id="btn-menu" style="cursor: pointer; font-size: 24px; color: #81A6C6; transition: 0.3s;"></i>
+                <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Aqsya Kos</span>
             </div>
 
-            <nav class="nav-icons">
-                <a href="dashboard_admin.php" class="nav-link active">
-                    <img src="../assets/img/home-icon.png" alt="Home">
+                <nav class="nav-icons">
+                <a href="dashboard_admin.php" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
+
                 <a href="kamar.php" class="nav-link">
-                    <img src="../assets/img/key-icon.png" alt="Rooms">
+                    <i class="fas fa-key"></i>
                     <span class="menu-text">Kamar</span>
                 </a>
+
                 <a href="penghuni.php" class="nav-link">
-                    <img src="../assets/img/user-icon.png" alt="Tenants">
+                    <i class="fas fa-users"></i>
                     <span class="menu-text">Penghuni</span>
                 </a>
+
                 <a href="pembayaran.php" class="nav-link">
-                    <img src="../assets/img/payment-icon.png" alt="Payments">
+                    <i class="fas fa-credit-card"></i>
                     <span class="menu-text">Pembayaran</span>
                 </a>
+
                 <a href="pesanan.php" class="nav-link">
-                    <img src="../assets/img/order-icon.png" alt="Orders">
+                    <i class="fas fa-shopping-cart"></i>
                     <span class="menu-text">Pesanan</span>
                 </a>
+
                 <a href="pengaduan.php" class="nav-link">
-                    <img src="../assets/img/complaint-icon.png" alt="Complaints">
+                    <i class="fas fa-exclamation-circle"></i>
                     <span class="menu-text">Pengaduan</span>
                 </a>
+
                 <a href="laporan.php" class="nav-link">
-                    <img src="../assets/img/report-icon.png" alt="Reports">
+                    <i class="fas fa-file-alt"></i>
                     <span class="menu-text">Laporan</span>
                 </a>
-                <a href="tipe_kamar.php" class='nav-link'>
-                    <img src='../assets/img/type-icon.png' alt='Type'>
-                    <span class='menu-text'>Tipe Kamar</span>
+
+                <a href="tipe_kamar.php" class="nav-link">
+                    <i class="fas fa-tags"></i>
+                    <span class="menu-text">Tipe Kamar</span>
                 </a>
+
                 <a href="logout.php" class="nav-link">
-                    <img src="../assets/img/logout-icon.png" alt="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
                     <span class="menu-text">Logout</span>
                 </a>
-                <!-- ... icon menu lainnya ... -->
             </nav>
         </aside>
 
@@ -88,14 +90,11 @@ $stats = mysqli_fetch_assoc($query_stats);
                 </div>
             </header>
 
-
-
-            <!-- Search & Action Bar -->
             <div class="action-bar">
-                <div class="search-box">
+                <form method="GET" class="search-box" id="searchForm">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Cari nomor kamar atau penghuni..">
-                </div>
+                    <input type="text" name="search" id="searchInput" placeholder="Cari nomor kamar atau penghuni..." value="<?= $_GET['search'] ?? ''; ?>">
+                </form>
                 <a href="tambah_kamar.php" class="btn-tambah">
                     <i class="fas fa-plus"></i> Tambah Kamar
                 </a>
@@ -165,6 +164,20 @@ $stats = mysqli_fetch_assoc($query_stats);
             btnMenu.onclick = function() {
                 sidebar.classList.toggle('expand');
             }
+        </script>
+
+        <script>
+            let timeout = null;
+
+            document.getElementById('searchInput').addEventListener('keyup', function() {
+
+                clearTimeout(timeout);
+
+                timeout = setTimeout(() => {
+                    document.getElementById('searchForm').submit();
+                }, 500);
+
+            });
         </script>
 </body>
 

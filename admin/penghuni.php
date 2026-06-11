@@ -1,15 +1,15 @@
 <?php
 include '../koneksi.php';
+$search = $_GET['search'] ?? '';
 /** @var mysqli $koneksi */
 
-$query = "SELECT c.nama, k.nomor_kamar, p.id_kamar, c.no_hp, 
-                 IFNULL(t.periode, '1') as periode,
-                 IFNULL(t.tgl_transaksi, p.tgl_pesan) AS tgl_masuk
+$query = "SELECT c.nama, k.nomor_kamar, p.id_kamar, c.no_hp, IFNULL(t.periode, '1') as periode, IFNULL(t.tgl_transaksi, p.tgl_pesan) AS tgl_masuk
           FROM pesanan p
           JOIN customer c ON p.no_ktp = c.no_ktp
           JOIN kamar k ON p.id_kamar = k.id_kamar
           LEFT JOIN transaksi t ON p.id_pesanan = t.id_pesanan
-          WHERE p.status_pesanan = 'lunas'";
+          WHERE p.status_pesanan = 'lunas'
+          AND (  c.nama LIKE '%$search%' OR k.nomor_kamar LIKE '%$search%' OR c.no_hp LIKE '%$search%')";
 
 $result = mysqli_query($koneksi, $query);
 ?>
@@ -24,52 +24,60 @@ $result = mysqli_query($koneksi, $query);
     <link rel="stylesheet" href="../assets/css/penghuni.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <div class="dashboard-wrapper">
         <aside class="sidebar-admin expand " id="sidebar">
-            <div class="sidebar-logo">
-                <img src="../assets/img/logo-menu.png" alt="Menu" id="btn-menu" style="cursor: pointer;">
-                <span class="logo-text" style="font-weight: bold; margin-left: 10px;">Aqsya Kos</span>
+            <div class="sidebar-logo" style="display: flex; align-items: center; padding: 20px 25px;">
+                <i class="fas fa-bars" id="btn-menu" style="cursor: pointer; font-size: 24px; color: #81A6C6; transition: 0.3s;"></i>
+                <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Aqsya Kos</span>
             </div>
 
             <nav class="nav-icons">
-                <a href="dashboard_admin.php" class="nav-link active">
-                    <img src="../assets/img/home-icon.png" alt="Home">
+                <a href="dashboard_admin.php" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>
+
                 <a href="kamar.php" class="nav-link">
-                    <img src="../assets/img/key-icon.png" alt="Rooms">
+                    <i class="fas fa-key"></i>
                     <span class="menu-text">Kamar</span>
                 </a>
+
                 <a href="penghuni.php" class="nav-link">
-                    <img src="../assets/img/user-icon.png" alt="Tenants">
+                    <i class="fas fa-users"></i>
                     <span class="menu-text">Penghuni</span>
                 </a>
+
                 <a href="pembayaran.php" class="nav-link">
-                    <img src="../assets/img/payment-icon.png" alt="Payments">
+                    <i class="fas fa-credit-card"></i>
                     <span class="menu-text">Pembayaran</span>
                 </a>
+
                 <a href="pesanan.php" class="nav-link">
-                    <img src="../assets/img/order-icon.png" alt="Orders">
+                    <i class="fas fa-shopping-cart"></i>
                     <span class="menu-text">Pesanan</span>
                 </a>
+
                 <a href="pengaduan.php" class="nav-link">
-                    <img src="../assets/img/complaint-icon.png" alt="Complaints">
+                    <i class="fas fa-exclamation-circle"></i>
                     <span class="menu-text">Pengaduan</span>
                 </a>
+
                 <a href="laporan.php" class="nav-link">
-                    <img src="../assets/img/report-icon.png" alt="Reports">
+                    <i class="fas fa-file-alt"></i>
                     <span class="menu-text">Laporan</span>
                 </a>
-                <a href="tipe_kamar.php" class='nav-link'>
-                    <img src='../assets/img/type-icon.png' alt='Type'>
-                    <span class='menu-text'>Tipe Kamar</span>
+
+                <a href="tipe_kamar.php" class="nav-link">
+                    <i class="fas fa-tags"></i>
+                    <span class="menu-text">Tipe Kamar</span>
                 </a>
+
                 <a href="logout.php" class="nav-link">
-                    <img src="../assets/img/logout-icon.png" alt="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
                     <span class="menu-text">Logout</span>
                 </a>
-                <!-- ... icon menu lainnya ... -->
             </nav>
         </aside>
 
@@ -83,10 +91,10 @@ $result = mysqli_query($koneksi, $query);
 
             <section class="data-section">
                 <div class="action-bar">
-                    <div class="search-box">
+                    <form method="GET" class="search-box" id="searchForm">
                         <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Masukkan nama, kamar, atau telepon..">
-                    </div>
+                        <input type="text" name="search" id="searchInput" placeholder="Masukkan nama, kamar, atau telepon..." value="<?= htmlspecialchars($_GET['search'] ?? ''); ?>">
+                    </form>
                 </div>
 
                 <div class="table-container">
@@ -115,7 +123,7 @@ $result = mysqli_query($koneksi, $query);
                                         <td><span class="badge-kamar">Kamar <?= htmlspecialchars($row['nomor_kamar']); ?></span></td>
                                         <td>
                                             <div class="contact-info">
-                                                <div><i class="fas fa-phone-alt" style="margin-right: 8px; color: #81A6C6;"></i> <?= $row['no_hp']; ?></div>
+                                                <div><i class="fas fa-phone-alt" style="margin-right: 8px; color: #81A6C6;"></i> <?= htmlspecialchars($row['no_hp']); ?></div>
                                             </div>
                                         </td>
                                         <td><?= (!empty($row['tgl_masuk']) && $row['tgl_masuk'] != '0000-00-00') ? date('d M Y', strtotime($row['tgl_masuk'])) : '-'; ?></td>
@@ -150,6 +158,20 @@ $result = mysqli_query($koneksi, $query);
         btnMenu.onclick = function() {
             sidebar.classList.toggle('expand');
         }
+    </script>
+
+    <script>
+        let timeout = null;
+
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+
+            clearTimeout(timeout);
+
+            timeout = setTimeout(() => {
+                document.getElementById('searchForm').submit();
+            }, 500);
+
+        });
     </script>
 </body>
 
