@@ -60,7 +60,7 @@ $result = mysqli_query($koneksi, $sql);
 // Query untuk mengambil riwayat sewa kamar dan sisa harinya
 // Query yang sudah disesuaikan agar tidak error Unknown Column
 $sql_riwayat = "SELECT 
-                    k.nomor_kamar,
+                    k.id_kamar,
                     tk.nama_tipe,
                     c.nama, -- Menggunakan kolom 'nama' sesuai database customer kamu
                     p.tgl_pesan as tgl_mulai,
@@ -304,8 +304,6 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
                 </table>
             </div>
 
-            <br><br>
-
             <div class="table-container mt-4">
                 <div style="padding: 20px 20px 0 20px;">
                     <h3 style="color: #333; font-size: 18px; margin-bottom: 5px;">Laporan Riwayat Hunian & Batas Kontrak Kamar</h3>
@@ -314,7 +312,7 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
                 <table class="laporan-table">
                     <thead>
                         <tr>
-                            <th>No. Kamar</th>
+                            <th>Id. Kamar</th>
                             <th>Tipe Kamar</th>
                             <th>Nama Penghuni</th>
                             <th>Tanggal Masuk</th>
