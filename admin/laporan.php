@@ -60,7 +60,7 @@ $result = mysqli_query($koneksi, $sql);
 // Query untuk mengambil riwayat sewa kamar dan sisa harinya
 // Query yang sudah disesuaikan agar tidak error Unknown Column
 $sql_riwayat = "SELECT 
-                    k.id_kamar,
+                    k.nomor_kamar,
                     tk.nama_tipe,
                     c.nama, -- Menggunakan kolom 'nama' sesuai database customer kamu
                     p.tgl_pesan as tgl_mulai,
