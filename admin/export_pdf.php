@@ -92,10 +92,13 @@ $result_riwayat = mysqli_query($koneksi, $sql_riwayat);
 <body>
 
     <div class="header">
-        <h1>LAPORAN KEUANGAN & RIWAYAT HUNIAN</h1>
-        <h1>AQSYA KOS</h1>
-        <p>Sistem Informasi Manajemen Rumah Kos</p>
-    </div>
+    <h1>LAPORAN KEUANGAN & RIWAYAT HUNIAN</h1>
+    <h1>AQSYA KOS</h1>
+    <p>Sistem Informasi Manajemen Rumah Kos</p>
+    <p style="margin-top: 10px; font-size: 12px; color: #777;">
+        Dicetak pada: <?= date('d M Y H:i:s'); ?>
+    </p>
+</div>
 
     <div class="info-periode">
         <strong>Periode Laporan:</strong> <?= date('d M Y', strtotime($tgl_awal_pilihan)); ?> s.d <?= date('d M Y', strtotime($tgl_akhir_pilihan)); ?>

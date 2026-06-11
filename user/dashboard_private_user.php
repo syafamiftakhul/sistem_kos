@@ -3,6 +3,7 @@ session_start();
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
+
 if (!isset($_SESSION['id_user'])) {
     header("Location: ../login.php");
     exit;
@@ -48,6 +49,21 @@ $query_booking = mysqli_query($koneksi, "SELECT pesanan.*, kamar.nomor_kamar, ti
       AND pesanan.status_pesanan IN ('lunas', 'pending', 'proses', 'selesai') 
     ORDER BY pesanan.id_pesanan DESC LIMIT 1");
 $booking = mysqli_fetch_assoc($query_booking);
+
+if (!empty($booking)) {
+    $periode_bulan = (int)($booking['periode'] ?? 1);
+    $tgl_masuk = $booking['tgl_masuk'];
+
+    $tgl_masuk_dt = new DateTime($tgl_masuk);
+    $tgl_selesai = clone $tgl_masuk_dt;
+    $tgl_selesai->modify('+' . $periode_bulan . ' month');
+
+    $today = new DateTime();
+    $diff = $today->diff($tgl_selesai);
+    $sisa_hari = (int)$diff->format('%r%a');
+}
+
+
 
 // Mengambil data semua keluhan milik customer yang login
 $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, tipe_kamar.nama_tipe 
@@ -125,7 +141,7 @@ $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, 
                     ?>
                 </div>
 
-                <div class="grid-info">
+                <div class="grid-info" style="position: relative;">
                     <div>
                         <div class="info-label">Nama Penghuni</div>
                         <div class="info-value"><?= htmlspecialchars($data_customer['nama'] ?? 'User'); ?></div>
@@ -142,8 +158,15 @@ $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, 
                         <div class="info-label">Total Price</div>
                         <div class="info-value price-value">Rp <?= number_format((float)($booking['harga'] ?? 0), 0, ',', '.'); ?></div>
                     </div>
-                </div>
 
+                    <div style="position: absolute; bottom: -25px; right: 0; font-size: 12px; font-weight: 600; color: #6B7280; background: #F3F4F6; padding: 4px 8px; border-radius: 6px;">
+                        <?php
+                        if ($sisa_hari < 0) echo "Telah Berakhir";
+                        elseif ($sisa_hari == 0) echo "Habis Hari Ini";
+                        else echo $sisa_hari . " Hari Lagi";
+                        ?>
+                    </div>
+                </div>
                 <?php if ($booking['status_pesanan'] == 'lunas') : ?>
                     <a href="pengaduan.php?id_kamar=<?= $booking['id_kamar']; ?>" class="btn-complaint" style="text-decoration: none; display: inline-block; text-align: center;">
                         <i class="fas fa-exclamation-circle"></i> Tambahkan Pengaduan
