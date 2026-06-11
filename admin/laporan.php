@@ -9,16 +9,19 @@ $target_bulanan = 5000000;
 $periode_pilihan = $_GET['periode'] ?? '1_tahun';
 $kondisi_where_transaksi = "WHERE YEAR(t.tgl_transaksi) = '$tahun_sekarang'";
 $kondisi_where_pesanan   = "AND YEAR(p.tgl_pesan) = '$tahun_sekarang'";
+$kondisi_where_riwayat   = "WHERE YEAR(p.tgl_pesan) = '$tahun_sekarang'"; // <-- TAMBAHKAN INI
 
 if ($periode_pilihan == '6_bulan') {
-    // Filter hanya 6 bulan ke belakang dari bulan sekarang
     $kondisi_where_transaksi = "WHERE t.tgl_transaksi >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH)";
     $kondisi_where_pesanan   = "AND p.tgl_pesan >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH)";
+    $kondisi_where_riwayat   = "WHERE p.tgl_pesan >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH)"; // <-- TAMBAHKAN INI
 } elseif ($periode_pilihan == 'keseluruhan') {
-    // Tanpa filter tahun alias loss semua riwayat keluar
     $kondisi_where_transaksi = "WHERE 1=1";
     $kondisi_where_pesanan   = "";
+    $kondisi_where_riwayat   = "WHERE 1=1"; // <-- TAMBAHKAN INI
 }
+
+
 
 // Query yang sudah diperbaiki untuk MySQL strict mode
 $sql = "SELECT 
@@ -53,6 +56,27 @@ $sql = "SELECT
         ORDER BY bulan_num ASC";
 
 $result = mysqli_query($koneksi, $sql);
+
+// Query untuk mengambil riwayat sewa kamar dan sisa harinya
+// Query yang sudah disesuaikan agar tidak error Unknown Column
+$sql_riwayat = "SELECT 
+                    k.nomor_kamar,
+                    tk.nama_tipe,
+                    c.nama, -- Menggunakan kolom 'nama' sesuai database customer kamu
+                    p.tgl_pesan as tgl_mulai,
+                    DATE_ADD(p.tgl_pesan, INTERVAL 1 MONTH) as tgl_habis,
+                    DATEDIFF(DATE_ADD(p.tgl_pesan, INTERVAL 1 MONTH), CURRENT_DATE()) as sisa_hari
+                FROM pesanan p
+                JOIN kamar k ON p.id_kamar = k.id_kamar
+                JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe
+                -- Di sini kita asumsikan p.no_ktp terhubung ke c.no_ktp. 
+                -- Jika pesananmu pakai id_user, ganti menjadi: ON p.id_user = c.id_user
+                JOIN customer c ON p.no_ktp = c.no_ktp 
+                $kondisi_where_riwayat AND p.status_pesanan = 'lunas'
+                ORDER BY p.tgl_pesan DESC";
+
+$result_riwayat = mysqli_query($koneksi, $sql_riwayat);
+
 
 $bulan_ini = date('m');
 $tahun_ini = date('Y');
@@ -110,7 +134,7 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
                 <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Aqsya Kos</span>
             </div>
 
-                <nav class="nav-icons">
+            <nav class="nav-icons">
                 <a href="dashboard_admin.php" class="nav-link">
                     <i class="fas fa-chart-line"></i>
                     <span class="menu-text">Dashboard</span>
@@ -279,6 +303,70 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
                     </tbody>
                 </table>
             </div>
+
+            <br><br>
+
+            <div class="table-container mt-4">
+                <div style="padding: 20px 20px 0 20px;">
+                    <h3 style="color: #333; font-size: 18px; margin-bottom: 5px;">Laporan Riwayat Hunian & Batas Kontrak Kamar</h3>
+                    <p style="color: #777; font-size: 13px;">Daftar aktivitas penggunaan kamar dan estimasi jatuh tempo pembayaran pada periode terpilih.</p>
+                </div>
+                <table class="laporan-table">
+                    <thead>
+                        <tr>
+                            <th>No. Kamar</th>
+                            <th>Tipe Kamar</th>
+                            <th>Nama Penghuni</th>
+                            <th>Tanggal Masuk</th>
+                            <th>Tanggal Jatuh Tempo</th>
+                            <th>Status Masa Sewa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (mysqli_num_rows($result_riwayat) > 0): ?>
+                            <?php while ($riwayat = mysqli_fetch_assoc($result_riwayat)):
+                                $sisa = $riwayat['sisa_hari'];
+
+                                if ($sisa < 0) {
+                                    $badge_class = "badge-danger";
+                                    $status_teks = "Lewat " . abs($sisa) . " Hari";
+                                } elseif ($sisa <= 3) {
+                                    $badge_class = "badge-danger";
+                                    $status_teks = "Kritis (" . $sisa . " Hari Lagi)";
+                                } elseif ($sisa <= 7) {
+                                    $badge_class = "badge-warning";
+                                    $status_teks = $sisa . " Hari Lagi";
+                                } else {
+                                    $badge_class = "badge-success";
+                                    $status_teks = $sisa . " Hari Lagi";
+                                }
+                            ?>
+                                <tr>
+                                    <td><strong><?= $riwayat['nomor_kamar']; ?></strong></td>
+                                    <td><?= $riwayat['nama_tipe']; ?></td>
+
+                                    <td><?= !empty($riwayat['nama']) ? $riwayat['nama'] : '-'; ?></td>
+
+                                    <td><?= date('d M Y', strtotime($riwayat['tgl_mulai'])); ?></td>
+                                    <td><?= date('d M Y', strtotime($riwayat['tgl_habis'])); ?></td>
+                                    <td>
+                                        <span class="badge-status <?= $badge_class; ?>">
+                                            <?= $status_teks; ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #888; padding: 20px;">
+                                    Tidak ada riwayat aktivitas hunian kamar pada periode ini.
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
             <script>
                 const btnMenu = document.getElementById('btn-menu');
                 const sidebar = document.getElementById('sidebar');
