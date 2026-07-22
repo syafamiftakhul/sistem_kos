@@ -113,14 +113,23 @@ $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, 
                         <div class="booking-date">
                             <i class="far fa-calendar"></i>
                             <?php
-                            if (!empty($booking['tgl_masuk'])) {
-                                $tgl_masuk_dt = new DateTime($booking['tgl_masuk']);
+                            if (!empty($booking)) {
                                 $periode_bulan = (int)($booking['periode'] ?? 1);
-                                echo $tgl_masuk_dt->format('d M Y') . " - ";
-                                $tgl_masuk_dt->modify("+$periode_bulan month");
-                                echo $tgl_masuk_dt->format('d M Y');
-                            } else {
-                                echo date('d M Y', strtotime($booking['tgl_pesan']));
+                                $tgl_masuk = $booking['tgl_masuk'];
+
+                                // Cek apakah data tgl_masuk sudah ada (berarti sudah disetujui admin/sudah lunas)
+                                if (!empty($tgl_masuk)) {
+                                    $tgl_masuk_dt = new DateTime($tgl_masuk);
+                                    $tgl_selesai = clone $tgl_masuk_dt;
+                                    $tgl_selesai->modify('+' . $periode_bulan . ' month');
+
+                                    $today = new DateTime();
+                                    $diff = $today->diff($tgl_selesai);
+                                    $sisa_hari = (int)$diff->format('%r%a');
+                                } else {
+                                    // Kalau belum disetujui, set null agar tidak muncul di tampilan
+                                    $sisa_hari = null;
+                                }
                             }
                             ?>
                         </div>
@@ -159,13 +168,18 @@ $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, 
                         <div class="info-value price-value">Rp <?= number_format((float)($booking['harga'] ?? 0), 0, ',', '.'); ?></div>
                     </div>
 
-                    <div style="position: absolute; bottom: -25px; right: 0; font-size: 12px; font-weight: 600; color: #6B7280; background: #F3F4F6; padding: 4px 8px; border-radius: 6px;">
-                        <?php
-                        if ($sisa_hari < 0) echo "Telah Berakhir";
-                        elseif ($sisa_hari == 0) echo "Habis Hari Ini";
-                        else echo $sisa_hari . " Hari Lagi";
-                        ?>
-                    </div>
+                   <div style="margin-top: 15px; margin-bottom: 10px; font-size: 12px; font-weight: 600; color: #6B7280; background: #F3F4F6; padding: 4px 8px; border-radius: 6px; width: fit-content;">
+    <?php if ($sisa_hari !== null && $booking['status_pesanan'] == 'lunas') : ?>
+        <div style="font-size: 12px; font-weight: 600; color: #6B7280; background: #F3F4F6; padding: 6px 12px; border-radius: 6px;">
+            <i class="far fa-clock"></i>
+            <?php
+            if ($sisa_hari < 0) echo "Telah Berakhir";
+            elseif ($sisa_hari == 0) echo "Habis Hari Ini";
+            else echo $sisa_hari . " Hari Lagi";
+            ?>
+        </div>
+    <?php endif; ?>
+</div>
                 </div>
                 <?php if ($booking['status_pesanan'] == 'lunas') : ?>
                     <a href="pengaduan.php?id_kamar=<?= $booking['id_kamar']; ?>" class="btn-complaint" style="text-decoration: none; display: inline-block; text-align: center;">

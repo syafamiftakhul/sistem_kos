@@ -74,19 +74,24 @@ $query_pembayaran = "SELECT pesanan.*, customer.nama, tipe_kamar.nama_tipe, IFNU
 
 $result_pembayaran = mysqli_query($koneksi, $query_pembayaran);
 
-$query_kontrak = "SELECT customer.nama, tipe_kamar.nama_tipe, pesanan.tgl_pesan,
-                  DATEDIFF(DATE_ADD(pesanan.tgl_pesan, INTERVAL 30 DAY), CURDATE()) as sisa_hari
-                  FROM pesanan
-                  JOIN customer ON pesanan.no_ktp = customer.no_ktp
-                  JOIN kamar ON pesanan.id_kamar = kamar.id_kamar 
-                  JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe
-                  WHERE pesanan.status_pesanan = 'lunas'
-                  AND kamar.status_kamar = 'Terisi'  -- INI KUNCINYA REKK!
-                  AND DATEDIFF(DATE_ADD(pesanan.tgl_pesan, INTERVAL 30 DAY), CURDATE()) BETWEEN 0 AND 30
+$query_kontrak = "SELECT 
+                    c.nama, 
+                    tk.nama_tipe, 
+                    p.tgl_pesan, 
+                    t.periode,
+                    DATE_ADD(p.tgl_pesan, INTERVAL t.periode MONTH) as tgl_habis,
+                    DATEDIFF(DATE_ADD(p.tgl_pesan, INTERVAL t.periode MONTH), CURDATE()) as sisa_hari
+                  FROM pesanan p
+                  JOIN customer c ON p.no_ktp = c.no_ktp
+                  JOIN kamar k ON p.id_kamar = k.id_kamar 
+                  JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe
+                  JOIN transaksi t ON p.id_pesanan = t.id_pesanan
+                  WHERE p.status_pesanan = 'lunas'
+                  AND k.status_kamar = 'Terisi'
+                  -- Hapus atau ganti HAVING agar semua data tampil
                   ORDER BY sisa_hari ASC LIMIT 5";
 
 $result_kontrak = mysqli_query($koneksi, $query_kontrak);
-
 $query_pengaduan = "SELECT pengaduan.*, customer.nama, tipe_kamar.nama_tipe 
                     FROM pengaduan 
                     JOIN kamar ON pengaduan.id_kamar = kamar.id_kamar 
@@ -267,10 +272,10 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
                     <?php
                     if (mysqli_num_rows($result_kontrak) > 0) {
                         while ($kontrak = mysqli_fetch_assoc($result_kontrak)) {
-                            $tgl_berakhir = date('d F Y', strtotime($kontrak['tgl_pesan'] . ' + 30 days'));
-                            $sisa = $kontrak['sisa_hari'];
+                            // Mengambil tanggal dari hasil perhitungan SQL
+                            $tgl_berakhir = date('d F Y', strtotime($kontrak['tgl_habis']));
+                            $sisa = (int)$kontrak['sisa_hari'];
 
-                            // Logika Warna: Kalau <= 7 hari pakai class 'danger' (merah), kalau > 7 pakai 'info' (biru)
                             $badge_color = ($sisa <= 7) ? 'danger' : 'info';
                     ?>
                             <div class="data-item">
@@ -280,12 +285,9 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
                                 </div>
                                 <div class="item-status">
                                     <span><?php echo $tgl_berakhir; ?></span>
-                                    <!-- Warna badge berubah sesuai sisa hari -->
                                     <span class="badge <?php echo $badge_color; ?>">
                                         <?php
-                                        if ($sisa < 0) {
-                                            echo 'Sudah Lewat'; // Kontrak harusnya tidak muncul di sini kalau pakai query baru di atas
-                                        } elseif ($sisa == 0) {
+                                        if ($sisa == 0) {
                                             echo 'Berakhir Hari Ini';
                                         } else {
                                             echo $sisa . ' Hari Lagi';

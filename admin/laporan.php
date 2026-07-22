@@ -55,13 +55,15 @@ $sql_riwayat = "SELECT
                     tk.nama_tipe,
                     c.nama, 
                     p.tgl_pesan as tgl_mulai,
-                    DATE_ADD(p.tgl_pesan, INTERVAL 1 MONTH) as tgl_habis,
-                    DATEDIFF(DATE_ADD(p.tgl_pesan, INTERVAL 1 MONTH), CURRENT_DATE()) as sisa_hari
+                    DATE_ADD(p.tgl_pesan, INTERVAL t.periode MONTH) as tgl_habis,
+                    DATEDIFF(DATE_ADD(p.tgl_pesan, INTERVAL t.periode MONTH), CURRENT_DATE()) as sisa_hari,
+                    p.status_pesanan
                 FROM pesanan p
+                JOIN transaksi t ON p.id_pesanan = t.id_pesanan
                 JOIN kamar k ON p.id_kamar = k.id_kamar
                 JOIN tipe_kamar tk ON k.id_tipe = tk.id_tipe
                 JOIN customer c ON p.no_ktp = c.no_ktp 
-                $kondisi_where_riwayat AND p.status_pesanan = 'lunas'
+                $kondisi_where_riwayat 
                 ORDER BY p.tgl_pesan DESC";
 
 $result_riwayat = mysqli_query($koneksi, $sql_riwayat);
@@ -144,8 +146,8 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
                         <span style="color: #64748b; font-size: 13px; font-weight: 500;">s.d</span>
                         <input type="date" name="tgl_akhir" id="tgl_akhir" value="<?= $tgl_akhir_pilihan; ?>" onchange="submitFilter()" style="border: none; outline: none; color: #334155; font-size: 14px; font-family: inherit; cursor: pointer;">
                     </form>
-        
-                    <a href="ort_pexpdf.php?tgl_awal=<?= $tgl_awal_pilihan; ?>&tgl_akhir=<?= $tgl_akhir_pilihan; ?>" class="btn-export" target="_blank" style="display: flex; align-items: center; gap: 8px;">
+
+                    <a href="export_pdf.php?tgl_awal=<?= $tgl_awal_pilihan; ?>&tgl_akhir=<?= $tgl_akhir_pilihan; ?>" class="btn-export" target="_blank" style="display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-download"></i> Export PDF
                     </a>
                 </div>
@@ -261,11 +263,18 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (mysqli_num_rows($result_riwayat) > 0): ?>
-                            <?php while ($riwayat = mysqli_fetch_assoc($result_riwayat)):
-                                $sisa = $riwayat['sisa_hari'];
+                        <?php
+                        // Cek dulu apakah $result_riwayat ada isinya
+                        if ($result_riwayat && mysqli_num_rows($result_riwayat) > 0) {
+                            while ($riwayat = mysqli_fetch_assoc($result_riwayat)) {
+                                $sisa = (int)$riwayat['sisa_hari'];
+                                $status_pesanan = isset($riwayat['status_pesanan']) ? strtolower($riwayat['status_pesanan']) : '';
 
-                                if ($sisa < 0) {
+                                // LOGIKA BARU: Kalau lunas/selesai, tidak ada jatuh tempo
+                                if ($status_pesanan == 'selesai') {
+                                    $badge_class = "badge-success";
+                                    $status_teks = "Lunas / Selesai";
+                                } elseif ($sisa < 0) {
                                     $badge_class = "badge-danger";
                                     $status_teks = "Lewat " . abs($sisa) . " Hari";
                                 } elseif ($sisa <= 3) {
@@ -278,11 +287,11 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
                                     $badge_class = "badge-success";
                                     $status_teks = $sisa . " Hari Lagi";
                                 }
-                            ?>
+                        ?>
                                 <tr>
-                                    <td><strong><?= $riwayat['nomor_kamar']; ?></strong></td>
-                                    <td><?= $riwayat['nama_tipe']; ?></td>
-                                    <td><?= !empty($riwayat['nama']) ? $riwayat['nama'] : '-'; ?></td>
+                                    <td><strong><?= htmlspecialchars($riwayat['nomor_kamar']); ?></strong></td>
+                                    <td><?= htmlspecialchars($riwayat['nama_tipe']); ?></td>
+                                    <td><?= !empty($riwayat['nama']) ? htmlspecialchars($riwayat['nama']) : '-'; ?></td>
                                     <td><?= date('d M Y', strtotime($riwayat['tgl_mulai'])); ?></td>
                                     <td><?= date('d M Y', strtotime($riwayat['tgl_habis'])); ?></td>
                                     <td>
@@ -291,14 +300,17 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
                                         </span>
                                     </td>
                                 </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
+                            <?php
+                            } // tutup while
+                        } else {
+                            ?>
                             <tr>
                                 <td colspan="6" style="text-align: center; color: #888; padding: 20px;">
                                     Tidak ada riwayat aktivitas hunian kamar pada periode ini.
                                 </td>
                             </tr>
-                        <?php endif; ?>
+                        <?php } // tutup if 
+                        ?>
                     </tbody>
                 </table>
             </div>
