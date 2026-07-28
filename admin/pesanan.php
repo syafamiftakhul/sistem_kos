@@ -54,7 +54,7 @@ $total_pending   = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesanan - Aqsya Kos</title>
-    <link rel="stylesheet" href="../assets/css/dashboard_admin.css">
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
     <link rel="stylesheet" href="../assets/css/pesanan.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -68,15 +68,50 @@ $total_pending   = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) as
             </div>
 
             <nav class="nav-icons">
-                <a href="dashboard_admin.php" class="nav-link"><i class="fas fa-chart-line"></i><span class="menu-text">Dashboard</span></a>
-                <a href="kamar.php" class="nav-link"><i class="fas fa-key"></i><span class="menu-text">Kamar</span></a>
-                <a href="penghuni.php" class="nav-link"><i class="fas fa-users"></i><span class="menu-text">Penghuni</span></a>
-                <a href="pembayaran.php" class="nav-link"><i class="fas fa-credit-card"></i><span class="menu-text">Pembayaran</span></a>
-                <a href="pesanan.php" class="nav-link"><i class="fas fa-shopping-cart"></i><span class="menu-text">Pesanan</span></a>
-                <a href="pengaduan.php" class="nav-link"><i class="fas fa-exclamation-circle"></i><span class="menu-text">Pengaduan</span></a>
-                <a href="laporan.php" class="nav-link"><i class="fas fa-file-alt"></i><span class="menu-text">Laporan</span></a>
-                <a href="tipe_kamar.php" class="nav-link"><i class="fas fa-tags"></i><span class="menu-text">Tipe Kamar</span></a>
-                <a href="logout.php" class="nav-link"><i class="fas fa-sign-out-alt"></i><span class="menu-text">Logout</span></a>
+                <a href="dashboard_admin.php" class="nav-link active">
+                    <i class="fas fa-chart-line"></i>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+
+                <a href="kamar.php" class="nav-link">
+                    <i class="fas fa-key"></i>
+                    <span class="menu-text">Kamar</span>
+                </a>
+
+                <a href="penghuni.php" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span class="menu-text">Penghuni</span>
+                </a>
+
+                <a href="pembayaran.php" class="nav-link">
+                    <i class="fas fa-credit-card"></i>
+                    <span class="menu-text">Pembayaran</span>
+                </a>
+
+                <a href="pesanan.php" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="menu-text">Pesanan</span>
+                </a>
+
+                <a href="pengaduan.php" class="nav-link">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span class="menu-text">Pengaduan</span>
+                </a>
+
+                <a href="laporan.php" class="nav-link">
+                    <i class="fas fa-file-alt"></i>
+                    <span class="menu-text">Laporan</span>
+                </a>
+
+                <a href="tipe_kamar.php" class="nav-link">
+                    <i class="fas fa-tags"></i>
+                    <span class="menu-text">Tipe Kamar</span>
+                </a>
+
+                <a href="logout.php" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="menu-text">Logout</span>
+                </a>
             </nav>
         </aside>
 

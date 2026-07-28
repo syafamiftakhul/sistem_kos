@@ -108,7 +108,7 @@ $total_tunggakan = mysqli_fetch_assoc($query_tunggakan)['total'] ?? 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan - Aqsya Kos</title>
-    <link rel="stylesheet" href="../assets/css/dashboard_admin.css">
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
     <link rel="stylesheet" href="../assets/css/laporan_admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
