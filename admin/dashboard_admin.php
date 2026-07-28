@@ -109,6 +109,7 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin - Kos Aqsya</title>
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
     <link rel="stylesheet" href="../assets/css/dashboard_admin.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -338,12 +339,22 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
     </main>
     </div>
 
-    <script>
+     <script>
         const btnMenu = document.getElementById('btn-menu');
         const sidebar = document.getElementById('sidebar');
 
         btnMenu.onclick = function() {
             sidebar.classList.toggle('expand');
+        }
+
+        function cariPembayaran(keyword) {
+            const url = new URL(window.location.href);
+            if (keyword.trim() !== '') {
+                url.searchParams.set('search', keyword);
+            } else {
+                url.searchParams.delete('search');
+            }
+            window.location.href = url.toString();
         }
     </script>
 

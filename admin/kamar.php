@@ -21,7 +21,7 @@ $stats = mysqli_fetch_assoc($query_stats);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Kamar - Aqsya Kos</title>
-    <link rel="stylesheet" href="../assets/css/dashboard_admin.css">
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
     <link rel="stylesheet" href="../assets/css/kamar_admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -166,6 +166,7 @@ $stats = mysqli_fetch_assoc($query_stats);
             </div>
         </div>
     </div>
+
 
         <script>
             const btnMenu = document.getElementById('btn-menu');

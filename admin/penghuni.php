@@ -36,21 +36,21 @@ if (!$result) {
 <head>
     <meta charset="UTF-8">
     <title>Manajemen Penghuni - Aqsya Kos</title>
-    <link rel="stylesheet" href="../assets/css/dashboard_admin.css">
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
     <link rel="stylesheet" href="../assets/css/penghuni.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
     <div class="dashboard-wrapper">
-        <aside class="sidebar-admin expand " id="sidebar">
+        <aside class="sidebar-admin" id="sidebar">
             <div class="sidebar-logo" style="display: flex; align-items: center; padding: 20px 25px;">
                 <i class="fas fa-bars" id="btn-menu" style="cursor: pointer; font-size: 24px; color: #81A6C6; transition: 0.3s;"></i>
                 <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Aqsya Kos</span>
             </div>
 
             <nav class="nav-icons">
-                <a href="dashboard_admin.php" class="nav-link">
+                <a href="dashboard_admin.php" class="nav-link active">
                     <i class="fas fa-chart-line"></i>
                     <span class="menu-text">Dashboard</span>
                 </a>

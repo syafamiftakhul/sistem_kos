@@ -27,92 +27,6 @@ body {
     align-items: stretch;
 }
 
-/* SIDEBAR */
-.sidebar-admin {
-    width: 90px;
-    background: var(--white);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    height: 100vh;
-    flex-shrink: 0;
-    min-height: 0;
-
-    padding: 25px 0;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.02);
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    transition: width 0.3s ease;
-
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* IMPORTANT: supaya scroll langsung aktif */
-.nav-icons {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-
-    gap: 30px;
-    margin-top: 40px;
-    width: 100%;
-}
-
-/* NAV LINK */
-.nav-link {
-    display: flex;
-    align-items: center;
-    padding: 10px 25px;
-    text-decoration: none;
-    color: #333;
-}
-
-.nav-link i {
-    font-size: 18px;
-    width: 22px;
-    text-align: center;
-    color: #81A6C6;
-}
-
-.nav-link.active img,
-.nav-link:hover img {
-    filter: grayscale(0);
-    opacity: 1;
-}
-
-/* LOGO */
-.sidebar-logo i {
-    font-size: 22px;
-    color: #81A6C6;
-    cursor: pointer;
-}
-
-/* TEXT */
-.menu-text,
-.logo-text {
-    display: none;
-    white-space: nowrap;
-    margin-left: 15px;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-/* EXPAND SIDEBAR */
-.sidebar-admin.expand {
-    width: 240px;
-}
-
-.sidebar-admin.expand .menu-text,
-.sidebar-admin.expand .logo-text {
-    display: inline-block;
-}
-
 /* MAIN CONTENT */
 .main-content {
     flex: 1;
@@ -243,7 +157,3 @@ body {
 .warning { background: #FEEFC3; color: #B05E00; }
 .info { background: #E8F0FE; color: #1967D2; }
 
-/* SCROLLBAR */
-.sidebar-admin::-webkit-scrollbar {
-    width: 4px;
-}

@@ -19,34 +19,6 @@ body {
     width: 100%;
 }
 
-/* SIDEBAR GLOBAL */
-.sidebar-admin {
-    width: 90px;
-    background: var(--white);
-    display: flex;
-    flex-direction: column;
-    padding: 25px 0;
-    transition: width 0.3s ease;
-    overflow: hidden;
-    white-space: nowrap;
-    height: 100vh;
-    position: sticky;
-    top: 0;
-    box-sizing: border-box;
-}
-
-.sidebar-admin.expand { width: 240px; }
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    padding: 15px 25px;
-    text-decoration: none;
-    color: #333;
-}
-
-.menu-text, .logo-text { display: none; margin-left: 15px; }
-.sidebar-admin.expand .menu-text, .sidebar-admin.expand .logo-text { display: inline-block; }
 
 /* MAIN CONTENT FIX: Dipaksa memenuhi sisa layar secara lega */
 .main-content { 
@@ -159,3 +131,4 @@ body {
 }
 .action-btns .btn-edit { color: #81A6C6; }
 .action-btns .btn-delete { color: #ff5252; }
+
