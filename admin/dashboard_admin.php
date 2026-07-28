@@ -346,16 +346,6 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
         btnMenu.onclick = function() {
             sidebar.classList.toggle('expand');
         }
-
-        function cariPembayaran(keyword) {
-            const url = new URL(window.location.href);
-            if (keyword.trim() !== '') {
-                url.searchParams.set('search', keyword);
-            } else {
-                url.searchParams.delete('search');
-            }
-            window.location.href = url.toString();
-        }
     </script>
 
 </body>
