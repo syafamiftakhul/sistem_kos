@@ -62,7 +62,7 @@ if (isset($_SESSION['id_user'])) {
             <img class="icon" src="assets/img/key.png" alt="Logo Kos" style="width: 25px; height: 25px; object-fit: contain;">
           </a>
         </div>
-        <h3 class="kos-aqsya-residence" style="margin: 0; font-size: 1.2rem; font-weight: 700;">Kos Aqsya Residence</h3>
+        <h3 class="kos-aqsya-residence" style="margin: 0; font-size: 1.2rem; font-weight: 700;">Kos Putra Mbah Uty</h3>
       </div>
 
       <nav class="frame-group" style="display: flex; align-items: center; gap: 25px;">
@@ -100,11 +100,11 @@ if (isset($_SESSION['id_user'])) {
       <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);"></div>
 
       <div class="hero-content" style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; width: 80%; z-index: 2;">
-        <h1 style="font-size: 48px; margin: 0; font-weight: 700;">Kos Aqsya Residence</h1>
+        <h1 style="font-size: 48px; margin: 0; font-weight: 700;">Kos Putra Mbah Uty</h1>
 
         <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 15px;">
           <img src="assets/img/map.png" style="width: 20px; filter: brightness(0) invert(1);">
-          <span style="font-size: 18px;">Jl. Mangu Indah No.88, Kaliwungu, Kab. Kendal</span>
+          <span style="font-size: 18px;">Jl. Pantura, Bonadem, Kumpul Rejo, Kec. Kaliwungu, Kabupaten Kendal, Jawa Tengah</span>
         </div>
 
         <div style="margin-top: 15px; font-size: 20px; font-weight: bold;">
@@ -112,8 +112,7 @@ if (isset($_SESSION['id_user'])) {
         </div>
 
         <p style="max-width: 700px; margin: 20px auto; font-size: 16px; line-height: 1.6; opacity: 0.9;">
-          Kos modern dan nyaman dengan fasilitas lengkap di lokasi strategis Kaliwungu.
-          Dekat dengan pusat bisnis, kampus, dan transportasi umum.
+          Kos putra dengan fasilitas lengkap di lokasi strategis Kaliwungu.
         </p>
       </div>
     </div>

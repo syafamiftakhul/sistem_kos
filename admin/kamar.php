@@ -31,7 +31,7 @@ $stats = mysqli_fetch_assoc($query_stats);
         <aside class="sidebar-admin" id="sidebar">
             <div class="sidebar-logo" style="display: flex; align-items: center; padding: 20px 25px;">
                 <i class="fas fa-bars" id="btn-menu" style="cursor: pointer; font-size: 24px; color: #81A6C6; transition: 0.3s;"></i>
-                <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Aqsya Kos</span>
+                <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Kos putra mbah uty</span>
             </div>
 
             <nav class="nav-icons">

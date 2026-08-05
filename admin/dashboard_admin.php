@@ -108,7 +108,7 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Kos Aqsya</title>
+    <title>Dashboard Admin - Kos putra mbah uty</title>
     <link rel="stylesheet" href="../assets/css/sidebar.css">
     <link rel="stylesheet" href="../assets/css/dashboard_admin.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -121,7 +121,7 @@ $result_pengaduan = mysqli_query($koneksi, $query_pengaduan);
         <aside class="sidebar-admin" id="sidebar">
             <div class="sidebar-logo" style="display: flex; align-items: center; padding: 20px 25px;">
                 <i class="fas fa-bars" id="btn-menu" style="cursor: pointer; font-size: 24px; color: #81A6C6; transition: 0.3s;"></i>
-                <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Aqsya Kos</span>
+                <span class="logo-text" style="font-weight: bold; margin-left: 15px; color: #81A6C6; font-size: 18px;">Kos putra mbah uty</span>
             </div>
 
             <nav class="nav-icons">
