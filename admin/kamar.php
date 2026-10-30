@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . "/auth.php";
 include '../koneksi.php';
 $search = $_GET['search'] ?? '';
 /** @var mysqli $koneksi */
@@ -132,9 +133,12 @@ $stats = mysqli_fetch_assoc($query_stats);
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge-status <?php echo ($row['status_kamar'] == 'terisi') ? 'terisi' : 'tersedia'; ?>">
-                                            <?php echo ($row['status_kamar'] == 'terisi') ? 'Terisi' : 'Tersedia'; ?>
-                                        </span>
+                                        <?php
+                                        $st = strtolower($row['status_kamar']);
+                                        $label_status = ['kosong' => 'Tersedia', 'booking' => 'Dipesan', 'terisi' => 'Terisi'][$st] ?? 'Tersedia';
+                                        $class_status = ($st === 'kosong') ? 'tersedia' : $st;
+                                        ?>
+                                        <span class="badge-status <?= $class_status; ?>"><?= $label_status; ?></span>
                                     </td>
                                     <td>
                                         <?php
@@ -168,27 +172,28 @@ $stats = mysqli_fetch_assoc($query_stats);
     </div>
 
 
-        <script>
-            const btnMenu = document.getElementById('btn-menu');
-            const sidebar = document.getElementById('sidebar');
+    <script>
+        const btnMenu = document.getElementById('btn-menu');
+        const sidebar = document.getElementById('sidebar');
 
-            btnMenu.onclick = function() {
-                sidebar.classList.toggle('expand');
-            }
-        </script>
+        btnMenu.onclick = function() {
+            sidebar.classList.toggle('expand');
+        }
+    </script>
 
-        <script>
-            let timeout = null;
+    <script>
+        let timeout = null;
 
-            document.getElementById('searchInput').addEventListener('keyup', function() {
+        document.getElementById('searchInput').addEventListener('keyup', function() {
 
-                clearTimeout(timeout);
+            clearTimeout(timeout);
 
-                timeout = setTimeout(() => {
-                    document.getElementById('searchForm').submit();
-                }, 500);
+            timeout = setTimeout(() => {
+                document.getElementById('searchForm').submit();
+            }, 500);
 
-            });
-        </script>
+        });
+    </script>
 </body>
+
 </html>

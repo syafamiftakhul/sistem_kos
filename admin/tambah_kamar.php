@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . "/auth.php";
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 $query_tipe = mysqli_query($koneksi, "SELECT * FROM tipe_kamar");

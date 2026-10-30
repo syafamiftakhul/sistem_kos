@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . "/auth.php";
 include '../koneksi.php';
 $search = $_GET['search'] ?? '';
 /** @var mysqli $koneksi */

@@ -33,23 +33,17 @@ if ($data) {
 $sudah_punya_kamar = false;
 
 if (isset($_SESSION['id_user'])) {
-    $id_user = $_SESSION['id_user'];
-    
-    // 1. Ambil no_ktp customer berdasarkan id_user login
-    $query_user = mysqli_query($koneksi, "SELECT no_ktp FROM customer WHERE id_user = '$id_user'");
-    $data_user = mysqli_fetch_assoc($query_user);
-    $no_ktp = $data_user['no_ktp'] ?? null;
-    
-    if ($no_ktp) {
-        // PERBAIKAN UTAMA LU REKK: 
-        // Kita cek langsung ke tabel kamar. Jika KTP dia masih terdaftar di kamar yang statusnya 'terisi'/'booking', baru kita kunci.
-        // Tapi kalau di tabel kamar KTP dia udah di-set kosong ('') oleh admin, dia BEBAS buat pesan lagi!
-        $cek_kamar_aktif = mysqli_query($koneksi, "SELECT * FROM kamar WHERE no_ktp = '$no_ktp' AND status_kamar != 'kosong'");
-        
-        // Jaga-jaga juga kalau dia punya pesanan baru yang statusnya masih 'menunggu' persetujuan admin
-        $cek_pesanan_baru = mysqli_query($koneksi, "SELECT * FROM pesanan WHERE no_ktp = '$no_ktp' AND status_pesanan = 'menunggu'");
+    $id_user = (int)$_SESSION['id_user'];
 
-        if (mysqli_num_rows($cek_kamar_aktif) > 0 || mysqli_num_rows($cek_pesanan_baru) > 0) {
+    $data_user = q_row(q($koneksi, "SELECT no_ktp FROM customer WHERE id_user = ?", 'i', $id_user));
+    $no_ktp = $data_user['no_ktp'] ?? null;
+
+    if ($no_ktp) {
+        // Terkunci jika punya pesanan yang menunggu verifikasi atau sewa yang masih aktif
+        $cek = q_row(q($koneksi,
+            "SELECT 1 AS ada FROM pesanan WHERE no_ktp = ? AND status_pesanan IN ('pending', 'lunas') LIMIT 1",
+            's', $no_ktp));
+        if ($cek) {
             $sudah_punya_kamar = true;
         }
     }

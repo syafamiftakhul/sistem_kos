@@ -1,5 +1,5 @@
 <?php
-session_start();
+require __DIR__ . "/auth.php";
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 

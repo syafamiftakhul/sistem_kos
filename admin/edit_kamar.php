@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . "/auth.php";
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
@@ -66,6 +67,7 @@ $query_tipe = mysqli_query($koneksi, "SELECT * FROM tipe_kamar");
                     <label>Status Kamar</label>
                     <select name="status_kamar">
                         <option value="kosong" <?= (strtolower((string)$data['status_kamar']) == 'kosong') ? 'selected' : ''; ?>>Kosong / Tersedia</option>
+                        <option value="booking" <?= (strtolower((string)$data['status_kamar']) == 'booking') ? 'selected' : ''; ?>>Dipesan (menunggu pembayaran)</option>
                         <option value="terisi" <?= (strtolower((string)$data['status_kamar']) == 'terisi') ? 'selected' : ''; ?>>Terisi</option>
                     </select>
                 </div>

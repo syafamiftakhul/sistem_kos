@@ -10,28 +10,15 @@ $query_kamar = mysqli_query($koneksi, "
 
 $nama = "User";
 if (isset($_SESSION['id_user'])) {
-  $id_user = $_SESSION['id_user'];
-  $akses = $_SESSION['akses'];
+    $id_user = (int)$_SESSION['id_user'];
+    $nama    = $_SESSION['nama'] ?? 'User';
 
-  $query_user = mysqli_query($koneksi, "SELECT email FROM user WHERE id_user='$id_user'");
-  if ($query_user && mysqli_num_rows($query_user) > 0) {
-    $data_user = mysqli_fetch_assoc($query_user);
-    $nama = $data_user['email'];
-  }
-
-  if ($akses == 2) {
-    $query = mysqli_query($koneksi, "SELECT * FROM customer WHERE id_user='$id_user'");
-    if ($query && mysqli_num_rows($query) > 0) {
-      $data = mysqli_fetch_assoc($query);
-      $nama = $data['nama'];
+    if (($_SESSION['akses'] ?? '') === 'penghuni') {
+        $data = q_row(q($koneksi, "SELECT nama FROM customer WHERE id_user = ?", 'i', $id_user));
+        if ($data) {
+            $nama = $data['nama'];
+        }
     }
-  } else if ($akses == 1) {
-    $query = mysqli_query($koneksi, "SELECT * FROM user WHERE id_user='$id_user'");
-    if ($query && mysqli_num_rows($query) > 0) {
-      $data = mysqli_fetch_assoc($query);
-      $nama = $data['nama'];
-    }
-  }
 }
 ?>
 <!DOCTYPE html>

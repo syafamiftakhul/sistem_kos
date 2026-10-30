@@ -1,9 +1,13 @@
 <?php
+require __DIR__ . "/auth.php";
 include '../koneksi.php';
 /** @var mysqli $koneksi */
 
 // Ambil filter status dari URL (default 'Semua')
-$filter = isset($_GET['status']) ? $_GET['status'] : 'Semua';
+$filter = $_GET['status'] ?? 'Semua';
+if (!in_array($filter, ['Semua', 'Lunas', 'Pending', 'Ditolak'], true)) {
+    $filter = 'Semua';
+}
 
 // FIX KUNCI 1: Query JOIN yang benar agar nomor kamar ter-relasi dengan aman lewat customer/pesanan
 $query = "SELECT t.*, c.nama, k.nomor_kamar 
@@ -28,11 +32,11 @@ if (!$result) {
 // Hitung Ringkasan Income (Berdasarkan status di DB lu)
 $total_lunas     = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Lunas'"))['total'] ?? 0;
 $total_pending   = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Pending'"))['total'] ?? 0;
-$total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'Terlambat'"))['total'] ?? 0;
-?>
+$total_ditolak = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bayar) as total FROM transaksi WHERE status_transaksi = 'ditolak'"))['total'] ?? 0; ?>
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,7 +84,7 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
                 </a>
             </nav>
         </aside>
-        
+
         <div class="main-content" style="flex: 1; min-height: 100vh; padding: 40px; box-sizing: border-box;">
             <header>
                 <div class="header-title">
@@ -101,7 +105,7 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
                     <a href="?status=Semua" class="cat-item <?= $filter == 'Semua' ? 'active' : '' ?>">Semua</a>
                     <a href="?status=Lunas" class="cat-item <?= $filter == 'Lunas' ? 'active' : '' ?>">Lunas</a>
                     <a href="?status=Pending" class="cat-item <?= $filter == 'Pending' ? 'active' : '' ?>">Pending</a>
-                    <a href="?status=Terlambat" class="cat-item <?= $filter == 'Terlambat' ? 'active' : '' ?>">Terlambat</a>
+                    <a href="?status=Ditolak" class="cat-item <?= $filter == 'Ditolak' ? 'active' : '' ?>">Ditolak</a>
                 </div>
 
                 <div class="table-container">
@@ -182,10 +186,8 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
                         <span class="label">Total Pending</span>
                         <h3>Rp <?= number_format($total_pending, 0, ',', '.') ?></h3>
                     </div>
-                    <div class="income-card terlambat">
-                        <span class="label">Total Terlambat</span>
-                        <h3>Rp <?= number_format($total_terlambat, 0, ',', '.') ?></h3>
-                    </div>
+                    <span class="label">Total Ditolak</span>
+                    <h3>Rp <?= number_format($total_ditolak, 0, ',', '.') ?></h3>
                 </div>
             </section>
         </div>
@@ -210,4 +212,5 @@ $total_terlambat = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT SUM(jml_bay
         }
     </script>
 </body>
+
 </html>

@@ -113,6 +113,8 @@ body {
     background: #fafafa;
 }
 
+.badge-status.booking { background: #FEF3C7; color: #B45309; }
+
 /* Badges Status (Disamain sama .badge di dashboard) */
 .badge-status {
     padding: 6px 15px;

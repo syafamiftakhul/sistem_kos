@@ -9,23 +9,14 @@ if (!isset($_SESSION['id_user'])) {
     exit;
 }
 
-if (isset($_SESSION['id_user'])) {
-    $id_user = $_SESSION['id_user'];
-    $akses = $_SESSION['akses'];
+$id_user = (int)$_SESSION['id_user'];
+$akses   = $_SESSION['akses'];
+$nama    = $_SESSION['nama'] ?? 'User';
 
-    // Langsung tembak cari nama panjang berdasarkan hak akses, jangan lewat email dulu
-    if ($akses == 2 || $akses == 'customer') {
-        $query = mysqli_query($koneksi, "SELECT nama FROM customer WHERE id_user='$id_user'");
-        if ($query && mysqli_num_rows($query) > 0) {
-            $data = mysqli_fetch_assoc($query);
-            $nama = $data['nama'];
-        }
-    } else if ($akses == 1 || $akses == 'admin') {
-        $query = mysqli_query($koneksi, "SELECT nama FROM user WHERE id_user='$id_user'");
-        if ($query && mysqli_num_rows($query) > 0) {
-            $data = mysqli_fetch_assoc($query);
-            $nama = $data['nama'];
-        }
+if ($akses === 'penghuni') {
+    $data = q_row(q($koneksi, "SELECT nama FROM customer WHERE id_user = ?", 'i', $id_user));
+    if ($data) {
+        $nama = $data['nama'];
     }
 }
 
@@ -46,7 +37,7 @@ $query_booking = mysqli_query($koneksi, "SELECT pesanan.*, kamar.nomor_kamar, ti
     JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
     LEFT JOIN transaksi ON pesanan.id_pesanan = transaksi.id_pesanan
     WHERE pesanan.no_ktp = '$no_ktp' 
-      AND pesanan.status_pesanan IN ('lunas', 'pending', 'proses', 'selesai') 
+      AND pesanan.status_pesanan IN ('lunas', 'pending', 'selesai') 
     ORDER BY pesanan.id_pesanan DESC LIMIT 1");
 $booking = mysqli_fetch_assoc($query_booking);
 
@@ -201,7 +192,7 @@ $query_keluhan = mysqli_query($koneksi, "SELECT pengaduan.*, kamar.nomor_kamar, 
                 <?php while ($row_keluhan = mysqli_fetch_assoc($query_keluhan)) : ?>
                     <div class="card-box" style="margin-bottom: 16px;">
                         <div class="card-top" style="margin-bottom: 12px;">
-                            <div class="keluhan-title"><?= htmlspecialchars($row_keluhan['subjek'] ?? 'Keluhan Tanpa Subjek'); ?></div>
+                            <div class="keluhan-title"><?=htmlspecialchars($row_keluhan['subjek'] ?: 'Keluhan Tanpa Subjek'); ?></div>
                             <?php
                             $status = strtolower($row_keluhan['status_pengaduan'] ?? 'menunggu');
                             if ($status == 'menunggu') {
