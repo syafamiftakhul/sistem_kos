@@ -10,7 +10,7 @@ $query = mysqli_query($koneksi, "SELECT kamar.*, tipe_kamar.fasilitas
                                  FROM kamar 
                                  LEFT JOIN tipe_kamar ON kamar.id_tipe = tipe_kamar.id_tipe 
                                  WHERE kamar.id_kamar = '$id'");
-$data = mysqli_fetch_assoc($querify);
+$data = mysqli_fetch_assoc($query);
 
 if (!$data) {
     header("Location: kamar.php");
